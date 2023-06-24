@@ -39,4 +39,15 @@ class DefaultEnvironment
         return Environment::isTugboat();
     }
 
+    /**
+     * Determine if this is a CI environment.
+     *
+     * @return bool
+     *   TRUE if this is CI.
+     */
+    public static function isCi(): bool
+    {
+        return static::getEnvironment() === 'ci';
+    }
+
 }

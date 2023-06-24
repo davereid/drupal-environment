@@ -12,6 +12,7 @@ namespace Davereid\DrupalEnvironment;
  * @method static bool isDefault()
  * @method static string getEnvironment()
  * @method static bool isPreview()
+ * @method static bool isCi()
  */
 class Environment
 {
@@ -77,23 +78,12 @@ class Environment
     }
 
     /**
-     * Determine if this is a CI environment.
-     *
-     * @return bool
-     *   TRUE if this is CI.
-     */
-    public static function isCi(): bool
-    {
-        return static::getEnvironment() === 'ci';
-    }
-
-    /**
      * Determine if this is a local environment.
      *
      * @return bool
      *   TRUE if this is a local environment.
-     * @todo Add Lando support.
      *
+     * @todo Add Lando support.
      */
     public static function isLocal(): bool
     {
@@ -129,7 +119,7 @@ class Environment
      *   TRUE if this request was originated in command-line (cli), FALSE
      *   otherwise.
      */
-    public static function isCli()
+    public static function isCli(): bool
     {
         return (PHP_SAPI === 'cli');
     }
