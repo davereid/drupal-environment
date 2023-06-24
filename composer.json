@@ -39,6 +39,11 @@
             "Davereid\\DrupalEnvironment\\Tests\\": "tests/src/"
         }
     },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.x-dev"
+        }
+    },
     "scripts": {
         "test": [
             "@phpstan",
