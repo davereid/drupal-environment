@@ -25,9 +25,10 @@ before_script:
   - apt update -yqq
   - apt install git libzip-dev zip -yqq
 
-  # Install PHP extensions: xdebug
+  # Install PHP extensions: xdebug and zip
   - pecl install xdebug
-  - docker-php-ext-install xdebug zip
+  - docker-php-ext-install zip
+  - docker-php-ext-enable xdebug
 
   # Install composer
   - curl -sS https://getcomposer.org/installer | php
