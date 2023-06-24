@@ -1,0 +1,26 @@
+{
+    "name": "davereid/drupal-environment",
+    "description": "Provides a helper for working with environment variables and Drupal hosting providers.",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "DaveReid\\DrupalEnvironment\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dave Reid",
+            "email": "dave@davereid.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10",
+        "roave/security-advisories": "dev-master"
+    }
+}
