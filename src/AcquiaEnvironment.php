@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\helper\Environment;
+namespace Davereid\DrupalEnvironment;
 
 /**
  * Helpers for working with the environment.
@@ -9,11 +9,12 @@ namespace Drupal\helper\Environment;
  *
  * This class should be usable outside of Drupal.
  */
-class AcquiaEnvironment extends DefaultEnvironment {
+class AcquiaEnvironment extends DefaultEnvironment
+{
 
-  /**
-   * {@inheritdoc}
-   */
-  public const ENVIRONMENT_NAME = 'AH_SITE_ENVIRONMENT';
+    /**
+     * {@inheritdoc}
+     */
+    public const ENVIRONMENT_NAME = 'AH_SITE_ENVIRONMENT';
 
 }
