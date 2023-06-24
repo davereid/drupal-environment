@@ -22,7 +22,7 @@
         "php": ">=7.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10",
+        "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^1.10",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan-deprecation-rules": "^1.1",
@@ -40,17 +40,17 @@
         }
     },
     "scripts": {
-        "check": [
-            "vendor/bin/phpstan analyse src tests --level 5"
-        ],
-        "fix": [
-            "vendor/bin/php-cs-fixer fix -v"
-        ],
         "test": [
-            "vendor/bin/phpunit tests/src"
-        ]
+            "@phpstan",
+            "@phpunit"
+        ],
+        "phpstan": "vendor/bin/phpstan analyse src tests --level 5",
+        "phpunit": "XDEBUG_MODE=coverage vendor/bin/phpunit tests/src --verbose --coverage-text"
     },
     "config": {
+        "platform": {
+            "php": "7.4"
+        },
         "allow-plugins": {
             "phpstan/extension-installer": true
         }

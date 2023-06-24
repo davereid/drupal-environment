@@ -22,8 +22,11 @@ cache:
 
 before_script:
   # Install git and zip library, the php image doesn't have installed
-  #- apt update -yqq
-  #- apt install git libzip-dev zip -yqq
+  - apt update -yqq
+  - apt install git libzip-dev zip -yqq
+
+  # Install PHP extensions: xdebug
+  - docker-php-ext-install xdebug zip
 
   # Install composer
   - curl -sS https://getcomposer.org/installer | php
@@ -33,23 +36,19 @@ before_script:
 
 test:php8.2:
   script:
-    - composer run-script check
-    - composer run-script test
+    - composer run test
 
 test:php8.1:
   image: php:8.1
   script:
-    - composer run-script check
-    - composer run-script test
+    - composer run test
 
 test:php8.0:
   image: php:8.0
   script:
-    - composer run-script check
-    - composer run-script test
+    - composer run test
 
 test:php7.4:
   image: php:7.4
   script:
-    - composer run-script check
-    - composer run-script test
+    - composer run test
