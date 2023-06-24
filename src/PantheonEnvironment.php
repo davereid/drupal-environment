@@ -2,6 +2,9 @@
 
 namespace Davereid\DrupalEnvironment;
 
+/**
+ * The Pantheon environment specifics.
+ */
 class PantheonEnvironment extends DefaultEnvironment
 {
 

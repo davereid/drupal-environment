@@ -3,11 +3,11 @@
 namespace Davereid\DrupalEnvironment;
 
 /**
- * Helpers for working with the environment.
+ * The Acquia environment specifics.
+ *
+ * @see https://docs.acquia.com/cloud-platform/develop/env-variable.html
  *
  * @todo Add isPreview() support.
- *
- * This class should be usable outside of Drupal.
  */
 class AcquiaEnvironment extends DefaultEnvironment
 {

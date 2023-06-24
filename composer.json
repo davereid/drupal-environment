@@ -40,7 +40,7 @@
     },
     "scripts": {
         "check": [
-            "vendor/bin/phpstan analyse src tests"
+            "vendor/bin/phpstan analyse src tests --level 5"
         ],
         "fix": [
             "vendor/bin/php-cs-fixer fix -v"
