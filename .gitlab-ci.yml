@@ -38,7 +38,7 @@ before_script:
 
 test:php8.2:
   script:
-    - composer run test
+    - php composer.phar run test
 
 test:php8.1:
   image: php:8.1
