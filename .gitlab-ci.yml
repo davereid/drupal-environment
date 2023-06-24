@@ -48,8 +48,3 @@ test:php8.0:
   image: php:8.0
   script:
     - composer run test
-
-test:php7.4:
-  image: php:7.4
-  script:
-    - composer run test
