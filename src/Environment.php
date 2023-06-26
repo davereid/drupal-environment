@@ -39,11 +39,16 @@ class Environment
     {
         static $class;
         if (!isset($class)) {
-            // Intentionally re-assigning the class variable here so that a match
-            // breaks the foreach loop, or we fall back to the default class.
-            foreach (static::CLASSES as $class) {
-                if (static::get($class::ENVIRONMENT_NAME)) {
-                    break;
+            if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
+                // Do nothing. The class was assigned in the if.
+            }
+            else {
+                // Intentionally re-assigning the class variable here so that a match
+                // breaks the foreach loop, or we fall back to the default class.
+                foreach (static::CLASSES as $class) {
+                    if (static::get($class::ENVIRONMENT_NAME)) {
+                        break;
+                    }
                 }
             }
         }
