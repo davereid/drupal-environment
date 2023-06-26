@@ -9,7 +9,6 @@ namespace Davereid\DrupalEnvironment;
  *
  * @method static bool isAcquia()
  * @method static bool isPantheon()
- * @method static bool isDefault()
  * @method static string getEnvironment()
  * @method static bool isPreview()
  * @method static bool isCi()
@@ -23,23 +22,8 @@ class Environment
     public const CLASSES = [
         'isAcquia' => AcquiaEnvironment::class,
         'isPantheon' => PantheonEnvironment::class,
-        'isDefault' => DefaultEnvironment::class,
+        NULL => DefaultEnvironment::class,
     ];
-
-    /**
-     * Provide a shortcut for calling methods on the environment classes.
-     */
-    public static function __callStatic(string $name, array $arguments): mixed
-    {
-        $class = static::getEnvironmentClass();
-
-        // Provide special case for methods like isPantheon() or isAcquia().
-        if (isset(static::CLASSES[$name])) {
-            return $class === static::CLASSES[$name];
-        }
-
-        return $class::$name(...$arguments);
-    }
 
     /**
      * Determine which environment class to use.
@@ -63,6 +47,21 @@ class Environment
     }
 
     /**
+     * Provide a shortcut for calling methods on the environment classes.
+     */
+    public static function __callStatic(string $name, array $arguments): mixed
+    {
+        $class = static::getEnvironmentClass();
+
+        // Provide special case for methods like isPantheon() or isAcquia().
+        if (isset(static::CLASSES[$name])) {
+            return $class === static::CLASSES[$name];
+        }
+
+        return $class::$name(...$arguments);
+    }
+
+    /**
      * Get an environment variable.
      *
      * @param string $name
@@ -73,8 +72,11 @@ class Environment
      */
     public static function get(string $name): mixed
     {
-        // @todo Should this have static caching?
-        return getenv($name);
+        static $cache = [];
+        if (!array_key_exists($name, $cache)) {
+            $cache[$name] = getenv($name);
+        }
+        return $cache[$name];
     }
 
     /**
