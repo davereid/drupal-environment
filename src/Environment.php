@@ -98,7 +98,7 @@ class Environment
      */
     public static function isLocal(): bool
     {
-        return static::getEnvironment() === 'local' || static::isDdev();
+        return static::getEnvironment() === 'local' || static::isDdev() || static::isLando();
     }
 
     /**
@@ -110,6 +110,17 @@ class Environment
     public static function isDdev(): bool
     {
         return (bool)static::get('IS_DDEV_PROJECT');
+    }
+
+    /**
+     * Determine if this is a Localdev or Lando environment.
+     *
+     * @return bool
+     *   TRUE if this is a Localdev or Lando environment.
+     */
+    public static function isLando(): bool
+    {
+        return static::getEnvironment() === 'lando';
     }
 
     /**
