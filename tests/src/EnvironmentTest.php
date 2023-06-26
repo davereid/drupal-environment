@@ -18,7 +18,7 @@ final class EnvironmentTest extends TestCase
      */
     public function testEnvironment(array $environment_variables, array $method_tests): void {
         foreach ($environment_variables as $name => $value) {
-            putenv("$name=$value");
+            isset($value) ? putenv("$name=$value") : putenv($name);
         }
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
@@ -68,7 +68,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-empty' => [
                 [
                     'PANTHEON_ENVIRONMENT' => '',
                 ],
@@ -87,7 +87,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-live' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'live',
                 ],
@@ -107,7 +107,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-test' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'test',
                 ],
@@ -127,7 +127,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-dev' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'dev',
                 ],
@@ -147,7 +147,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-multidev' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'pr-1',
                 ],
@@ -167,7 +167,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-ci' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'ci',
                 ],
@@ -187,7 +187,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => FALSE,
                 ],
             ],
-            [
+            'pantheon-local' => [
                 [
                     'PANTHEON_ENVIRONMENT' => 'local',
                 ],
@@ -209,6 +209,7 @@ final class EnvironmentTest extends TestCase
             ],
             'circleci' => [
                 [
+                    'ENVIRONMENT' => NULL,
                     'CI' => 'true',
                     'CIRCLECI' => 'true'
                 ],
@@ -229,6 +230,7 @@ final class EnvironmentTest extends TestCase
             ],
             'github' => [
                 [
+                    'ENVIRONMENT' => NULL,
                     'CI' => 'true',
                     'GITHUB_WORKFLOW' => 'test'
                 ],
@@ -249,6 +251,7 @@ final class EnvironmentTest extends TestCase
             ],
             'gitlab' => [
                 [
+                    'ENVIRONMENT' => NULL,
                     'CI' => 'true',
                     'GITLAB_CI' => 'true'
                 ],
@@ -269,6 +272,7 @@ final class EnvironmentTest extends TestCase
             ],
             'ddev' => [
                 [
+                    'ENVIRONMENT' => NULL,
                     'IS_DDEV_PROJECT' => TRUE,
                 ],
                 [
@@ -288,6 +292,7 @@ final class EnvironmentTest extends TestCase
             ],
             'lando' => [
                 [
+                    'ENVIRONMENT' => NULL,
                     'LANDO_INFO' => '[...]',
                 ],
                 [
