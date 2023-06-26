@@ -207,6 +207,66 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => TRUE,
                 ],
             ],
+            'circleci' => [
+                [
+                    'CI' => 'true',
+                    'CIRCLECI' => 'true'
+                ],
+                [
+                    'getEnvironment' => 'ci',
+                    'isAcquia' => FALSE,
+                    'isCircleCi' => TRUE,
+                    'isGitHubWorkflow' => FALSE,
+                    'isGitLabCi' => FALSE,
+                    'isPantheon' => FALSE,
+                    'isProduction' => FALSE,
+                    'isStaging' => FALSE,
+                    'isDevelopment' => FALSE,
+                    'isPreview' => FALSE,
+                    'isCi' => TRUE,
+                    'isLocal' => FALSE,
+                ],
+            ],
+            'github' => [
+                [
+                    'CI' => 'true',
+                    'GITHUB_WORKFLOW' => 'test'
+                ],
+                [
+                    'getEnvironment' => 'ci',
+                    'isAcquia' => FALSE,
+                    'isCircleCi' => FALSE,
+                    'isGitHubWorkflow' => TRUE,
+                    'isGitLabCi' => FALSE,
+                    'isPantheon' => FALSE,
+                    'isProduction' => FALSE,
+                    'isStaging' => FALSE,
+                    'isDevelopment' => FALSE,
+                    'isPreview' => FALSE,
+                    'isCi' => TRUE,
+                    'isLocal' => FALSE,
+                ],
+            ],
+            'gitlab' => [
+                [
+                    'CI' => 'true',
+                    'GITLAB_CI' => 'true'
+                ],
+                [
+                    'getEnvironment' => 'ci',
+                    'isAcquia' => FALSE,
+                    'isCircleCi' => FALSE,
+                    'isGitHubWorkflow' => FALSE,
+                    'isGitLabCi' => TRUE,
+                    'isPantheon' => FALSE,
+                    'isProduction' => FALSE,
+                    'isStaging' => FALSE,
+                    'isDevelopment' => FALSE,
+                    'isPreview' => FALSE,
+                    'isCi' => TRUE,
+                    'isLocal' => FALSE,
+                ],
+            ],
             'ddev' => [
                 [
                     'IS_DDEV_PROJECT' => TRUE,
