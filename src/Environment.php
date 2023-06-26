@@ -120,7 +120,7 @@ class Environment
      */
     public static function isLando(): bool
     {
-        return static::getEnvironment() === 'lando';
+        return (bool)static::get('LANDO_INFO');
     }
 
     /**
