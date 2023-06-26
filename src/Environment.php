@@ -25,7 +25,7 @@ class Environment
     public const CLASSES = [
         'isAcquia' => AcquiaEnvironment::class,
         'isPantheon' => PantheonEnvironment::class,
-        NULL => DefaultEnvironment::class,
+        null => DefaultEnvironment::class,
     ];
 
     /**
