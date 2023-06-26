@@ -31,7 +31,8 @@ before_script:
   - docker-php-ext-enable xdebug
 
   # Install Composer
-  - curl -sS https://getcomposer.org/installer | php --install-dir=/usr/local/bin --filename=composer
+  - curl --silent https://getcomposer.org/installer --output composer-setup.php
+  - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
   # Install all project dependencies
   - composer install
