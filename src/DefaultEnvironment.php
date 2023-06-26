@@ -148,13 +148,6 @@ class DefaultEnvironment
                 'fg_color' => '#990055',
             ];
         }
-        if (static::isCi()) {
-            return [
-                'name' => 'CI',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#F2F7F5',
-            ];
-        }
         if (Environment::isLocal()) {
             return [
                 'name' => 'Local',

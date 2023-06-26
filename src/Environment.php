@@ -7,14 +7,17 @@ namespace Davereid\DrupalEnvironment;
  *
  * @todo Add Platform.sh support
  *
+ * @method static string getEnvironment()
  * @method static bool isAcquia()
  * @method static bool isPantheon()
- * @method static string getEnvironment()
  * @method static bool isProduction()
  * @method static bool isStaging()
  * @method static bool isDevelopment()
  * @method static bool isPreview()
- * @method static bool isCi()
+ * @mtehod static bool isCi()
+ * @mtehod static bool isGitHubWorkflow()
+ * @mtehod static bool isGitLabCi()
+ * @mtehod static bool isCircleCi()
  * @method static array|null getIndicatorConfig()
  */
 class Environment
@@ -26,6 +29,9 @@ class Environment
     public const CLASSES = [
         'isAcquia' => AcquiaEnvironment::class,
         'isPantheon' => PantheonEnvironment::class,
+        'isGitHubWorkflow' => GitHubWorkflowEnvironment::class,
+        'isGitLabCi' => GitLabCiEnvironment::class,
+        'isCircleCi' => CircleCiEnvironment::class,
         null => DefaultEnvironment::class,
     ];
 
@@ -128,6 +134,8 @@ class Environment
      *
      * @return bool
      *   TRUE if this is a Tugboat environment.
+     *
+     * @todo Should this be its own environment class?
      */
     public static function isTugboat(): bool
     {
