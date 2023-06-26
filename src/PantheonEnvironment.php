@@ -4,6 +4,9 @@ namespace Davereid\DrupalEnvironment;
 
 /**
  * The Pantheon environment specifics.
+ *
+ * @see https://docs.pantheon.io/pantheon-workflow
+ * @see https://docs.pantheon.io/guides/multidev
  */
 class PantheonEnvironment extends DefaultEnvironment
 {
@@ -17,11 +20,6 @@ class PantheonEnvironment extends DefaultEnvironment
      * {@inheritdoc}
      */
     public const PRODUCTION = 'live';
-
-    /**
-     * {@inheritdoc}
-     */
-    public const STAGING = 'test';
 
     /**
      * {@inheritdoc}

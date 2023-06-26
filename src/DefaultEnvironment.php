@@ -20,14 +20,14 @@ class DefaultEnvironment
      *
      * @var string
      */
-    public const PRODUCTION = 'production';
+    public const PRODUCTION = 'prod';
 
     /**
      * The default staging environment name.
      *
      * @var string
      */
-    public const STAGING = 'staging';
+    public const STAGING = 'test';
 
     /**
      * The default development environment name.
