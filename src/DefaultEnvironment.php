@@ -111,4 +111,62 @@ class DefaultEnvironment
         return static::getEnvironment() === static::CI;
     }
 
+    /**
+     * Get the environment_indicator configuration. for this environment.
+     *
+     * @return array|null
+     *   The environment_indicator configuration or NULL if one could not be provided.
+     *
+     * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
+     */
+    public static function getIndicatorConfig(): ?array {
+        if (static::isProduction()) {
+            return [
+                'name' => 'Production',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#e7131a',
+            ];
+        }
+        if (static::isStaging()) {
+            return [
+                'name' => 'Staging',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#b85c00',
+            ];
+        }
+        if (static::isDevelopment()) {
+            return [
+                'name' => 'Development',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#307b24',
+            ];
+        }
+        if (static::isPreview()) {
+            return [
+                'name' => 'Preview',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#990055',
+            ];
+        }
+        if (static::isCi()) {
+            return [
+                'name' => 'CI',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#F2F7F5',
+            ];
+        }
+        if (Environment::isLocal()) {
+            return [
+                'name' => 'Local',
+                'bg_color' => '#ffffff',
+                'fg_color' => '#505050',
+            ];
+        }
+
+        // Unknown environment condition.
+        $environment = static::getEnvironment();
+        trigger_error("Unknown environment {$environment} in " . __METHOD__, E_USER_WARNING);
+        return NULL;
+    }
+
 }
