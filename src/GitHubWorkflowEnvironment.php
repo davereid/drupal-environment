@@ -23,12 +23,4 @@ class GitHubWorkflowEnvironment extends DefaultEnvironment
         return static::CI;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function isCi(): bool
-    {
-        return TRUE;
-    }
-
 }
