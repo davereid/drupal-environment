@@ -157,8 +157,6 @@ class DefaultEnvironment
         }
 
         // Unknown environment condition.
-        $environment = static::getEnvironment();
-        trigger_error("Unknown environment {$environment} in " . __METHOD__, E_USER_WARNING);
         return NULL;
     }
 

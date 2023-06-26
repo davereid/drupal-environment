@@ -19,6 +19,7 @@ final class EnvironmentTest extends TestCase
     public function testEnvironment(array $environment_variables, array $method_tests): void {
         $environment_variables += [
             'ENVIRONMENT' => NULL,
+            'PANTHEON_ENVIRONMENT' => NULL,
             'CI' => NULL,
             'GITLAB_CI' => NULL,
         ];
@@ -49,7 +50,9 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => FALSE,
                     'isPreview' => FALSE,
                     'isCi' => FALSE,
+                    'isCli' => (PHP_SAPI === 'cli'),
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                     'getComposerFilename' => 'composer.json',
                     'getComposerLockFilename' => 'composer.lock',
                 ],
@@ -71,6 +74,11 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Production',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#e7131a',
+                    ],
                 ],
             ],
             'pantheon-empty' => [
@@ -90,6 +98,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                 ],
             ],
             'pantheon-live' => [
@@ -110,6 +119,11 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Production',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#e7131a',
+                    ],
                 ],
             ],
             'pantheon-test' => [
@@ -130,6 +144,11 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Staging',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#b85c00',
+                    ],
                 ],
             ],
             'pantheon-dev' => [
@@ -150,6 +169,11 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Development',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#307b24',
+                    ],
                 ],
             ],
             'pantheon-multidev' => [
@@ -170,6 +194,11 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => TRUE,
                     'isCi' => FALSE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Preview',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#990055',
+                    ],
                 ],
             ],
             'pantheon-ci' => [
@@ -190,6 +219,7 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => FALSE,
                     'isCi' => TRUE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                 ],
             ],
             'pantheon-local' => [
@@ -210,6 +240,11 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => TRUE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Local',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#505050',
+                    ],
                 ],
             ],
             'circleci' => [
@@ -230,6 +265,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => TRUE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                 ],
             ],
             'github' => [
@@ -250,6 +286,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => TRUE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                 ],
             ],
             'gitlab' => [
@@ -270,6 +307,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => TRUE,
                     'isLocal' => FALSE,
+                    'getIndicatorConfig' => NULL,
                 ],
             ],
             'ddev' => [
@@ -289,6 +327,11 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => TRUE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Local',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#505050',
+                    ],
                 ],
             ],
             'lando' => [
@@ -308,6 +351,11 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => FALSE,
                     'isCi' => FALSE,
                     'isLocal' => TRUE,
+                    'getIndicatorConfig' => [
+                        'name' => 'Local',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#505050',
+                    ],
                 ],
             ],
             'composer' => [
