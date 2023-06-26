@@ -15,6 +15,7 @@ namespace Davereid\DrupalEnvironment;
  * @method static bool isDevelopment()
  * @method static bool isPreview()
  * @method static bool isCi()
+ * @method static array|null getIndicatorConfig()
  */
 class Environment
 {

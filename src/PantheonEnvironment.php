@@ -39,11 +39,13 @@ class PantheonEnvironment extends DefaultEnvironment
      */
     public static function isMultidev(): bool
     {
+        // Because the PANTHEON_ENVIRONMENT could be potentially anything,
+        // we need to narrow out all the known environments.
         return !static::isProduction()
             && !static::isStaging()
             && !static::isDevelopment()
             && !static::isCi()
-            && Environment::isLocal();
+            && !Environment::isLocal();
     }
 
 }
