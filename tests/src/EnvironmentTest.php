@@ -12,6 +12,16 @@ final class EnvironmentTest extends TestCase
 {
 
     /**
+     * Test the commandExists() method.
+     *
+     * @covers \Davereid\DrupalEnvironment\Environment::commandExists
+     */
+    public function testCommandExists(): void {
+        $this->assertTrue(Environment::commandExists('php'));
+        $this->assertFalse(Environment::commandExists('invalid-command'));
+    }
+
+    /**
      * Test the environment methods.
      *
      * @dataProvider providerEnvironment
