@@ -16,6 +16,16 @@ class PantheonEnvironment extends DefaultEnvironment
     /**
      * {@inheritdoc}
      */
+    public const PRODUCTION = 'live';
+
+    /**
+     * {@inheritdoc}
+     */
+    public const STAGING = 'test';
+
+    /**
+     * {@inheritdoc}
+     */
     public static function isPreview(): bool
     {
         return static::isMultidev() || parent::isPreview();
@@ -29,8 +39,11 @@ class PantheonEnvironment extends DefaultEnvironment
      */
     public static function isMultidev(): bool
     {
-        return !in_array(static::getEnvironment(), ['dev', 'test', 'live'],
-                true) && !Environment::isCi() && !Environment::isLocal();
+        return !static::isProduction()
+            && !static::isStaging()
+            && !static::isDevelopment()
+            && !static::isCi()
+            && Environment::isLocal();
     }
 
 }

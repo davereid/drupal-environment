@@ -10,6 +10,9 @@ namespace Davereid\DrupalEnvironment;
  * @method static bool isAcquia()
  * @method static bool isPantheon()
  * @method static string getEnvironment()
+ * @method static bool isProduction()
+ * @method static bool isStaging()
+ * @method static bool isDevelopment()
  * @method static bool isPreview()
  * @method static bool isCi()
  */
