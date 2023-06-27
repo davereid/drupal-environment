@@ -26,18 +26,33 @@ final class EnvironmentTest extends TestCase
      *
      * @dataProvider providerEnvironment
      */
-    public function testEnvironment(array $environment_variables, array $method_tests): void {
-        $environment_variables += [
+    public function testEnvironment(array $variables, array $method_tests): void {
+        $variables += [
             'ENVIRONMENT' => NULL,
             'PANTHEON_ENVIRONMENT' => NULL,
+            // When running under CI, we need to ensure these are reset.
             'CI' => NULL,
             'GITLAB_CI' => NULL,
+            'GITHUB_WORKFLOW' => NULL,
         ];
-        foreach ($environment_variables as $name => $value) {
-            isset($value) ? putenv("$name=$value") : putenv($name);
-        }
+        $originals = [];
+        $this->setEnvironmentVariables($variables, $originals);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
+        }
+        $this->setEnvironmentVariables($originals);
+    }
+
+    /**
+     * @param array $variables
+     * @param array|null $originals
+     */
+    protected function setEnvironmentVariables(array $variables, ?array &$originals = NULL): void {
+        foreach ($variables as $name => $value) {
+            if (isset($originals)) {
+                $originals[$name] = getenv($name) ?: null;
+            }
+            isset($value) ? putenv("$name=$value") : putenv($name);
         }
     }
 

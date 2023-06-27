@@ -9,7 +9,7 @@ jobs:
   dependabot:
     name: Dependabot automerge
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - uses: actions/checkout@v3
       - name: Dependabot metadata
