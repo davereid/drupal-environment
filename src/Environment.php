@@ -85,7 +85,7 @@ class Environment
      * @return mixed
      *   The environment variable, if it's set.
      */
-    public static function get(string $name): mixed
+    public static function get(string $name)
     {
         static $cache = [];
         if (!array_key_exists($name, $cache)) {
