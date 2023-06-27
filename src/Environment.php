@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * Helpers for working with the Drupal environment.

@@ -32,12 +32,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Davereid\\DrupalEnvironment\\": "src/"
+            "DrupalEnvironment\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Davereid\\DrupalEnvironment\\Tests\\": "tests/src/"
+            "DrupalEnvironment\\Tests\\": "tests/src/"
         }
     },
     "extra": {
@@ -46,8 +46,11 @@
         }
     },
     "scripts": {
+        "lint": [
+            "@phpcs",
+            "@phpstan"
+        ],
         "test": [
-            "@phpstan",
             "@phpunit"
         ],
         "phpcs": "vendor/bin/phpcs --standard=PSR1,PSR2 src tests",

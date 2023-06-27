@@ -1,8 +1,8 @@
 <?php
 
-namespace Davereid\DrupalEnvironment\Tests;
+namespace DrupalEnvironment\Tests;
 
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -37,17 +37,19 @@ final class EnvironmentTest extends TestCase
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
         ];
-        $originals = [];
-        $this->setEnvironmentVariables($variables, $originals);
+        $this->setEnvironmentVariables($variables);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
         }
-        $this->setEnvironmentVariables($originals);
     }
 
     /**
+     * Set environment variables manually for testing.
+     *
      * @param array $variables
+     *   The variable values to set keyed by name.
      * @param array|null $originals
+     *   If provided will be populated with the original variable values keyed by name.
      */
     protected function setEnvironmentVariables(array $variables, ?array &$originals = null): void
     {

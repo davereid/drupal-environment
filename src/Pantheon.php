@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * The Pantheon environment specifics.
