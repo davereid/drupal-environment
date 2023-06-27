@@ -22,5 +22,4 @@ class CircleCi extends DefaultEnvironment
     {
         return static::CI;
     }
-
 }

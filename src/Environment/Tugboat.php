@@ -20,7 +20,7 @@ class Tugboat extends DefaultEnvironment
      */
     public static function isPreview(): bool
     {
-        return TRUE;
+        return true;
     }
 
 }

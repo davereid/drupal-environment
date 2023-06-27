@@ -55,8 +55,7 @@ class Environment
         if (!isset($class)) {
             if ($class = getenv('DRUPAL_ENVIRONMENT_CLASS')) {
                 // Do nothing. The class was assigned in the if.
-            }
-            else {
+            } else {
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach (static::CLASSES as $class) {

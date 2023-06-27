@@ -19,5 +19,4 @@ class Acquia extends DefaultEnvironment
      * {@inheritdoc}
      */
     public const ENVIRONMENT_NAME = 'AH_SITE_ENVIRONMENT';
-
 }

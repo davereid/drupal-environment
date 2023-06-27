@@ -157,7 +157,8 @@ class DefaultEnvironment
      *
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
      */
-    public static function getIndicatorConfig(): ?array {
+    public static function getIndicatorConfig(): ?array
+    {
         if (static::isProduction()) {
             return [
                 'name' => 'Production',
@@ -195,7 +196,7 @@ class DefaultEnvironment
         }
 
         // Unknown environment condition.
-        return NULL;
+        return null;
     }
 
 }
