@@ -12,6 +12,7 @@ namespace DrupalEnvironment;
  * @method static bool isStaging()
  * @method static bool isDevelopment()
  * @method static bool isPreview()
+ * @method static bool isTugboat()
  * @method static bool isCi()
  * @method static bool isGitHubWorkflow()
  * @method static bool isGitLabCi()
