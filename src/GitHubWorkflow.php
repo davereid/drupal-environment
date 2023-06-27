@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment\Environment;
+namespace Davereid\DrupalEnvironment;
 
 /**
  * The GitHub Workflow environment specifics.

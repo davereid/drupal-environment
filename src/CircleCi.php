@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment\Environment;
+namespace Davereid\DrupalEnvironment;
 
 /**
  * The CircleCI environment specifics.
