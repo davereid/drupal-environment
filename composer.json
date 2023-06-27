@@ -19,7 +19,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.4"
+        "php": ">=7.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
@@ -53,9 +53,6 @@
         "phpunit": "XDEBUG_MODE=coverage vendor/bin/phpunit tests/src --verbose --coverage-text"
     },
     "config": {
-        "platform": {
-            "php": "7.4"
-        },
         "allow-plugins": {
             "phpstan/extension-installer": true
         }
