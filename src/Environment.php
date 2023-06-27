@@ -44,7 +44,7 @@ class Environment
     {
         static $class;
         if (!isset($class)) {
-            if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
+            if ($class = getenv('DRUPAL_ENVIRONMENT_CLASS')) {
                 // Do nothing. The class was assigned in the if.
             }
             else {
