@@ -4,6 +4,6 @@ plugins:
     config:
       standard: "PSR1,PSR2"
   phpmd:
-    enabled: true
+    enabled: false
 exclude_patterns:
   - "tests/"
