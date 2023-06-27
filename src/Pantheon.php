@@ -7,6 +7,8 @@ namespace Davereid\DrupalEnvironment;
  *
  * @see https://docs.pantheon.io/pantheon-workflow
  * @see https://docs.pantheon.io/guides/multidev
+ *
+ * @internal
  */
 class Pantheon extends DefaultEnvironment
 {

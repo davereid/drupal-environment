@@ -6,6 +6,8 @@ namespace Davereid\DrupalEnvironment;
  * The Tugboat environment specifics.
  *
  * @see https://docs.tugboatqa.com/reference/environment-variables/
+ *
+ * @internal
  */
 class Tugboat extends DefaultEnvironment
 {

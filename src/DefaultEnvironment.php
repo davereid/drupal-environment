@@ -4,6 +4,8 @@ namespace Davereid\DrupalEnvironment;
 
 /**
  * The standard environment.
+ *
+ * @internal
  */
 class DefaultEnvironment
 {

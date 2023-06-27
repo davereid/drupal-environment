@@ -6,6 +6,8 @@ namespace Davereid\DrupalEnvironment;
  * The CircleCI environment specifics.
  *
  * @see https://circleci.com/docs/variables/
+ *
+ * @internal
  */
 class CircleCi extends DefaultEnvironment
 {

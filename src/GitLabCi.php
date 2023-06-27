@@ -6,6 +6,8 @@ namespace Davereid\DrupalEnvironment;
  * The GitlabCi environment specifics.
  *
  * @see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+ *
+ * @internal
  */
 class GitLabCi extends DefaultEnvironment
 {

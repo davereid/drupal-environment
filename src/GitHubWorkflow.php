@@ -6,6 +6,8 @@ namespace Davereid\DrupalEnvironment;
  * The GitHub Workflow environment specifics.
  *
  * @see https://docs.github.com/en/actions/learn-github-actions/variables
+ *
+ * @internal
  */
 class GitHubWorkflow extends DefaultEnvironment
 {

@@ -11,6 +11,8 @@ namespace Davereid\DrupalEnvironment;
  * @todo Add isPreview() support.
  * @todo Should the 'ide' environment be detected as local?
  * @todo Add support for https://docs.acquia.com/ra/environment.html
+ *
+ * @internal
  */
 class Acquia extends DefaultEnvironment
 {
