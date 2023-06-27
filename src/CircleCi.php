@@ -1,13 +1,15 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * The CircleCI environment specifics.
  *
  * @see https://circleci.com/docs/variables/
+ *
+ * @internal
  */
-class CircleCiEnvironment extends DefaultEnvironment
+class CircleCi extends DefaultEnvironment
 {
 
     /**
@@ -22,5 +24,4 @@ class CircleCiEnvironment extends DefaultEnvironment
     {
         return static::CI;
     }
-
 }

@@ -1,11 +1,9 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * Helpers for working with the Drupal environment.
- *
- * @todo Add Platform.sh support
  *
  * @method static string getEnvironment()
  * @method static bool isAcquia()
@@ -14,6 +12,7 @@ namespace Davereid\DrupalEnvironment;
  * @method static bool isStaging()
  * @method static bool isDevelopment()
  * @method static bool isPreview()
+ * @method static bool isTugboat()
  * @method static bool isCi()
  * @method static bool isGitHubWorkflow()
  * @method static bool isGitLabCi()
@@ -27,11 +26,12 @@ class Environment
      * The currently supported environment classes.
      */
     public const CLASSES = [
-        'isAcquia' => AcquiaEnvironment::class,
-        'isPantheon' => PantheonEnvironment::class,
-        'isGitHubWorkflow' => GitHubWorkflowEnvironment::class,
-        'isGitLabCi' => GitLabCiEnvironment::class,
-        'isCircleCi' => CircleCiEnvironment::class,
+        'isAcquia' => Acquia::class,
+        'isPantheon' => Pantheon::class,
+        'isTugboat' => Tugboat::class,
+        'isGitHubWorkflow' => GitHubWorkflow::class,
+        'isGitLabCi' => GitLabCi::class,
+        'isCircleCi' => CircleCi::class,
         null => DefaultEnvironment::class,
     ];
 
@@ -41,14 +41,13 @@ class Environment
      * @return string
      *   The class name.
      */
-    public static function getEnvironmentClass()
+    public static function getEnvironmentClass(): string
     {
         static $class;
         if (!isset($class)) {
             if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
                 // Do nothing. The class was assigned in the if.
-            }
-            else {
+            } else {
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach (static::CLASSES as $class) {
@@ -132,19 +131,6 @@ class Environment
     }
 
     /**
-     * Determine if this is a Tugboat environment.
-     *
-     * @return bool
-     *   TRUE if this is a Tugboat environment.
-     *
-     * @todo Should this be its own environment class?
-     */
-    public static function isTugboat(): bool
-    {
-        return static::getEnvironment() === 'tugboat';
-    }
-
-    /**
      * Determines whether the current request is a command-line one.
      *
      * @return bool
@@ -190,8 +176,7 @@ class Environment
      */
     public static function getComposerLockFilename(): string
     {
-        $composer_filename = static::getComposerFilename();
-        return pathinfo($composer_filename, PATHINFO_FILENAME) . '.lock';
+        $filename = static::getComposerFilename();
+        return pathinfo($filename, PATHINFO_FILENAME) . '.lock';
     }
-
 }

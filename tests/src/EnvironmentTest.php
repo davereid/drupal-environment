@@ -1,8 +1,8 @@
 <?php
 
-namespace Davereid\DrupalEnvironment\Tests;
+namespace DrupalEnvironment\Tests;
 
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,10 +13,9 @@ final class EnvironmentTest extends TestCase
 
     /**
      * Test the commandExists() method.
-     *
-     * @covers \Davereid\DrupalEnvironment\Environment::commandExists
      */
-    public function testCommandExists(): void {
+    public function testCommandExists(): void
+    {
         $this->assertTrue(Environment::commandExists('php'));
         $this->assertFalse(Environment::commandExists('invalid-command'));
     }
@@ -26,28 +25,32 @@ final class EnvironmentTest extends TestCase
      *
      * @dataProvider providerEnvironment
      */
-    public function testEnvironment(array $variables, array $method_tests): void {
+    public function testEnvironment(array $variables, array $method_tests): void
+    {
         $variables += [
-            'ENVIRONMENT' => NULL,
-            'PANTHEON_ENVIRONMENT' => NULL,
+            'ENVIRONMENT' => null,
+            'PANTHEON_ENVIRONMENT' => null,
             // When running under CI, we need to ensure these are reset.
-            'CI' => NULL,
-            'GITLAB_CI' => NULL,
-            'GITHUB_WORKFLOW' => NULL,
+            'CI' => null,
+            'GITLAB_CI' => null,
+            'GITHUB_WORKFLOW' => null,
         ];
-        $originals = [];
-        $this->setEnvironmentVariables($variables, $originals);
+        $this->setEnvironmentVariables($variables);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
         }
-        $this->setEnvironmentVariables($originals);
     }
 
     /**
+     * Set environment variables manually for testing.
+     *
      * @param array $variables
+     *   The variable values to set keyed by name.
      * @param array|null $originals
+     *   If provided will be populated with the original variable values keyed by name.
      */
-    protected function setEnvironmentVariables(array $variables, ?array &$originals = NULL): void {
+    protected function setEnvironmentVariables(array $variables, ?array &$originals = null): void
+    {
         foreach ($variables as $name => $value) {
             if (isset($originals)) {
                 $originals[$name] = getenv($name) ?: null;
@@ -59,25 +62,27 @@ final class EnvironmentTest extends TestCase
     /**
      * Data provider for ::testEnvironment.
      */
-    public function providerEnvironment(): array {
+    public function providerEnvironment(): array
+    {
         return [
             'default-state' => [
                 [],
                 [
                     'getEnvironment' => '',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
                     'isCli' => (PHP_SAPI === 'cli'),
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                     'getComposerFilename' => 'composer.json',
                     'getComposerLockFilename' => 'composer.lock',
                 ],
@@ -88,17 +93,18 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'prod',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => TRUE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => true,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#ffffff',
@@ -112,18 +118,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => '',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'pantheon-live' => [
@@ -132,18 +139,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'live',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => TRUE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isMultidev' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => true,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isMultidev' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#ffffff',
@@ -157,18 +165,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'test',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => FALSE,
-                    'isStaging' => TRUE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isMultidev' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => true,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isMultidev' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
                         'bg_color' => '#ffffff',
@@ -182,18 +191,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'dev',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => TRUE,
-                    'isPreview' => FALSE,
-                    'isMultidev' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => true,
+                    'isPreview' => false,
+                    'isMultidev' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
                         'bg_color' => '#ffffff',
@@ -207,18 +217,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'pr-1',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => TRUE,
-                    'isMultidev' => TRUE,
-                    'isCi' => FALSE,
-                    'isLocal' => FALSE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => true,
+                    'isMultidev' => true,
+                    'isCi' => false,
+                    'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
                         'bg_color' => '#ffffff',
@@ -232,19 +243,20 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'ci',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isMultidev' => FALSE,
-                    'isCi' => TRUE,
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isMultidev' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'pantheon-local' => [
@@ -253,22 +265,48 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'local',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => TRUE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isMultidev' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => TRUE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isMultidev' => false,
+                    'isCi' => false,
+                    'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#ffffff',
                         'fg_color' => '#505050',
+                    ],
+                ],
+            ],
+            'tugboat' => [
+                [
+                    'TUGBOAT_PREVIEW_NAME' => 'phpunit',
+                ],
+                [
+                    'getEnvironment' => 'phpunit',
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => true,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => true,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Preview',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#990055',
                     ],
                 ],
             ],
@@ -279,18 +317,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'ci',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => TRUE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => TRUE,
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isAcquia' => false,
+                    'isCircleCi' => true,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'github' => [
@@ -300,18 +339,19 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'ci',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => TRUE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => TRUE,
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => true,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'gitlab' => [
@@ -321,37 +361,39 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => 'ci',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => TRUE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => TRUE,
-                    'isLocal' => FALSE,
-                    'getIndicatorConfig' => NULL,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => true,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'ddev' => [
                 [
-                    'IS_DDEV_PROJECT' => TRUE,
+                    'IS_DDEV_PROJECT' => true,
                 ],
                 [
                     'getEnvironment' => '',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => TRUE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#ffffff',
@@ -365,17 +407,18 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironment' => '',
-                    'isAcquia' => FALSE,
-                    'isCircleCi' => FALSE,
-                    'isGitHubWorkflow' => FALSE,
-                    'isGitLabCi' => FALSE,
-                    'isPantheon' => FALSE,
-                    'isProduction' => FALSE,
-                    'isStaging' => FALSE,
-                    'isDevelopment' => FALSE,
-                    'isPreview' => FALSE,
-                    'isCi' => FALSE,
-                    'isLocal' => TRUE,
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#ffffff',
@@ -394,5 +437,4 @@ final class EnvironmentTest extends TestCase
             ]
         ];
     }
-
 }

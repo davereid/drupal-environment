@@ -1,9 +1,11 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * The standard environment.
+ *
+ * @internal
  */
 class DefaultEnvironment
 {
@@ -37,11 +39,32 @@ class DefaultEnvironment
     public const DEVELOPMENT = 'dev';
 
     /**
+     * The default preview environment name.
+     *
+     * @var string
+     */
+    public const PREVIEW = 'preview';
+
+    /**
      * The default CI environment name.
      *
      * @var string
      */
     public const CI = 'ci';
+
+    /**
+     * Get an environment variable.
+     *
+     * @param string $name
+     *   The name of the environment variable to retrieve.
+     *
+     * @return mixed
+     *   The environment variable, if it's set.
+     */
+    public static function get(string $name)
+    {
+        return Environment::get($name);
+    }
 
     /**
      * Return the environment name.
@@ -53,7 +76,7 @@ class DefaultEnvironment
      */
     public static function getEnvironment(): string
     {
-        return Environment::get(static::ENVIRONMENT_NAME);
+        return static::get(static::ENVIRONMENT_NAME);
     }
 
     /**
@@ -97,7 +120,7 @@ class DefaultEnvironment
      */
     public static function isPreview(): bool
     {
-        return Environment::isTugboat();
+        return static::getEnvironment() === static::PREVIEW;
     }
 
     /**
@@ -112,6 +135,17 @@ class DefaultEnvironment
     }
 
     /**
+     * Determine if this is a local environment.
+     *
+     * @return bool
+     *   TRUE if this is local.
+     */
+    public static function isLocal(): bool
+    {
+        return Environment::isLocal();
+    }
+
+    /**
      * Get the environment_indicator configuration. for this environment.
      *
      * @return array|null
@@ -119,7 +153,8 @@ class DefaultEnvironment
      *
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
      */
-    public static function getIndicatorConfig(): ?array {
+    public static function getIndicatorConfig(): ?array
+    {
         if (static::isProduction()) {
             return [
                 'name' => 'Production',
@@ -148,7 +183,7 @@ class DefaultEnvironment
                 'fg_color' => '#990055',
             ];
         }
-        if (Environment::isLocal()) {
+        if (static::isLocal()) {
             return [
                 'name' => 'Local',
                 'bg_color' => '#ffffff',
@@ -157,7 +192,6 @@ class DefaultEnvironment
         }
 
         // Unknown environment condition.
-        return NULL;
+        return null;
     }
-
 }

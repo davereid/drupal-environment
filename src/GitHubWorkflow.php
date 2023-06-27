@@ -1,13 +1,15 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * The GitHub Workflow environment specifics.
  *
  * @see https://docs.github.com/en/actions/learn-github-actions/variables
+ *
+ * @internal
  */
-class GitHubWorkflowEnvironment extends DefaultEnvironment
+class GitHubWorkflow extends DefaultEnvironment
 {
 
     /**
@@ -22,5 +24,4 @@ class GitHubWorkflowEnvironment extends DefaultEnvironment
     {
         return static::CI;
     }
-
 }

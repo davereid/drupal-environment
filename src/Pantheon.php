@@ -1,14 +1,16 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace DrupalEnvironment;
 
 /**
  * The Pantheon environment specifics.
  *
  * @see https://docs.pantheon.io/pantheon-workflow
  * @see https://docs.pantheon.io/guides/multidev
+ *
+ * @internal
  */
-class PantheonEnvironment extends DefaultEnvironment
+class Pantheon extends DefaultEnvironment
 {
 
     /**
@@ -43,7 +45,6 @@ class PantheonEnvironment extends DefaultEnvironment
             && !static::isStaging()
             && !static::isDevelopment()
             && !static::isCi()
-            && !Environment::isLocal();
+            && !static::isLocal();
     }
-
 }
