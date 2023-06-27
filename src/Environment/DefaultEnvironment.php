@@ -44,6 +44,24 @@ class DefaultEnvironment
     public const CI = 'ci';
 
     /**
+     * Get an environment variable.
+     *
+     * @param string $name
+     *   The name of the environment variable to retrieve.
+     *
+     * @return mixed
+     *   The environment variable, if it's set.
+     */
+    public static function get(string $name)
+    {
+        static $cache = [];
+        if (!array_key_exists($name, $cache)) {
+            $cache[$name] = getenv($name);
+        }
+        return $cache[$name];
+    }
+
+    /**
      * Return the environment name.
      *
      * For example: "local" or "ci" or "dev" or "prod".

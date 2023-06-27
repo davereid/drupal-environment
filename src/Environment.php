@@ -5,8 +5,7 @@ namespace Davereid\DrupalEnvironment;
 /**
  * Helpers for working with the Drupal environment.
  *
- * @todo Add Platform.sh support
- *
+ * @method static mixed get(string $name)
  * @method static string getEnvironment()
  * @method static bool isAcquia()
  * @method static bool isPantheon()
@@ -52,7 +51,7 @@ class Environment
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach (static::CLASSES as $class) {
-                    if (static::get($class::ENVIRONMENT_NAME)) {
+                    if (getenv($class::ENVIRONMENT_NAME)) {
                         break;
                     }
                 }
@@ -74,24 +73,6 @@ class Environment
         }
 
         return $class::$name(...$arguments);
-    }
-
-    /**
-     * Get an environment variable.
-     *
-     * @param string $name
-     *   The name of the environment variable to retrieve.
-     *
-     * @return mixed
-     *   The environment variable, if it's set.
-     */
-    public static function get(string $name)
-    {
-        static $cache = [];
-        if (!array_key_exists($name, $cache)) {
-            $cache[$name] = getenv($name);
-        }
-        return $cache[$name];
     }
 
     /**
