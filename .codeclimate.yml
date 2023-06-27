@@ -1,2 +1,7 @@
+plugins:
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
 exclude_patterns:
   - "tests/"
