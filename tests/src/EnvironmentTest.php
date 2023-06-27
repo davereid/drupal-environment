@@ -290,7 +290,7 @@ final class EnvironmentTest extends TestCase
                     'TUGBOAT_PREVIEW_NAME' => 'phpunit',
                 ],
                 [
-                    'getEnvironment' => 'local',
+                    'getEnvironment' => 'phpunit',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
