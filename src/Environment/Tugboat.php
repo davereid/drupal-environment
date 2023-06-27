@@ -22,5 +22,4 @@ class Tugboat extends DefaultEnvironment
     {
         return true;
     }
-
 }

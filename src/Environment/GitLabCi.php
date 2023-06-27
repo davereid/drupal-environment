@@ -22,5 +22,4 @@ class GitLabCi extends DefaultEnvironment
     {
         return static::CI;
     }
-
 }

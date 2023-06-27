@@ -22,5 +22,4 @@ class GitHubWorkflow extends DefaultEnvironment
     {
         return static::CI;
     }
-
 }

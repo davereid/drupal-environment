@@ -198,5 +198,4 @@ class DefaultEnvironment
         // Unknown environment condition.
         return null;
     }
-
 }

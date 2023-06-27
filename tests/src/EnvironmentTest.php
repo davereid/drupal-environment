@@ -398,5 +398,4 @@ final class EnvironmentTest extends TestCase
             ]
         ];
     }
-
 }

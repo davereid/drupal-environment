@@ -169,5 +169,4 @@ class Environment
         $composer_filename = static::getComposerFilename();
         return pathinfo($composer_filename, PATHINFO_FILENAME) . '.lock';
     }
-
 }

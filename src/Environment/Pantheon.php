@@ -45,5 +45,4 @@ class Pantheon extends DefaultEnvironment
             && !static::isCi()
             && !static::isLocal();
     }
-
 }
