@@ -61,11 +61,7 @@ class DefaultEnvironment
      */
     public static function get(string $name)
     {
-        static $cache = [];
-        if (!array_key_exists($name, $cache)) {
-            $cache[$name] = getenv($name);
-        }
-        return $cache[$name];
+        return Environment::get($name);
     }
 
     /**
