@@ -13,8 +13,6 @@ final class EnvironmentTest extends TestCase
 
     /**
      * Test the commandExists() method.
-     *
-     * @covers \Davereid\DrupalEnvironment\Environment::commandExists
      */
     public function testCommandExists(): void
     {
@@ -75,6 +73,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -98,6 +97,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => true,
                     'isStaging' => false,
@@ -122,6 +122,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -142,6 +143,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => true,
                     'isStaging' => false,
@@ -167,6 +169,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
                     'isStaging' => true,
@@ -192,6 +195,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -217,6 +221,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -242,6 +247,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -263,6 +269,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -278,6 +285,32 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
             ],
+            'tugboat' => [
+                [
+                    'TUGBOAT_PREVIEW_NAME' => 'phpunit',
+                ],
+                [
+                    'getEnvironment' => 'local',
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => true,
+                    'isPantheon' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => true,
+                    'isMultidev' => false,
+                    'isCi' => false,
+                    'isLocal' => true,
+                    'getIndicatorConfig' => [
+                        'name' => 'Preview',
+                        'bg_color' => '#ffffff',
+                        'fg_color' => '#990055',
+                    ],
+                ],
+            ],
             'circleci' => [
                 [
                     'CI' => 'true',
@@ -289,6 +322,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => true,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -310,6 +344,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => true,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -331,6 +366,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => true,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -351,6 +387,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
@@ -375,6 +412,7 @@ final class EnvironmentTest extends TestCase
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
                     'isGitLabCi' => false,
+                    'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
                     'isStaging' => false,
