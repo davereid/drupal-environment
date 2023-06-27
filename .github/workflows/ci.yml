@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test PHP ${{ matrix.php }} - ${{ matrix.os }}
+    runs-on: ${{ matrix.php }}
+    strategy:
+      matrix:
+        php: ['8.0', '8.1', '8.2']
+        os: ['ubuntu-latest']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: composer diagnose
+      - run: composer install
+      - run: composer audit
+      - run: composer run test
