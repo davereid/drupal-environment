@@ -36,6 +36,7 @@ jobs:
       - run: composer diagnose || true
       - run: composer install
       - run: composer audit
+      - run: composer run lint
       - run: composer run test
       - name: Test & publish code coverage
         if: ${{ matrix.php == '8.2' && matrix.os == 'ubuntu-latest' }}
