@@ -176,7 +176,7 @@ class Environment
      */
     public static function getComposerLockFilename(): string
     {
-        $composer_filename = static::getComposerFilename();
-        return pathinfo($composer_filename, PATHINFO_FILENAME) . '.lock';
+        $filename = static::getComposerFilename();
+        return pathinfo($filename, PATHINFO_FILENAME) . '.lock';
     }
 }
