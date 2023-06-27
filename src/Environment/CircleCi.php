@@ -1,13 +1,13 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace Davereid\DrupalEnvironment\Environment;
 
 /**
  * The CircleCI environment specifics.
  *
  * @see https://circleci.com/docs/variables/
  */
-class CircleCiEnvironment extends DefaultEnvironment
+class CircleCi extends DefaultEnvironment
 {
 
     /**

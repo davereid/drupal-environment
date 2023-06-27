@@ -27,12 +27,12 @@ class Environment
      * The currently supported environment classes.
      */
     public const CLASSES = [
-        'isAcquia' => AcquiaEnvironment::class,
-        'isPantheon' => PantheonEnvironment::class,
-        'isGitHubWorkflow' => GitHubWorkflowEnvironment::class,
-        'isGitLabCi' => GitLabCiEnvironment::class,
-        'isCircleCi' => CircleCiEnvironment::class,
-        null => DefaultEnvironment::class,
+        'isAcquia' => \Davereid\DrupalEnvironment\Environment\Acquia::class,
+        'isPantheon' => \Davereid\DrupalEnvironment\Environment\Pantheon::class,
+        'isGitHubWorkflow' => \Davereid\DrupalEnvironment\Environment\GitHubWorkflow::class,
+        'isGitLabCi' => \Davereid\DrupalEnvironment\Environment\GitLabCi::class,
+        'isCircleCi' => \Davereid\DrupalEnvironment\Environment\CircleCi::class,
+        null => \Davereid\DrupalEnvironment\Environment\DefaultEnvironment::class,
     ];
 
     /**

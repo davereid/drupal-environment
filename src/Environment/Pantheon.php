@@ -1,6 +1,7 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace Davereid\DrupalEnvironment\Environment;
+
 
 /**
  * The Pantheon environment specifics.
@@ -8,7 +9,7 @@ namespace Davereid\DrupalEnvironment;
  * @see https://docs.pantheon.io/pantheon-workflow
  * @see https://docs.pantheon.io/guides/multidev
  */
-class PantheonEnvironment extends DefaultEnvironment
+class Pantheon extends DefaultEnvironment
 {
 
     /**

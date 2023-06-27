@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace Davereid\DrupalEnvironment\Environment;
 
 /**
  * The standard environment.

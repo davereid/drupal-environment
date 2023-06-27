@@ -1,6 +1,6 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace Davereid\DrupalEnvironment\Environment;
 
 /**
  * The Acquia environment specifics.
@@ -12,7 +12,7 @@ namespace Davereid\DrupalEnvironment;
  * @todo Should the 'ide' environment be detected as local?
  * @todo Add support for https://docs.acquia.com/ra/environment.html
  */
-class AcquiaEnvironment extends DefaultEnvironment
+class Acquia extends DefaultEnvironment
 {
 
     /**

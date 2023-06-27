@@ -1,13 +1,13 @@
 <?php
 
-namespace Davereid\DrupalEnvironment;
+namespace Davereid\DrupalEnvironment\Environment;
 
 /**
  * The GitlabCi environment specifics.
  *
  * @see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
  */
-class GitLabCiEnvironment extends DefaultEnvironment
+class GitLabCi extends DefaultEnvironment
 {
 
     /**
