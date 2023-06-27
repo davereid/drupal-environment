@@ -64,7 +64,7 @@ class Environment
     /**
      * Provide a shortcut for calling methods on the environment classes.
      */
-    public static function __callStatic(string $name, array $arguments): mixed
+    public static function __callStatic(string $name, array $arguments)
     {
         $class = static::getEnvironmentClass();
 
