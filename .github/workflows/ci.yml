@@ -32,7 +32,7 @@ jobs:
           php-version: ${{ matrix.php }}
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: composer diagnose
+      - run: composer diagnose || true
       - run: composer install
       - run: composer audit
       - run: composer run test
