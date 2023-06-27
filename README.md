@@ -17,7 +17,7 @@ This also standardizes some environment terminology between hosting providers so
 ### Getting an environment variable
 
 ```php
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 $value = Environment::get('VARIABLE_NAME');
 ```
 
@@ -26,7 +26,7 @@ The advantages of using this is the results are statically cached.
 ### Testing for Drupal hosting or CI environments
 
 ```php
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 
 // These all return a boolean true/false
 Environment::isPantheon();
@@ -40,7 +40,7 @@ Environment::isCircleCi();
 ### Testing for specific environments
 
 ```php
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 
 // This gets the specific environment string.
 $environment = Environment::getEnvironment();
@@ -58,7 +58,7 @@ Environment::isLando();
 ### Testing for executable commands
 
 ```php
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 
 // This returns a boolean true/false:
 Environment::commandExists('composer');
@@ -69,7 +69,7 @@ Environment::commandExists('composer');
 ### settings.php
 
 ```php
-use Davereid\DrupalEnvironment\Environment;
+use DrupalEnvironment\Environment;
 
 if (Environment::isProduction()) {
   // Set some production environment settings overrides.
