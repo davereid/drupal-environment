@@ -2,6 +2,13 @@
 
 namespace Davereid\DrupalEnvironment;
 
+use Davereid\DrupalEnvironment\Environment\Acquia;
+use Davereid\DrupalEnvironment\Environment\CircleCi;
+use Davereid\DrupalEnvironment\Environment\DefaultEnvironment;
+use Davereid\DrupalEnvironment\Environment\GitHubWorkflow;
+use Davereid\DrupalEnvironment\Environment\GitLabCi;
+use Davereid\DrupalEnvironment\Environment\Pantheon;
+
 /**
  * Helpers for working with the Drupal environment.
  *
@@ -26,12 +33,12 @@ class Environment
      * The currently supported environment classes.
      */
     public const CLASSES = [
-        'isAcquia' => \Davereid\DrupalEnvironment\Environment\Acquia::class,
-        'isPantheon' => \Davereid\DrupalEnvironment\Environment\Pantheon::class,
-        'isGitHubWorkflow' => \Davereid\DrupalEnvironment\Environment\GitHubWorkflow::class,
-        'isGitLabCi' => \Davereid\DrupalEnvironment\Environment\GitLabCi::class,
-        'isCircleCi' => \Davereid\DrupalEnvironment\Environment\CircleCi::class,
-        null => \Davereid\DrupalEnvironment\Environment\DefaultEnvironment::class,
+        'isAcquia' => Acquia::class,
+        'isPantheon' => Pantheon::class,
+        'isGitHubWorkflow' => GitHubWorkflow::class,
+        'isGitLabCi' => GitLabCi::class,
+        'isCircleCi' => CircleCi::class,
+        null => DefaultEnvironment::class,
     ];
 
     /**
