@@ -50,7 +50,7 @@
             "@phpunit"
         ],
         "phpstan": "vendor/bin/phpstan analyse src tests --level 5",
-        "phpunit": "XDEBUG_MODE=coverage vendor/bin/phpunit tests/src --verbose --coverage-text"
+        "phpunit": "vendor/bin/phpunit tests/src --verbose --coverage-text"
     },
     "config": {
         "allow-plugins": {
