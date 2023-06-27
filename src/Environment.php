@@ -99,8 +99,6 @@ class Environment
      *
      * @return bool
      *   TRUE if this is a local environment.
-     *
-     * @todo Add Lando support.
      */
     public static function isLocal(): bool
     {
@@ -112,6 +110,8 @@ class Environment
      *
      * @return bool
      *   TRUE if this is a DDEV environment.
+     *
+     * @see https://ddev.readthedocs.io/en/latest/users/extend/custom-commands/#environment-variables-provided
      */
     public static function isDdev(): bool
     {
@@ -123,6 +123,8 @@ class Environment
      *
      * @return bool
      *   TRUE if this is a Localdev or Lando environment.
+     *
+     * @see https://docs.lando.dev/core/v3/env.html
      */
     public static function isLando(): bool
     {

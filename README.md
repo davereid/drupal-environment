@@ -4,6 +4,14 @@
 
 Provides a class for working with Drupal environments and environment variables.
 
+This also standardizes some environment terminology between hosting providers so that you can use the same code across different hosts:
+
+| Environment | Acquia | Pantheon |
+|-|-|-|
+| Production | `prod` | `live` |
+| Staging | `test` | `test` |
+| Development | `dev` | `dev` |
+
 ## Basic Usage
 
 ### Getting an environment variable
@@ -20,10 +28,67 @@ The advantages of using this is the results are statically cached.
 ```php
 use Davereid\DrupalEnvironment\Environment;
 
-$result = Environment::isPantheon();
-$result = Environment::isAcquia();
-$result = Environment::isTugboat();
-$result = Environment::isCi();
-
+// These all return a boolean true/false
+Environment::isPantheon();
+Environment::isAcquia();
+Environment::isTugboat();
+Environment::isGitHubWorkflow();
+Environment::isGitLabCi();
+Environment::isCircleCi();
 ```
 
+### Testing for specific environments
+
+```php
+use Davereid\DrupalEnvironment\Environment;
+
+// This gets the specific environment string.
+$environment = Environment::getEnvironment();
+
+// These all return a boolean true/false
+Environment::isProduction();
+Environment::isStaging();
+Environment::isDevelopment();
+Environment::isCi();
+Environment::isLocal(); // Covers both DDEV and Lando
+Environment::isDdev();
+Environment::isLando();
+```
+
+### Testing for executable commands
+
+```php
+use Davereid\DrupalEnvironment\Environment;
+
+// This returns a boolean true/false:
+Environment::commandExists('composer');
+```
+
+## Example usage
+
+### settings.php
+
+```php
+use Davereid\DrupalEnvironment\Environment;
+
+if (Environment::isProduction()) {
+  // Set some production environment settings overrides.
+}
+elseif (Environment::isStaging()) {
+  // Set some staging environment settings overrides.
+}
+elseif (Environment::isDevelopment()) {
+  // Set some development environment settings overrides.
+}
+elseif (Environment::isLocal()) {
+  // Set some development environment settings overrides.
+}
+
+// Include a environment-specific settings file.
+if ($environment = Environment::getEnvironment()) {
+  $settings_file = 'settings.' . $environment . '.php';
+  if (is_file($settings_file)) {
+    require_once $settings_file;
+  }
+}
+```
