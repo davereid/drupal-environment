@@ -14,10 +14,10 @@ namespace Davereid\DrupalEnvironment;
  * @method static bool isStaging()
  * @method static bool isDevelopment()
  * @method static bool isPreview()
- * @mtehod static bool isCi()
- * @mtehod static bool isGitHubWorkflow()
- * @mtehod static bool isGitLabCi()
- * @mtehod static bool isCircleCi()
+ * @method static bool isCi()
+ * @method static bool isGitHubWorkflow()
+ * @method static bool isGitLabCi()
+ * @method static bool isCircleCi()
  * @method static array|null getIndicatorConfig()
  */
 class Environment

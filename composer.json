@@ -19,7 +19,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.3"
+        "php": ">=7.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9",
@@ -54,7 +54,7 @@
     },
     "config": {
         "platform": {
-            "php": "7.3"
+            "php": "7.4"
         },
         "allow-plugins": {
             "phpstan/extension-installer": true
