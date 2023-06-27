@@ -2,7 +2,6 @@
 
 namespace Davereid\DrupalEnvironment\Environment;
 
-
 /**
  * The Pantheon environment specifics.
  *
@@ -44,7 +43,7 @@ class Pantheon extends DefaultEnvironment
             && !static::isStaging()
             && !static::isDevelopment()
             && !static::isCi()
-            && !Environment::isLocal();
+            && !static::isLocal();
     }
 
 }

@@ -8,6 +8,7 @@ use Davereid\DrupalEnvironment\Environment\DefaultEnvironment;
 use Davereid\DrupalEnvironment\Environment\GitHubWorkflow;
 use Davereid\DrupalEnvironment\Environment\GitLabCi;
 use Davereid\DrupalEnvironment\Environment\Pantheon;
+use Davereid\DrupalEnvironment\Environment\Tugboat;
 
 /**
  * Helpers for working with the Drupal environment.
@@ -35,6 +36,7 @@ class Environment
     public const CLASSES = [
         'isAcquia' => Acquia::class,
         'isPantheon' => Pantheon::class,
+        'isTugboat' => Tugboat::class,
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
         'isCircleCi' => CircleCi::class,
@@ -117,19 +119,6 @@ class Environment
     public static function isLando(): bool
     {
         return (bool)static::get('LANDO_INFO');
-    }
-
-    /**
-     * Determine if this is a Tugboat environment.
-     *
-     * @return bool
-     *   TRUE if this is a Tugboat environment.
-     *
-     * @todo Should this be its own environment class?
-     */
-    public static function isTugboat(): bool
-    {
-        return static::getEnvironment() === 'tugboat';
     }
 
     /**

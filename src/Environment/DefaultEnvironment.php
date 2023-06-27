@@ -2,6 +2,8 @@
 
 namespace Davereid\DrupalEnvironment\Environment;
 
+use Davereid\DrupalEnvironment\Environment;
+
 /**
  * The standard environment.
  */
@@ -35,6 +37,13 @@ class DefaultEnvironment
      * @var string
      */
     public const DEVELOPMENT = 'dev';
+
+    /**
+     * The default preview environment name.
+     *
+     * @var string
+     */
+    public const PREVIEW = 'preview';
 
     /**
      * The default CI environment name.
@@ -71,7 +80,7 @@ class DefaultEnvironment
      */
     public static function getEnvironment(): string
     {
-        return Environment::get(static::ENVIRONMENT_NAME);
+        return static::get(static::ENVIRONMENT_NAME);
     }
 
     /**
@@ -115,7 +124,7 @@ class DefaultEnvironment
      */
     public static function isPreview(): bool
     {
-        return Environment::isTugboat();
+        return static::getEnvironment() === static::PREVIEW;
     }
 
     /**
@@ -127,6 +136,17 @@ class DefaultEnvironment
     public static function isCi(): bool
     {
         return static::getEnvironment() === static::CI;
+    }
+
+    /**
+     * Determine if this is a local environment.
+     *
+     * @return bool
+     *   TRUE if this is local.
+     */
+    public static function isLocal(): bool
+    {
+        return Environment::isLocal();
     }
 
     /**
@@ -166,7 +186,7 @@ class DefaultEnvironment
                 'fg_color' => '#990055',
             ];
         }
-        if (Environment::isLocal()) {
+        if (static::isLocal()) {
             return [
                 'name' => 'Local',
                 'bg_color' => '#ffffff',
