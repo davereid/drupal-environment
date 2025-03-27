@@ -53,9 +53,9 @@
             "@putenv XDEBUG_MODE=coverage",
             "@phpunit"
         ],
-        "phpcs": "vendor/bin/phpcs --standard=PSR1,PSR2 src tests",
-        "phpstan": "vendor/bin/phpstan analyse src tests --level 5",
-        "phpunit": "vendor/bin/phpunit tests/src --coverage-text"
+        "phpcs": "vendor/bin/phpcs",
+        "phpstan": "vendor/bin/phpstan",
+        "phpunit": "vendor/bin/phpunit --coverage-text"
     },
     "config": {
         "allow-plugins": {
