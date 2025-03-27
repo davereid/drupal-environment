@@ -30,6 +30,7 @@ use DrupalEnvironment\Environment;
 
 // These all return a boolean true/false
 Environment::isPantheon();
+Environment::isPlatformSh();
 Environment::isAcquia();
 Environment::isTugboat();
 Environment::isGitHubWorkflow();
