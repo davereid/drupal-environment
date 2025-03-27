@@ -42,6 +42,8 @@ class Pantheon extends DefaultEnvironment
      *
      * @return bool
      *   TRUE if this is a Pantheon Multidev environment.
+     *
+     * @see https://docs.pantheon.io/guides/multidev
      */
     public static function isMultidev(): bool
     {
@@ -58,6 +60,8 @@ class Pantheon extends DefaultEnvironment
      * Determine if this is a custom domain request.
      *
      * @return bool
+     *
+     * @see https://docs.pantheon.io/guides/domains
      */
     public static function isCustomDomain(): bool
     {
