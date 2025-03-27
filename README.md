@@ -71,6 +71,9 @@ Environment::commandExists('composer');
 ```php
 use DrupalEnvironment\Environment;
 
+// Add configuration for the Environment Indicator module.
+$config['environment_indicator.indicator'] = Environment::getIndicatorConfig();
+
 if (Environment::isProduction()) {
   // Set some production environment settings overrides.
 }
