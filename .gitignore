@@ -1,6 +1,6 @@
 /build/
 /vendor/
 /.idea/
-/.phpunit.cache/
 .DS_Store
 composer.lock
+.phpunit.result.cache
