@@ -36,7 +36,7 @@ jobs:
       - name: Read the composer PHP config
         id: php
         run: |
-          echo "version=$(composer ocnfig platform.php)" >> "$GITHUB_ENV"
+          echo "version=$(composer config platform.php)" >> "$GITHUB_ENV"
       - run: composer config --unset platform.php
       - run: composer diagnose || true
       - run: composer install
