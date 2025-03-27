@@ -62,7 +62,7 @@ final class EnvironmentTest extends TestCase
     /**
      * Data provider for ::testEnvironment.
      */
-    public function providerEnvironment(): array
+    public static function providerEnvironment(): array
     {
         return [
             'default-state' => [
