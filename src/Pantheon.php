@@ -24,7 +24,10 @@ class Pantheon extends DefaultEnvironment
      */
     public const PRODUCTION = 'live';
 
-    public const INTERNAL_DOMAIN = 'pantheonsite.io';
+    /**
+     * The internal pantheon domain name.
+     */
+    public const PLATFORM_DOMAIN = '.pantheonsite.io';
 
     /**
      * {@inheritdoc}
@@ -52,12 +55,12 @@ class Pantheon extends DefaultEnvironment
     }
 
     /**
-     * Determine if this is a public domain request.
+     * Determine if this is a custom domain request.
      *
      * @return bool
      */
     public static function isCustomDomain(): bool
     {
-        return isset($_SERVER['HTTP_HOST']) && !str_contains($_SERVER['HTTP_HOST'], static::INTERNAL_DOMAIN);
+        return isset($_SERVER['HTTP_HOST']) && !str_ends_with($_SERVER['HTTP_HOST'], static::PLATFORM_DOMAIN);
     }
 }
