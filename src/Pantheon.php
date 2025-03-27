@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment;
 
@@ -24,6 +25,11 @@ class Pantheon extends DefaultEnvironment
     public const PRODUCTION = 'live';
 
     /**
+     * The internal pantheon domain name.
+     */
+    public const PLATFORM_DOMAIN = '.pantheonsite.io';
+
+    /**
      * {@inheritdoc}
      */
     public static function isPreview(): bool
@@ -36,6 +42,8 @@ class Pantheon extends DefaultEnvironment
      *
      * @return bool
      *   TRUE if this is a Pantheon Multidev environment.
+     *
+     * @see https://docs.pantheon.io/guides/multidev
      */
     public static function isMultidev(): bool
     {
@@ -46,5 +54,17 @@ class Pantheon extends DefaultEnvironment
             && !static::isDevelopment()
             && !static::isCi()
             && !static::isLocal();
+    }
+
+    /**
+     * Determine if this is a custom domain request.
+     *
+     * @return bool
+     *
+     * @see https://docs.pantheon.io/guides/domains
+     */
+    public static function isCustomDomain(): bool
+    {
+        return isset($_SERVER['HTTP_HOST']) && !str_ends_with($_SERVER['HTTP_HOST'], static::PLATFORM_DOMAIN);
     }
 }

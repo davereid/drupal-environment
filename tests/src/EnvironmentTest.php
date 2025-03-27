@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
 
 use DrupalEnvironment\Environment;
+use PHPUnit\Event\RuntimeException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,9 +28,13 @@ final class EnvironmentTest extends TestCase
      *
      * @dataProvider providerEnvironment
      */
+    #[DataProvider('providerEnvironment')]
     public function testEnvironment(array $variables, array $method_tests): void
     {
         $variables += [
+            'ENV' => [],
+        ];
+        $variables['ENV'] += [
             'ENVIRONMENT' => null,
             'PANTHEON_ENVIRONMENT' => null,
             // When running under CI, we need to ensure these are reset.
@@ -35,10 +42,13 @@ final class EnvironmentTest extends TestCase
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
         ];
-        $this->setEnvironmentVariables($variables);
+        $originals = [];
+        $this->setVariables($variables, $originals);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
         }
+        // Reset the environment variables.
+        $this->setVariables($originals);
     }
 
     /**
@@ -49,26 +59,46 @@ final class EnvironmentTest extends TestCase
      * @param array|null $originals
      *   If provided will be populated with the original variable values keyed by name.
      */
-    protected function setEnvironmentVariables(array $variables, ?array &$originals = null): void
+    protected function setVariables(array $variables, ?array &$originals = null): void
     {
-        foreach ($variables as $name => $value) {
-            if (isset($originals)) {
-                $originals[$name] = getenv($name) ?: null;
+        foreach ($variables as $type => $type_variables) {
+            foreach ($type_variables as $name => $value) {
+                switch ($type) {
+                    case 'ENV':
+                        if (isset($originals)) {
+                            $originals[$type][$name] = getenv($name) ?: null;
+                        }
+                        isset($value) ? putenv("$name=$value") : putenv($name);
+                        break;
+
+                    case '_SERVER':
+                        if (isset($originals)) {
+                            $originals[$type][$name] = $_SERVER[$name] ?? null;
+                        }
+                        $_SERVER[$name] = $value;
+                        break;
+
+                    default:
+                        if (isset($originals)) {
+                            $originals[$type][$name] = $$type[$name] ?: null;
+                        }
+                        $$type[$name] = $value;
+                        break;
+                }
             }
-            isset($value) ? putenv("$name=$value") : putenv($name);
         }
     }
 
     /**
      * Data provider for ::testEnvironment.
      */
-    public function providerEnvironment(): array
+    public static function providerEnvironment(): array
     {
         return [
             'default-state' => [
                 [],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -90,7 +120,9 @@ final class EnvironmentTest extends TestCase
             ],
             'default-prod' => [
                 [
-                    'ENVIRONMENT' => 'prod'
+                    'ENV' => [
+                        'ENVIRONMENT' => 'prod',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'prod',
@@ -109,17 +141,19 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#e7131a',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'pantheon-empty' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => '',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => '',
+                    ],
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -138,7 +172,12 @@ final class EnvironmentTest extends TestCase
             ],
             'pantheon-live' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'live',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'live',
+                    ],
+                    '_SERVER' => [
+                        'HTTP_HOST' => 'www.example.com',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'live',
@@ -154,18 +193,24 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => false,
                     'isPreview' => false,
                     'isMultidev' => false,
+                    'isCustomDomain' => true,
                     'isCi' => false,
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#e7131a',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'pantheon-test' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'test',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'test',
+                    ],
+                    '_SERVER' => [
+                        'HTTP_HOST' => 'drupal-environment-test.pantheonsite.io',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'test',
@@ -181,18 +226,24 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => false,
                     'isPreview' => false,
                     'isMultidev' => false,
+                    'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#b85c00',
+                        'bg_color' => '#b85c00',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'pantheon-dev' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'dev',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'dev',
+                    ],
+                    '_SERVER' => [
+                        'HTTP_HOST' => 'drupal-environment-dev.pantheonsite.io',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'dev',
@@ -208,18 +259,24 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => true,
                     'isPreview' => false,
                     'isMultidev' => false,
+                    'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#307b24',
+                        'bg_color' => '#307b24',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'pantheon-multidev' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'pr-1',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'pr-1',
+                    ],
+                    '_SERVER' => [
+                        'HTTP_HOST' => 'drupal-environment-multidev-test.pantheonsite.io',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'pr-1',
@@ -235,18 +292,21 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => false,
                     'isPreview' => true,
                     'isMultidev' => true,
+                    'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#990055',
+                        'bg_color' => '#990055',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'pantheon-ci' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'ci',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'ci',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'ci',
@@ -262,6 +322,7 @@ final class EnvironmentTest extends TestCase
                     'isDevelopment' => false,
                     'isPreview' => false,
                     'isMultidev' => false,
+                    'isCustomDomain' => false,
                     'isCi' => true,
                     'isLocal' => false,
                     'getIndicatorConfig' => null,
@@ -269,7 +330,9 @@ final class EnvironmentTest extends TestCase
             ],
             'pantheon-local' => [
                 [
-                    'PANTHEON_ENVIRONMENT' => 'local',
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'local',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'local',
@@ -289,8 +352,8 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#505050',
+                        'bg_color' => '#505050',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
@@ -409,7 +472,9 @@ final class EnvironmentTest extends TestCase
             ],
             'tugboat' => [
                 [
-                    'TUGBOAT_PREVIEW_NAME' => 'phpunit',
+                    'ENV' => [
+                        'TUGBOAT_PREVIEW_NAME' => 'phpunit',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'phpunit',
@@ -428,15 +493,17 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#990055',
+                        'bg_color' => '#990055',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'circleci' => [
                 [
-                    'CI' => 'true',
-                    'CIRCLECI' => 'true'
+                    'ENV' => [
+                        'CI' => 'true',
+                        'CIRCLECI' => 'true',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'ci',
@@ -458,8 +525,10 @@ final class EnvironmentTest extends TestCase
             ],
             'github' => [
                 [
-                    'CI' => 'true',
-                    'GITHUB_WORKFLOW' => 'test'
+                    'ENV' => [
+                        'CI' => 'true',
+                        'GITHUB_WORKFLOW' => 'test',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'ci',
@@ -481,8 +550,10 @@ final class EnvironmentTest extends TestCase
             ],
             'gitlab' => [
                 [
-                    'CI' => 'true',
-                    'GITLAB_CI' => 'true'
+                    'ENV' => [
+                        'CI' => 'true',
+                        'GITLAB_CI' => 'true',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'ci',
@@ -504,10 +575,12 @@ final class EnvironmentTest extends TestCase
             ],
             'ddev' => [
                 [
-                    'IS_DDEV_PROJECT' => true,
+                    'ENV' => [
+                        'IS_DDEV_PROJECT' => true,
+                    ],
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -523,17 +596,19 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#505050',
+                        'bg_color' => '#505050',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'lando' => [
                 [
-                    'LANDO_INFO' => '[...]',
+                    'ENV' => [
+                        'LANDO_INFO' => '[...]',
+                    ],
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -549,14 +624,16 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#505050',
+                        'bg_color' => '#505050',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'composer' => [
                 [
-                    'COMPOSER' => 'alternate.ext',
+                    'ENV' => [
+                        'COMPOSER' => 'alternate.ext',
+                    ],
                 ],
                 [
                     'getComposerFilename' => 'alternate.ext',

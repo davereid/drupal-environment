@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment;
 
@@ -71,10 +72,10 @@ class DefaultEnvironment
      *
      * For example: "local" or "ci" or "dev" or "prod".
      *
-     * @return string
+     * @return string|bool
      *   The name of the environment.
      */
-    public static function getEnvironment(): string
+    public static function getEnvironment(): string|bool
     {
         return static::get(static::ENVIRONMENT_NAME);
     }
@@ -158,36 +159,36 @@ class DefaultEnvironment
         if (static::isProduction()) {
             return [
                 'name' => 'Production',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#e7131a',
+                'bg_color' => '#e7131a',
+                'fg_color' => '#ffffff',
             ];
         }
         if (static::isStaging()) {
             return [
                 'name' => 'Staging',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#b85c00',
+                'bg_color' => '#b85c00',
+                'fg_color' => '#ffffff',
             ];
         }
         if (static::isDevelopment()) {
             return [
                 'name' => 'Development',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#307b24',
+                'bg_color' => '#307b24',
+                'fg_color' => '#ffffff',
             ];
         }
         if (static::isPreview()) {
             return [
                 'name' => 'Preview',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#990055',
+                'bg_color' => '#990055',
+                'fg_color' => '#ffffff',
             ];
         }
         if (static::isLocal()) {
             return [
                 'name' => 'Local',
-                'bg_color' => '#ffffff',
-                'fg_color' => '#505050',
+                'bg_color' => '#505050',
+                'fg_color' => '#ffffff',
             ];
         }
 
