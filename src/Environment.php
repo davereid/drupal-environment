@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment;
 
@@ -81,10 +82,10 @@ class Environment
      * @param string $name
      *   The name of the environment variable to retrieve.
      *
-     * @return mixed
+     * @return string|bool
      *   The environment variable, if it's set.
      */
-    public static function get(string $name)
+    public static function get(string $name): string|bool
     {
         static $cache = [];
         if (!array_key_exists($name, $cache)) {

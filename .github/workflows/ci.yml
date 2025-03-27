@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php: ['8.0', '8.1', '8.2', '8.3', '8.4']
+        php: ['8.1', '8.2', '8.3', '8.4']
         os: ['ubuntu-latest']
       fail-fast: false
     steps:
@@ -33,6 +33,8 @@ jobs:
           php-version: ${{ matrix.php }}
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read the composer PHP config
+        run: echo "PHP_DEFAULT_VERSION=$(composer config platform.php)" >> "$GITHUB_ENV"
       - run: composer config --unset platform.php
       - run: composer diagnose || true
       - run: composer install
@@ -40,8 +42,8 @@ jobs:
       - run: composer run lint
       - run: composer run test
       - name: Test & publish code coverage
-        if: ${{ matrix.php == '8.3' && matrix.os == 'ubuntu-latest' }}
-        uses: paambaati/codeclimate-action@v5.0.0
+        if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' }}
+        uses: paambaati/codeclimate-action@v9.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:

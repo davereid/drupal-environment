@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment;
 
@@ -71,10 +72,10 @@ class DefaultEnvironment
      *
      * For example: "local" or "ci" or "dev" or "prod".
      *
-     * @return string
+     * @return string|bool
      *   The name of the environment.
      */
-    public static function getEnvironment(): string
+    public static function getEnvironment(): string|bool
     {
         return static::get(static::ENVIRONMENT_NAME);
     }
