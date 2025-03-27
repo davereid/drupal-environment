@@ -359,8 +359,10 @@ final class EnvironmentTest extends TestCase
             ],
             'platformsh-prod' => [
                 [
-                    'PLATFORM_ENVIRONMENT' => 'main-asdf123',
-                    'PLATFORM_ENVIRONMENT_TYPE' => 'production',
+                    'ENV' => [
+                        'PLATFORM_ENVIRONMENT' => 'main-asdf123',
+                        'PLATFORM_ENVIRONMENT_TYPE' => 'production',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'main-asdf123',
@@ -380,15 +382,17 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#e7131a',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'platformsh-stage' => [
                 [
-                    'PLATFORM_ENVIRONMENT' => 'stage-asdf123',
-                    'PLATFORM_ENVIRONMENT_TYPE' => 'staging',
+                    'ENV' => [
+                        'PLATFORM_ENVIRONMENT' => 'stage-asdf123',
+                        'PLATFORM_ENVIRONMENT_TYPE' => 'staging',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'stage-asdf123',
@@ -408,15 +412,17 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#b85c00',
+                        'bg_color' => '#b85c00',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
             'platformsh-dev' => [
                 [
-                    'PLATFORM_ENVIRONMENT' => 'develop-asdf123',
-                    'PLATFORM_ENVIRONMENT_TYPE' => 'development',
+                    'ENV' => [
+                        'PLATFORM_ENVIRONMENT' => 'develop-asdf123',
+                        'PLATFORM_ENVIRONMENT_TYPE' => 'development',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'develop-asdf123',
@@ -436,16 +442,18 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
-                        'bg_color' => '#ffffff',
-                        'fg_color' => '#307b24',
+                        'fg_color' => '#ffffff',
+                        'bg_color' => '#307b24',
                     ],
                 ],
             ],
             'platformsh-preview' => [
                 [
-                    'PLATFORM_ENVIRONMENT' => 'pr-225-asdf123',
-                    'PLATFORM_BRANCH' => 'pr-225',
-                    'PLATFORM_ENVIRONMENT_TYPE' => 'development',
+                    'ENV' => [
+                        'PLATFORM_ENVIRONMENT' => 'pr-225-asdf123',
+                        'PLATFORM_BRANCH' => 'pr-225',
+                        'PLATFORM_ENVIRONMENT_TYPE' => 'development',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'pr-225-asdf123',
@@ -465,8 +473,8 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                       'name' => 'Preview',
-                      'bg_color' => '#ffffff',
-                      'fg_color' => '#990055',
+                      'bg_color' => '#990055',
+                      'fg_color' => '#ffffff',
                     ],
                 ],
             ],
