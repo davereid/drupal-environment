@@ -33,6 +33,7 @@ jobs:
           php-version: ${{ matrix.php }}
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: composer config --unset platform.php
       - run: composer diagnose || true
       - run: composer install
       - run: composer audit
