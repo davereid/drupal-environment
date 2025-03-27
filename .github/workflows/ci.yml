@@ -34,9 +34,7 @@ jobs:
         env:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Read the composer PHP config
-        id: php
-        run: |
-          echo "version=$(composer config platform.php)" >> "$GITHUB_ENV"
+        run: echo "PHP_DEFAULT_VERSION=$(composer config platform.php)" >> "$GITHUB_ENV"
       - run: composer config --unset platform.php
       - run: composer diagnose || true
       - run: composer install
@@ -44,7 +42,7 @@ jobs:
       - run: composer run lint
       - run: composer run test
       - name: Test & publish code coverage
-        if: ${{ matrix.php == steps.php.outputs.version && matrix.os == 'ubuntu-latest' }}
+        if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' }}
         uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
