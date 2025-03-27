@@ -442,8 +442,8 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
-                        'fg_color' => '#ffffff',
                         'bg_color' => '#307b24',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
