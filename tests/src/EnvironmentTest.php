@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DrupalEnvironment\Tests;
 
 use DrupalEnvironment\Environment;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
