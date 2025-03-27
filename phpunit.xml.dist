@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" bootstrap="vendor/autoload.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="true" stopOnFailure="false" cacheResultFile=".phpunit.cache/test-results" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" backupGlobals="false" bootstrap="vendor/autoload.php" colors="true" processIsolation="true" stopOnFailure="false" displayDetailsOnTestsThatTriggerDeprecations="true" displayDetailsOnTestsThatTriggerErrors="true" displayDetailsOnTestsThatTriggerNotices="true" displayDetailsOnTestsThatTriggerWarnings="true" displayDetailsOnPhpunitDeprecations="true">
+  <source>
     <include>
-      <directory suffix=".php">./src</directory>
+      <directory suffix=".php">src</directory>
     </include>
+  </source>
+  <coverage includeUncoveredFiles="true">
     <report>
       <clover outputFile="build/logs/clover.xml"/>
       <html outputDirectory="build/logs/html-coverage" lowUpperBound="50" highLowerBound="90"/>
@@ -21,7 +23,4 @@
   <logging>
     <junit outputFile="build/test-results/results.xml"/>
   </logging>
-  <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-  </listeners>
 </phpunit>

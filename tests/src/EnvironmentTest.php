@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
 
 use DrupalEnvironment\Environment;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,6 +27,7 @@ final class EnvironmentTest extends TestCase
      *
      * @dataProvider providerEnvironment
      */
+    #[DataProvider('providerEnvironment')]
     public function testEnvironment(array $variables, array $method_tests): void
     {
         $variables += [
@@ -62,13 +65,13 @@ final class EnvironmentTest extends TestCase
     /**
      * Data provider for ::testEnvironment.
      */
-    public function providerEnvironment(): array
+    public static function providerEnvironment(): array
     {
         return [
             'default-state' => [
                 [],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -117,7 +120,7 @@ final class EnvironmentTest extends TestCase
                     'PANTHEON_ENVIRONMENT' => '',
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -381,7 +384,7 @@ final class EnvironmentTest extends TestCase
                     'IS_DDEV_PROJECT' => true,
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -406,7 +409,7 @@ final class EnvironmentTest extends TestCase
                     'LANDO_INFO' => '[...]',
                 ],
                 [
-                    'getEnvironment' => '',
+                    'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
