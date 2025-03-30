@@ -68,16 +68,27 @@ class DefaultEnvironment
     }
 
     /**
-     * Return the environment name.
+     * Return the environment type.
      *
      * For example: "local" or "ci" or "dev" or "prod".
      *
      * @return string|bool
-     *   The name of the environment.
+     *   The type of the environment.
      */
     public static function getEnvironment(): string|bool
     {
         return static::get(static::ENVIRONMENT_NAME);
+    }
+    
+    /**
+     * Return the user-defined environment name.
+     *
+     * @return string|bool
+     *   The name of the environment.
+     */
+    public static function getEnvironmentName(): string|bool
+    {
+        return static::getEnvironment();
     }
 
     /**

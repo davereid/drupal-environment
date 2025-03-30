@@ -365,8 +365,8 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
-                    'getEnvironment' => 'main-asdf123',
-                    'getEnvironmentType' => 'production',
+                    'getEnvironment' => 'production',
+                    'getEnvironmentName' => 'main-asdf123',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -395,8 +395,8 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
-                    'getEnvironment' => 'stage-asdf123',
-                    'getEnvironmentType' => 'staging',
+                    'getEnvironment' => 'staging',
+                    'getEnvironmentName' => 'stage-asdf123',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -425,8 +425,8 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
-                    'getEnvironment' => 'develop-asdf123',
-                    'getEnvironmentType' => 'development',
+                    'getEnvironment' => 'development',
+                    'getEnvironmentName' => 'develop-asdf123',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
@@ -456,8 +456,8 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
-                    'getEnvironment' => 'pr-225-asdf123',
-                    'getEnvironmentType' => 'development',
+                    'getEnvironment' => 'development',
+                    'getEnvironmentName' => 'pr-225-asdf123',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,

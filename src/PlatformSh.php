@@ -40,16 +40,22 @@ class PlatformSh extends DefaultEnvironment
     public const DEVELOPMENT = 'development';
 
     /**
-     * Return the environment type.
-     *
-     * For example: "local" or "development" or "production".
-     *
-     * @return string
-     *   The type of the environment.
+     * {@inheritdoc}
      */
-    public static function getEnvironmentType(): string
+    public static function getEnvironment(): string
     {
         return static::get(static::ENVIRONMENT_TYPE) ?: 'local';
+    }
+
+    /**
+     * Return the user-defined environment name.
+     *
+     * @return string|bool
+     *   The name of the environment.
+     */
+    public static function getEnvironmentName(): string|bool
+    {
+        return static::get(static::ENVIRONMENT_NAME);
     }
 
     /**
@@ -57,7 +63,7 @@ class PlatformSh extends DefaultEnvironment
      */
     public static function isProduction(): bool
     {
-        return static::getEnvironmentType() === static::PRODUCTION;
+        return static::getEnvironment() === static::PRODUCTION;
     }
 
     /**
@@ -65,7 +71,7 @@ class PlatformSh extends DefaultEnvironment
      */
     public static function isStaging(): bool
     {
-        return static::getEnvironmentType() === static::STAGING;
+        return static::getEnvironment() === static::STAGING;
     }
 
     /**
@@ -73,7 +79,7 @@ class PlatformSh extends DefaultEnvironment
      */
     public static function isDevelopment(): bool
     {
-        return static::getEnvironmentType() === static::DEVELOPMENT && !static::isPreview();
+        return static::getEnvironment() === static::DEVELOPMENT && !static::isPreview();
     }
 
     /**
