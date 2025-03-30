@@ -8,6 +8,7 @@ namespace DrupalEnvironment;
  * Helpers for working with the Drupal environment.
  *
  * @method static string|bool getEnvironment()
+ * @method static string|bool getEnvironmentName()
  * @method static bool isAcquia()
  * @method static bool isPantheon()
  * @method static bool isPlatformSh()
