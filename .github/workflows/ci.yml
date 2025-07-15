@@ -42,9 +42,8 @@ jobs:
       - run: composer run lint
       - run: composer run test
       - name: Test & publish code coverage
-        if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' }}
-        uses: paambaati/codeclimate-action@v9.0.0
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
+        if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
+        uses: qltysh/qlty-action/coverage@v1
         with:
-          coverageLocations: ${{ github.workspace }}/build/logs/clover.xml:clover
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: ${{ github.workspace }}/build/logs/clover.xml
