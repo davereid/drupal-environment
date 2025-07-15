@@ -87,6 +87,11 @@ elseif (Environment::isLocal()) {
   // Set some development environment settings overrides.
 }
 
+// Redirect any internal platform domains to a preferred domain.
+if (Environment::isProduction()) {
+  Environment::enforceDomain('www.example.com');
+}
+
 // Include a environment-specific settings file.
 if ($environment = Environment::getEnvironment()) {
   $settings_file = 'settings.' . $environment . '.php';

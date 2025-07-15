@@ -180,4 +180,26 @@ class Environment
         $filename = static::getComposerFilename();
         return pathinfo($filename, PATHINFO_FILENAME) . '.lock';
     }
+
+    /**
+     * Redirect requests to a preferred domain.
+     *
+     * This will not redirect CLI requests.
+     *
+     * @param string $domain
+     *   The preferred domain name.
+     */
+    public static function enforceDomain(string $domain): void
+    {
+        if (PHP_SAPI !== 'cli' && $_SERVER['HTTP_HOST'] !== $domain) {
+            // Name transaction "redirect" in New Relic for improved reporting.
+            if (extension_loaded('newrelic')) {
+                newrelic_name_transaction('redirect');
+            }
+
+            header('HTTP/1.0 301 Moved Permanently');
+            header('Location: https://' . $domain . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }
