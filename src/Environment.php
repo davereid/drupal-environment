@@ -182,6 +182,17 @@ class Environment
     }
 
     /**
+     * Get the current domain name.
+     *
+     * @return string
+     *   The current domain name.
+     */
+    public static function getCurrentDomain(): string
+    {
+        return $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+    }
+
+    /**
      * Redirect requests to a preferred domain.
      *
      * This will not redirect CLI requests.
@@ -191,7 +202,7 @@ class Environment
      */
     public static function enforceDomain(string $domain): void
     {
-        if (PHP_SAPI !== 'cli' && $_SERVER['HTTP_HOST'] !== $domain) {
+        if (PHP_SAPI !== 'cli' && static::getCurrentDomain() !== $domain) {
             // Name transaction "redirect" in New Relic for improved reporting.
             if (extension_loaded('newrelic')) {
                 newrelic_name_transaction('redirect');
