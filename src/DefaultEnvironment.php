@@ -180,7 +180,7 @@ class DefaultEnvironment
         if (static::isPreview()) {
             return [
                 'name' => 'Preview',
-                'bg_color' => '#990055',
+                'bg_color' => '#20688C',
                 'fg_color' => '#ffffff',
             ];
         }
