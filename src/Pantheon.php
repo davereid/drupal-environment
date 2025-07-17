@@ -65,6 +65,6 @@ class Pantheon extends DefaultEnvironment
      */
     public static function isCustomDomain(): bool
     {
-        return isset($_SERVER['HTTP_HOST']) && !str_ends_with($_SERVER['HTTP_HOST'], static::PLATFORM_DOMAIN);
+        return !str_ends_with(Environment::getCurrentDomain(), static::PLATFORM_DOMAIN);
     }
 }

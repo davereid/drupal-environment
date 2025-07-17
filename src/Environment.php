@@ -180,4 +180,43 @@ class Environment
         $filename = static::getComposerFilename();
         return pathinfo($filename, PATHINFO_FILENAME) . '.lock';
     }
+
+    /**
+     * Get the current domain name.
+     *
+     * @return string
+     *   The current domain name.
+     *
+     * @todo This could be improved. See https://stackoverflow.com/questions/1459739.
+     */
+    public static function getCurrentDomain(): string
+    {
+        static $host;
+        if (!isset($host)) {
+            $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+        }
+        return $host;
+    }
+
+    /**
+     * Redirect requests to a preferred domain.
+     *
+     * This will not redirect CLI requests.
+     *
+     * @param string $domain
+     *   The preferred domain name.
+     */
+    public static function enforceDomain(string $domain): void
+    {
+        if (!static::isCli() && static::getCurrentDomain() !== $domain) {
+            // Name transaction "redirect" in New Relic for improved reporting.
+            if (extension_loaded('newrelic')) {
+                newrelic_name_transaction('redirect');
+            }
+
+            header('HTTP/1.0 301 Moved Permanently');
+            header('Location: https://' . $domain . $_SERVER['REQUEST_URI']);
+            exit();
+        }
+    }
 }
