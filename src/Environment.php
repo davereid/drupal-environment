@@ -191,7 +191,11 @@ class Environment
      */
     public static function getCurrentDomain(): string
     {
-        return $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+        static $host;
+        if (!isset($host)) {
+            $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+        }
+        return $host;
     }
 
     /**
