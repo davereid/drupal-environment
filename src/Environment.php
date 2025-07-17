@@ -202,7 +202,7 @@ class Environment
      */
     public static function enforceDomain(string $domain): void
     {
-        if (PHP_SAPI !== 'cli' && static::getCurrentDomain() !== $domain) {
+        if (!static::isCli() && static::getCurrentDomain() !== $domain) {
             // Name transaction "redirect" in New Relic for improved reporting.
             if (extension_loaded('newrelic')) {
                 newrelic_name_transaction('redirect');
