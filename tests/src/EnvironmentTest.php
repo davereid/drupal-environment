@@ -290,7 +290,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
-                        'bg_color' => '#990055',
+                        'bg_color' => '#20688C',
                         'fg_color' => '#ffffff',
                     ],
                 ],
@@ -370,7 +370,7 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
-                        'bg_color' => '#990055',
+                        'bg_color' => '#20688C',
                         'fg_color' => '#ffffff',
                     ],
                 ],
