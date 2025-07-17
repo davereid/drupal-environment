@@ -186,6 +186,8 @@ class Environment
      *
      * @return string
      *   The current domain name.
+     *
+     * @todo This could be improved. See https://stackoverflow.com/questions/1459739.
      */
     public static function getCurrentDomain(): string
     {
