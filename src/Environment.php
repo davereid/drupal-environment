@@ -23,6 +23,8 @@ namespace DrupalEnvironment;
 class Environment
 {
 
+    protected static array $cache = [];
+
     /**
      * The currently supported environment classes.
      */
@@ -87,11 +89,24 @@ class Environment
      */
     public static function get(string $name): string|bool
     {
-        static $cache = [];
-        if (!array_key_exists($name, $cache)) {
-            $cache[$name] = getenv($name);
+        if (!array_key_exists($name, static::$cache)) {
+            static::$cache[$name] = getenv($name);
         }
-        return $cache[$name];
+        return static::$cache[$name];
+    }
+
+    /**
+     * Set an environment variable.
+     *
+     * @param string $name
+     *   The name of the environment variable to set.
+     * @param string $value
+     *   The value of the environment variable to set.
+     */
+    public static function put(string $name, string $value): void
+    {
+        putenv("$name=$value");
+        static::$cache[$name] = $value;
     }
 
     /**
@@ -238,6 +253,33 @@ class Environment
             header('HTTP/1.0 301 Moved Permanently');
             header('Location: https://' . $domain . $_SERVER['REQUEST_URI']);
             exit();
+        }
+    }
+
+    /**
+     * Process a file that contains environment variables to the current environment.
+     *
+     * @param string $file
+     *   The path to the JSON file.
+     */
+    public static function processEnvironmentFileJson(string $file): void
+    {
+        if (is_file($file)) {
+            $contents = @file_get_contents($file);
+            if ($contents === FALSE) {
+                throw new \RuntimeException("Unable to read environment file $file.");
+            }
+
+            $values = json_decode($contents, TRUE, 512, JSON_THROW_ON_ERROR);
+
+            // We only support key value secrets that are strings.
+            $values = array_filter($values, function ($value, $key) {
+                return is_string($key) && is_string($value);
+            }, ARRAY_FILTER_USE_BOTH);
+
+            foreach ($values as $name => $value) {
+                Environment::put($name, $value);
+            }
         }
     }
 }
