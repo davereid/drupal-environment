@@ -305,6 +305,9 @@ final class EnvironmentTest extends TestCase
                     'ENV' => [
                         'PANTHEON_ENVIRONMENT' => 'ci',
                     ],
+                    '_SERVER' => [
+                        'HTTP_HOST' => 'drupal-environment-multidev-ci.pantheonsite.io',
+                    ],
                 ],
                 [
                     'getEnvironment' => 'ci',
