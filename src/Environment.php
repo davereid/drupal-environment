@@ -182,18 +182,37 @@ class Environment
     }
 
     /**
-     * Get the current domain name.
+     * Get the current host name.
      *
      * @return string
-     *   The current domain name.
-     *
-     * @todo This could be improved. See https://stackoverflow.com/questions/1459739.
+     *   The current host name.
      */
-    public static function getCurrentDomain(): string
+    public static function getHost(): string
     {
         static $host;
         if (!isset($host)) {
-            $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'];
+            $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
+            $sourceTransformations = array(
+                "HTTP_X_FORWARDED_HOST" => function($value) {
+                    $elements = explode(',', $value);
+                    return trim(end($elements));
+                }
+            );
+            $host = '';
+            foreach ($possibleHostSources as $source)
+            {
+                if (!empty($host)) break;
+                if (empty($_SERVER[$source])) continue;
+                $host = $_SERVER[$source];
+                if (array_key_exists($source, $sourceTransformations))
+                {
+                    $host = $sourceTransformations[$source]($host);
+                }
+            }
+
+            // trim and remove port number from host
+            // host is lowercase as per RFC 952/2181
+            $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
         }
         return $host;
     }
@@ -208,7 +227,7 @@ class Environment
      */
     public static function enforceDomain(string $domain): void
     {
-        if (!static::isCli() && static::getCurrentDomain() !== $domain) {
+        if (!static::isCli() && static::getHost() !== $domain) {
             // Name transaction "redirect" in New Relic for improved reporting.
             if (extension_loaded('newrelic')) {
                 newrelic_name_transaction('redirect');
