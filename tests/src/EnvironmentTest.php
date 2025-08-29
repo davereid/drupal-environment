@@ -173,7 +173,8 @@ final class EnvironmentTest extends TestCase
                         'PANTHEON_ENVIRONMENT' => 'live',
                     ],
                     '_SERVER' => [
-                        'HTTP_HOST' => 'www.example.com',
+                        'HTTP_X_FORWARDED_HOST' => 'www.example.com',
+                        'HTTP_HOST' => 'drupal-environment-live.pantheonsite.io',
                     ],
                 ],
                 [
@@ -192,6 +193,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => true,
                     'isCi' => false,
                     'isLocal' => false,
+                    'getHost' => 'www.example.com',
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#e7131a',
@@ -205,7 +207,7 @@ final class EnvironmentTest extends TestCase
                         'PANTHEON_ENVIRONMENT' => 'test',
                     ],
                     '_SERVER' => [
-                        'HTTP_HOST' => 'drupal-environment-test.pantheonsite.io',
+                        'HTTP_X_FORWARDED_HOST' => 'drupal-environment-test.pantheonsite.io',
                     ],
                 ],
                 [
@@ -224,6 +226,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'getHost' => 'drupal-environment-test.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
                         'bg_color' => '#b85c00',
@@ -256,6 +259,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'getHost' => 'drupal-environment-dev.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Development',
                         'bg_color' => '#307b24',
@@ -288,6 +292,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'getHost' => 'drupal-environment-multidev-test.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
                         'bg_color' => '#20688C',
@@ -511,7 +516,31 @@ final class EnvironmentTest extends TestCase
                     'getComposerFilename' => 'alternate.ext',
                     'getComposerLockFilename' => 'alternate.lock',
                 ]
-            ]
+            ],
+            'current-domain-servername' => [
+                [
+                    '_SERVER' => [
+                        'SERVER_NAME' => 'www.SERVERNAME.com:443',
+                        'SERVER_ADDR' => '127.0.0.1:80',
+                    ],
+                ],
+                [
+                    'getHost' => 'www.servername.com',
+                ],
+            ],
+            'current-domain-serveraddr' => [
+                [
+                    '_SERVER' => [
+                        'HTTP_X_FORWARDED_HOST' => '',
+                        'HTTP_HOST' => '',
+                        'SERVER_NAME' => '',
+                        'SERVER_ADDR' => '127.0.0.1:80',
+                    ],
+                ],
+                [
+                    'getHost' => '127.0.0.1',
+                ],
+            ],
         ];
     }
 }
