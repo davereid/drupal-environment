@@ -195,7 +195,7 @@ class Environment
         $filename = static::getComposerFilename();
         return pathinfo($filename, PATHINFO_FILENAME) . '.lock';
     }
-    
+
     /**
      * Get the current host name.
      *
