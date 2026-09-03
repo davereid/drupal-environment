@@ -23,8 +23,6 @@ namespace DrupalEnvironment;
 class Environment
 {
 
-    protected static array $cache = [];
-
     /**
      * Static cache of environment variables.
      *
