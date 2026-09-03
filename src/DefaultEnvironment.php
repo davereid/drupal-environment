@@ -94,7 +94,8 @@ class DefaultEnvironment
      *
      * Primary used for tests.
      */
-    public static function reset(): void {
+    public static function reset(): void
+    {
         static::$environment = [];
     }
 

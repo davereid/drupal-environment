@@ -23,9 +23,19 @@ namespace DrupalEnvironment;
 class Environment
 {
 
-    private static array $cache = [];
+    /**
+     * Static cache of environment variables.
+     *
+     * @var array
+     */
+    protected static array $cache = [];
 
-    private static string|bool|null $class = null;
+    /**
+     * The environment class name.
+     *
+     * @var mixed
+     */
+    protected static mixed $class;
 
     /**
      * The currently supported environment classes.
@@ -105,12 +115,12 @@ class Environment
      * @param mixed $value
      *   The value to set the environment variable to. Set to NULL to unset.
      */
-    public static function set(string $name, mixed $value = null): void {
+    public static function set(string $name, mixed $value = null): void
+    {
         if (isset($value)) {
             static::$cache[$name] = $value;
             putenv($name . '=' . $value);
-        }
-        else {
+        } else {
             unset(static::$cache[$name]);
             putenv($name);
         }
@@ -121,7 +131,8 @@ class Environment
      *
      * Primary used for tests.
      */
-    public static function reset(): void {
+    public static function reset(): void
+    {
         static::$cache = [];
         static::$class = null;
         DefaultEnvironment::reset();
@@ -148,7 +159,7 @@ class Environment
      */
     public static function isDdev(): bool
     {
-        return (bool)static::get('IS_DDEV_PROJECT');
+        return (bool) static::get('IS_DDEV_PROJECT');
     }
 
     /**
@@ -161,7 +172,7 @@ class Environment
      */
     public static function isLando(): bool
     {
-        return (bool)static::get('LANDO_INFO');
+        return (bool) static::get('LANDO_INFO');
     }
 
     /**
@@ -188,7 +199,7 @@ class Environment
     public static function commandExists(string $command): bool
     {
         $command = escapeshellcmd($command);
-        return (bool)shell_exec("command -v {$command}");
+        return (bool) shell_exec("command -v {$command}");
     }
 
     /**
