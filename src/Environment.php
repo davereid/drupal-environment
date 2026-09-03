@@ -52,7 +52,7 @@ class Environment
     /**
      * Determine which environment class to use.
      *
-     * @return string
+     * @return class-string<DefaultEnvironment>
      *   The class name.
      */
     public static function getEnvironmentClass(): string
@@ -65,7 +65,8 @@ class Environment
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach (static::CLASSES as $class) {
-                    if (call_user_func([$class, 'getEnvironment'])) {
+                    assert(is_a($class, DefaultEnvironment::class, true));
+                    if ($class::getEnvironment()) {
                         static::$class = $class;
                         break;
                     }
@@ -133,9 +134,12 @@ class Environment
      */
     public static function reset(): void
     {
+        // Resetting the default environment class also resets all the
+        // individual environment classes since they share the static variable.
+        static::getEnvironmentClass()::reset();
+        // Once the environment class has been reset, we can reset here.
         static::$cache = [];
         static::$class = null;
-        DefaultEnvironment::reset();
     }
 
     /**
