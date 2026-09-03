@@ -3,8 +3,13 @@ declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
 
+use DrupalEnvironment\CircleCi;
+use DrupalEnvironment\DefaultEnvironment;
 use DrupalEnvironment\Environment;
-use PHPUnit\Event\RuntimeException;
+use DrupalEnvironment\GitHubWorkflow;
+use DrupalEnvironment\GitLabCi;
+use DrupalEnvironment\Pantheon;
+use DrupalEnvironment\Tugboat;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -13,6 +18,16 @@ use PHPUnit\Framework\TestCase;
  */
 final class EnvironmentTest extends TestCase
 {
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Reset all static variables.
+        Environment::reset();
+    }
 
     /**
      * Test the commandExists() method.
@@ -99,6 +114,7 @@ final class EnvironmentTest extends TestCase
             'default-state' => [
                 [],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -125,6 +141,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'prod',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -152,6 +169,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'prod',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -180,6 +198,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'dev',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -207,6 +226,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -234,6 +254,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'live',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -267,6 +288,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'test',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -300,6 +322,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'dev',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -333,6 +356,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'pr-1',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -366,6 +390,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'ci',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -391,6 +416,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'local',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -419,6 +445,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => Tugboat::class,
                     'getEnvironment' => 'phpunit',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -447,6 +474,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => CircleCi::class,
                     'getEnvironment' => 'ci',
                     'isAcquia' => false,
                     'isCircleCi' => true,
@@ -471,6 +499,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => GitHubWorkflow::class,
                     'getEnvironment' => 'ci',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -495,6 +524,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => GitLabCi::class,
                     'getEnvironment' => 'ci',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -518,6 +548,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -545,6 +576,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
                     'isCircleCi' => false,

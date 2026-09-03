@@ -23,6 +23,10 @@ namespace DrupalEnvironment;
 class Environment
 {
 
+    private static array $cache = [];
+
+    private static string|bool|null $class = null;
+
     /**
      * The currently supported environment classes.
      */
@@ -43,22 +47,22 @@ class Environment
      */
     public static function getEnvironmentClass(): string
     {
-        static $class;
-        if (!isset($class)) {
+        if (!isset(static::$class)) {
             if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
-                // Do nothing. The class was assigned in the if.
+                static::$class = $class;
             } else {
-                $classPossibilities = [...static::CLASSES, [DefaultEnvironment::class]];
+                static::$class = DefaultEnvironment::class;
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
-                foreach ($classPossibilities as $class) {
-                    if ($class::getEnvironment()) {
+                foreach (static::CLASSES as $class) {
+                    if (call_user_func([$class, 'getEnvironment'])) {
+                        static::$class = $class;
                         break;
                     }
                 }
             }
         }
-        return $class;
+        return static::$class;
     }
 
     /**
@@ -87,11 +91,21 @@ class Environment
      */
     public static function get(string $name): string|bool
     {
-        static $cache = [];
-        if (!array_key_exists($name, $cache)) {
-            $cache[$name] = getenv($name);
+        if (!array_key_exists($name, static::$cache)) {
+            static::$cache[$name] = getenv($name);
         }
-        return $cache[$name];
+        return static::$cache[$name];
+    }
+
+    /**
+     * Reset the static variables.
+     *
+     * Primary used for tests.
+     */
+    public static function reset(): void {
+        static::$cache = [];
+        static::$class = null;
+        DefaultEnvironment::reset();
     }
 
     /**
