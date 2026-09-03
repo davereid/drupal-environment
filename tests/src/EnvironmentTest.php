@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 final class EnvironmentTest extends TestCase
 {
 
-    use SetVariablesTrait;
+    use SetVariablesTestTrait;
 
     /**
      * Test the commandExists() method.

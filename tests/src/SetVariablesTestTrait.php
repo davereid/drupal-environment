@@ -6,7 +6,10 @@ namespace DrupalEnvironment\Tests;
 
 use DrupalEnvironment\Environment;
 
-trait SetVariablesTrait
+/**
+ * Trait for tests for overriding variables.
+ */
+trait SetVariablesTestTrait
 {
 
     /**
