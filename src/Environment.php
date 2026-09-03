@@ -6,7 +6,7 @@ namespace DrupalEnvironment;
 /**
  * Helpers for working with the Drupal environment.
  *
- * @method static string getEnvironment()
+ * @method static string|bool getEnvironment()
  * @method static bool isAcquia()
  * @method static bool isPantheon()
  * @method static bool isProduction()
@@ -24,6 +24,20 @@ class Environment
 {
 
     /**
+     * Static cache of environment variables.
+     *
+     * @var array
+     */
+    protected static array $cache = [];
+
+    /**
+     * The environment class name.
+     *
+     * @var mixed
+     */
+    protected static mixed $class;
+
+    /**
      * The currently supported environment classes.
      */
     public const CLASSES = [
@@ -33,32 +47,33 @@ class Environment
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
         'isCircleCi' => CircleCi::class,
-        null => DefaultEnvironment::class,
     ];
 
     /**
      * Determine which environment class to use.
      *
-     * @return string
+     * @return class-string<DefaultEnvironment>
      *   The class name.
      */
     public static function getEnvironmentClass(): string
     {
-        static $class;
-        if (!isset($class)) {
+        if (!isset(static::$class)) {
             if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
-                // Do nothing. The class was assigned in the if.
+                static::$class = $class;
             } else {
+                static::$class = DefaultEnvironment::class;
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach (static::CLASSES as $class) {
-                    if (static::get($class::ENVIRONMENT_NAME)) {
+                    assert(is_a($class, DefaultEnvironment::class, true));
+                    if ($class::getEnvironment()) {
+                        static::$class = $class;
                         break;
                     }
                 }
             }
         }
-        return $class;
+        return static::$class;
     }
 
     /**
@@ -82,16 +97,49 @@ class Environment
      * @param string $name
      *   The name of the environment variable to retrieve.
      *
-     * @return string|bool
+     * @return string|bool|null
      *   The environment variable, if it's set.
      */
-    public static function get(string $name): string|bool
+    public static function get(string $name): string|bool|null
     {
-        static $cache = [];
-        if (!array_key_exists($name, $cache)) {
-            $cache[$name] = getenv($name);
+        if (!array_key_exists($name, static::$cache)) {
+            static::$cache[$name] = getenv($name);
         }
-        return $cache[$name];
+        return static::$cache[$name];
+    }
+
+    /**
+     * Set an environment variable.
+     *
+     * @param string $name
+     *   The name of the environment variable to retrieve.
+     * @param mixed $value
+     *   The value to set the environment variable to. Set to NULL to unset.
+     */
+    public static function set(string $name, mixed $value = null): void
+    {
+        if (isset($value)) {
+            static::$cache[$name] = $value;
+            putenv($name . '=' . $value);
+        } else {
+            unset(static::$cache[$name]);
+            putenv($name);
+        }
+    }
+
+    /**
+     * Reset the static variables.
+     *
+     * This should really only be called from tests.
+     */
+    public static function reset(): void
+    {
+        // Resetting the default environment class also resets all the
+        // individual environment classes since they share the static variable.
+        static::getEnvironmentClass()::reset();
+        // Once the environment class has been reset, we can reset here.
+        static::$cache = [];
+        static::$class = null;
     }
 
     /**
@@ -115,7 +163,7 @@ class Environment
      */
     public static function isDdev(): bool
     {
-        return (bool)static::get('IS_DDEV_PROJECT');
+        return (bool) static::get('IS_DDEV_PROJECT');
     }
 
     /**
@@ -128,7 +176,7 @@ class Environment
      */
     public static function isLando(): bool
     {
-        return (bool)static::get('LANDO_INFO');
+        return (bool) static::get('LANDO_INFO');
     }
 
     /**
@@ -155,7 +203,7 @@ class Environment
     public static function commandExists(string $command): bool
     {
         $command = escapeshellcmd($command);
-        return (bool)shell_exec("command -v {$command}");
+        return (bool) shell_exec("command -v {$command}");
     }
 
     /**

@@ -4,9 +4,9 @@ on:
   push:
     branches:
       - main
-  pull_request_target:
+  pull_request:
   schedule:
-    - cron: 0 0 * * *
+    - cron: 0 0 * * 1
   workflow_dispatch:
 
 permissions:
@@ -22,11 +22,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4']
+        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
         os: ['ubuntu-latest']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -43,7 +45,7 @@ jobs:
       - run: composer run test
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
-        uses: qltysh/qlty-action/coverage@v1
+        uses: qltysh/qlty-action/coverage@v2
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: ${{ github.workspace }}/build/logs/clover.xml

@@ -21,8 +21,8 @@ class GitLabCi extends DefaultEnvironment
     /**
      * {@inheritdoc}
      */
-    public static function getEnvironment(): string
+    public static function getEnvironment(): string|bool
     {
-        return static::CI;
+        return parent::getEnvironment() ? static::CI : false;
     }
 }

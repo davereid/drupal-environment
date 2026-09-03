@@ -12,11 +12,21 @@ class DefaultEnvironment
 {
 
     /**
+     * The calculated environment.
+     *
+     * @var array
+     */
+    protected static array $environment = [];
+
+    /**
      * The default environment variable name.
      *
-     * @var string
+     * @var string|array
      */
-    public const ENVIRONMENT_NAME = 'ENVIRONMENT';
+    public const ENVIRONMENT_NAME = [
+      'ENVIRONMENT',
+      'APP_ENV',
+    ];
 
     /**
      * The default production environment name.
@@ -54,20 +64,6 @@ class DefaultEnvironment
     public const CI = 'ci';
 
     /**
-     * Get an environment variable.
-     *
-     * @param string $name
-     *   The name of the environment variable to retrieve.
-     *
-     * @return mixed
-     *   The environment variable, if it's set.
-     */
-    public static function get(string $name)
-    {
-        return Environment::get($name);
-    }
-
-    /**
      * Return the environment name.
      *
      * For example: "local" or "ci" or "dev" or "prod".
@@ -77,7 +73,30 @@ class DefaultEnvironment
      */
     public static function getEnvironment(): string|bool
     {
-        return static::get(static::ENVIRONMENT_NAME);
+        if (!isset(static::$environment[static::class])) {
+            static::$environment[static::class] = false;
+            $environmentPossibilities = static::ENVIRONMENT_NAME;
+            if (!is_array($environmentPossibilities)) {
+                $environmentPossibilities = [$environmentPossibilities];
+            }
+            foreach ($environmentPossibilities as $environmentPossibility) {
+                if ($environment = Environment::get($environmentPossibility)) {
+                    static::$environment[static::class] = $environment;
+                    break;
+                }
+            }
+        }
+        return static::$environment[static::class];
+    }
+
+    /**
+     * Reset the static variables.
+     *
+     * This should really only be called from tests.
+     */
+    public static function reset(): void
+    {
+        static::$environment = [];
     }
 
     /**
