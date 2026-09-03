@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
 
+use DrupalEnvironment\Acquia;
 use DrupalEnvironment\CircleCi;
 use DrupalEnvironment\DefaultEnvironment;
 use DrupalEnvironment\Environment;
@@ -595,6 +596,30 @@ final class EnvironmentTest extends TestCase
                         'bg_color' => '#505050',
                         'fg_color' => '#ffffff',
                     ],
+                ],
+            ],
+            'manual-class' => [
+                [
+                    'ENV' => [
+                        'DRUPAL_ENVIRONMENT_CLASS' => Acquia::class,
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Acquia::class,
+                    'getEnvironment' => false,
+                    'isAcquia' => true,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'composer' => [
