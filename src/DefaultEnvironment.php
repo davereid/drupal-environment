@@ -16,7 +16,10 @@ class DefaultEnvironment
      *
      * @var string|array
      */
-    public const ENVIRONMENT_NAME = ['APP_ENV', 'ENVIRONMENT'];
+    public const ENVIRONMENT_NAME = [
+      'ENVIRONMENT',
+      'APP_ENV',
+    ];
 
     /**
      * The default production environment name.
@@ -77,15 +80,17 @@ class DefaultEnvironment
      */
     public static function getEnvironment(): string|bool
     {
-        if (is_array(static::ENVIRONMENT_NAME)) {
-            foreach (static::ENVIRONMENT_NAME as $name) {
-                if ($environment = static::get($name)) {
-                    return $environment;
-                }
+        static $environment = NULL;
+        if (!isset($environment)) {
+          $environmentPossibilities = is_array(static::ENVIRONMENT_NAME) ? static::ENVIRONMENT_NAME : [static::ENVIRONMENT_NAME];
+          foreach ($environmentPossibilities as $environmentPossibility) {
+            $environment = static::get($environmentPossibility);
+            if ($environment) {
+              break;
             }
-            return FALSE;
+          }
         }
-        return static::get(static::ENVIRONMENT_NAME);
+        return $environment;
     }
 
     /**
