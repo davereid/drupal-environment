@@ -33,7 +33,6 @@ class Environment
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
         'isCircleCi' => CircleCi::class,
-        null => DefaultEnvironment::class,
     ];
 
     /**
@@ -49,10 +48,11 @@ class Environment
             if ($class = static::get('DRUPAL_ENVIRONMENT_CLASS')) {
                 // Do nothing. The class was assigned in the if.
             } else {
+                $classPossibilities = [...static::CLASSES, [DefaultEnvironment::class]];
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
-                foreach (static::CLASSES as $class) {
-                    if (static::get($class::ENVIRONMENT_NAME)) {
+                foreach ($classPossibilities as $class) {
+                    if (static::getEnvironment()) {
                         break;
                     }
                 }
