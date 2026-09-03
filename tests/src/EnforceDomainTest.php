@@ -16,20 +16,59 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the Environment.
+ * Tests Environment::enforeDomain().
  */
-final class EnvironmentTest extends TestCase
+final class EnforceDomainTest extends TestCase
 {
 
     use SetVariablesTrait;
 
     /**
-     * Test the commandExists() method.
+     * Test that enforceDomain() does not redirect CLI requests.
      */
-    public function testCommandExists(): void
+    public function testEnforceDomainMatches(): void
     {
-        $this->assertTrue(Environment::commandExists('php'));
-        $this->assertFalse(Environment::commandExists('invalid-command'));
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+                'HTTP_HOST' => 'example.com',
+            ],
+        ]);
+        RedirectTestEnvironment::enforceDomain('example.com');
+        $this->expectNotToPerformAssertions();
+    }
+
+    /**
+     * Test that enforceDomain() does not redirect CLI requests.
+     */
+    public function testEnforceDomainSkipsCliRequests(): void
+    {
+        RedirectTestEnvironment::$isCli = true;
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+                'HTTP_HOST' => 'legacy.example.com',
+            ],
+        ]);
+        RedirectTestEnvironment::enforceDomain('example.com');
+        $this->expectNotToPerformAssertions();
+    }
+
+    /**
+     * Test that enforceDomain() redirects requests using the wrong domain.
+     */
+    public function testEnforceDomainRedirectsToPreferredDomain(): void
+    {
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+                'HTTP_HOST' => 'legacy.example.com',
+            ],
+        ]);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('https://example.com/current-path?query=value');
+        $this->expectExceptionCode(301);
+        RedirectTestEnvironment::enforceDomain('example.com');
     }
 
     /**
@@ -52,9 +91,50 @@ final class EnvironmentTest extends TestCase
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
         ];
-        $this->setVariables($variables);
+        $originals = [];
+        $this->setVariables($variables, $originals);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
+        }
+        // Reset the environment variables.
+        $this->setVariables($originals);
+    }
+
+    /**
+     * Set environment variables manually for testing.
+     *
+     * @param array $variables
+     *   The variable values to set keyed by name.
+     * @param array|null $originals
+     *   If provided will be populated with the original variable values keyed by name.
+     */
+    protected function setVariables(array $variables, ?array &$originals = null): void
+    {
+        foreach ($variables as $type => $type_variables) {
+            foreach ($type_variables as $name => $value) {
+                switch ($type) {
+                    case 'ENV':
+                        if (isset($originals)) {
+                            $originals[$type][$name] = getenv($name) ?: null;
+                        }
+                        Environment::set($name, $value);
+                        break;
+
+                    case '_SERVER':
+                        if (isset($originals)) {
+                            $originals[$type][$name] = $_SERVER[$name] ?? null;
+                        }
+                        $_SERVER[$name] = $value;
+                        break;
+
+                    default:
+                        if (isset($originals)) {
+                            $originals[$type][$name] = $$type[$name] ?: null;
+                        }
+                        $$type[$name] = $value;
+                        break;
+                }
+            }
         }
     }
 
