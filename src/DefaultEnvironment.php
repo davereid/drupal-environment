@@ -173,7 +173,8 @@ class DefaultEnvironment
      *
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
      */
-    public static function getIndicatorConfig(): ?array {
+    public static function getIndicatorConfig(): ?array
+    {
         return match (true)
         {
             static::isProduction() => [
