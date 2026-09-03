@@ -80,15 +80,15 @@ class DefaultEnvironment
      */
     public static function getEnvironment(): string|bool
     {
-        static $environment = NULL;
+        static $environment = null;
         if (!isset($environment)) {
-          $environmentPossibilities = is_array(static::ENVIRONMENT_NAME) ? static::ENVIRONMENT_NAME : [static::ENVIRONMENT_NAME];
-          foreach ($environmentPossibilities as $environmentPossibility) {
-            $environment = static::get($environmentPossibility);
-            if ($environment) {
-              break;
+            $environmentPossibilities = is_array(static::ENVIRONMENT_NAME) ? static::ENVIRONMENT_NAME : [static::ENVIRONMENT_NAME];
+            foreach ($environmentPossibilities as $environmentPossibility) {
+                $environment = static::get($environmentPossibility);
+                if ($environment) {
+                    break;
+                }
             }
-          }
         }
         return $environment;
     }
