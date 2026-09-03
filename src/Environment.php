@@ -278,6 +278,9 @@ class Environment
      *
      * This will not redirect CLI requests.
      *
+     * This does not enforce HTTPS because there should be better ways for your
+     * host to do that in advance of this.
+     *
      * @param string $domain
      *   The preferred domain name.
      */
@@ -289,9 +292,31 @@ class Environment
                 newrelic_name_transaction('redirect');
             }
 
-            header('HTTP/1.0 301 Moved Permanently');
-            header('Location: https://' . $domain . $_SERVER['REQUEST_URI']);
-            exit();
+            static::redirect('https://' . $domain . $_SERVER['REQUEST_URI']);
         }
+    }
+
+    /**
+     * Terminate the current request.
+     *
+     * This is a separate method to allow the redirect behavior to be tested
+     * without terminating the test process.
+     *
+     * @param string $url
+     *   The URL to redirect to.
+     * @param int $code
+     *   The HTTP status code to use for the redirect.
+     *
+     * @codeCoverageIgnore
+     */
+    protected static function redirect(string $url, int $code = 301): never
+    {
+        assert($code >= 300 && $code < 400);
+        if (headers_sent()) {
+            throw new \RuntimeException('Cannot redirect after headers have been sent.');
+        }
+        header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);
+        header('Location: ' . $url);
+        exit;
     }
 }
