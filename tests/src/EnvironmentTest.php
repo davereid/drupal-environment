@@ -84,7 +84,7 @@ final class EnvironmentTest extends TestCase
                         if (isset($originals)) {
                             $originals[$type][$name] = getenv($name) ?: null;
                         }
-                        isset($value) ? putenv("$name=$value") : putenv($name);
+                        Environment::set($name, $value);
                         break;
 
                     case '_SERVER':

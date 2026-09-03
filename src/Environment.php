@@ -86,15 +86,34 @@ class Environment
      * @param string $name
      *   The name of the environment variable to retrieve.
      *
-     * @return string|bool
+     * @return string|bool|null
      *   The environment variable, if it's set.
      */
-    public static function get(string $name): string|bool
+    public static function get(string $name): string|bool|null
     {
         if (!array_key_exists($name, static::$cache)) {
             static::$cache[$name] = getenv($name);
         }
         return static::$cache[$name];
+    }
+
+    /**
+     * Set an environment variable.
+     *
+     * @param string $name
+     *   The name of the environment variable to retrieve.
+     * @param mixed $value
+     *   The value to set the environment variable to. Set to NULL to unset.
+     */
+    public static function set(string $name, mixed $value = null): void {
+        if (isset($value)) {
+            static::$cache[$name] = $value;
+            putenv($name . '=' . $value);
+        }
+        else {
+            unset(static::$cache[$name]);
+            putenv($name);
+        }
     }
 
     /**
