@@ -319,7 +319,7 @@ class Environment
             }, ARRAY_FILTER_USE_BOTH);
 
             foreach ($values as $name => $value) {
-                Environment::put($name, $value);
+                Environment::set($name, $value);
             }
         }
     }
