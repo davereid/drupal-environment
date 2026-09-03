@@ -173,10 +173,10 @@ class Environment
     }
 
     /**
-     * Determine if this is a Localdev or Lando environment.
+     * Determine if this is a Lando environment.
      *
      * @return bool
-     *   TRUE if this is a Localdev or Lando environment.
+     *   TRUE if this is a Lando environment.
      *
      * @see https://docs.lando.dev/core/v3/env.html
      */

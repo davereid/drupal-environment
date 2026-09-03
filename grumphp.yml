@@ -12,3 +12,7 @@ grumphp:
         phpcs: ~
         phpstan: ~
         phpunit: ~
+        npm_script:
+            script: "lint"
+            triggered_by: [md, php, yml, json]
+            is_run_task: true
