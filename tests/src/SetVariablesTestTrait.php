@@ -54,7 +54,7 @@ trait SetVariablesTestTrait
             foreach ($type_variables as $name => $value) {
                 switch ($type) {
                     case 'ENV':
-                        isset($value) ? putenv($name . '=' . $value) : putenv($name);
+                        Environment::set($name, $value);
                         break;
 
                     case '_SERVER':
