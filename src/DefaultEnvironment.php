@@ -175,8 +175,7 @@ class DefaultEnvironment
      */
     public static function getIndicatorConfig(): ?array
     {
-        return match (true)
-        {
+        return match (true) {
             static::isProduction() => [
                 'name' => 'Production',
                 'bg_color' => '#e7131a',
