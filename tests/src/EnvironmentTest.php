@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
@@ -19,7 +20,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class EnvironmentTest extends TestCase
 {
-
     /**
      * {@inheritdoc}
      */

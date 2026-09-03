@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DrupalEnvironment;
@@ -10,7 +11,6 @@ namespace DrupalEnvironment;
  */
 class DefaultEnvironment
 {
-
     /**
      * The calculated environment.
      *
