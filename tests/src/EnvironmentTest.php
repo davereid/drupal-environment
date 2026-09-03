@@ -36,6 +36,7 @@ final class EnvironmentTest extends TestCase
         ];
         $variables['ENV'] += [
             'ENVIRONMENT' => null,
+            'APP_ENV' => null,
             'PANTHEON_ENVIRONMENT' => null,
             // When running under CI, we need to ensure these are reset.
             'CI' => null,
@@ -140,6 +141,61 @@ final class EnvironmentTest extends TestCase
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'default-prod-appenv' => [
+                [
+                    'ENV' => [
+                        'APP_ENV' => 'prod',
+                    ],
+                ],
+                [
+                    'getEnvironment' => 'prod',
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => true,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Production',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'environment-priority' => [
+                [
+                    'ENV' => [
+                        'ENVIRONMENT' => 'dev',
+                        'APP_ENV' => 'prod',
+                    ],
+                ],
+                [
+                    'getEnvironment' => 'dev',
+                    'isAcquia' => false,
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => true,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Development',
+                        'bg_color' => '#307b24',
                         'fg_color' => '#ffffff',
                     ],
                 ],
