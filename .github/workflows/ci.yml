@@ -43,6 +43,7 @@ jobs:
       - run: composer audit
       - run: composer run lint
       - run: composer run test
+      - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
         uses: qltysh/qlty-action/coverage@v2
