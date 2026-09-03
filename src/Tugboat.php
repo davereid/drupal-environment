@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DrupalEnvironment;
@@ -12,7 +13,6 @@ namespace DrupalEnvironment;
  */
 class Tugboat extends DefaultEnvironment
 {
-
     /**
      * {@inheritdoc}
      */

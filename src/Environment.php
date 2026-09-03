@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DrupalEnvironment;
@@ -22,7 +23,6 @@ namespace DrupalEnvironment;
  */
 class Environment
 {
-
     /**
      * Static cache of environment variables.
      *
