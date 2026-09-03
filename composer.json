@@ -1,8 +1,8 @@
 {
     "name": "davereid/drupal-environment",
     "description": "Provides a helper for working with environment variables and Drupal hosting providers.",
-    "type": "library",
     "license": "MIT",
+    "type": "library",
     "keywords": [
         "Drupal",
         "Acquia",
@@ -16,19 +16,21 @@
             "email": "dave@davereid.net"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
-        "php": ">=8.1"
+        "php": ">=8.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10 || ^11 || ^12",
-        "phpstan/phpstan": "^2",
+        "ergebnis/composer-normalize": "^2",
+        "php-parallel-lint/php-parallel-lint": "^1",
+        "phpro/grumphp-shim": "^2",
         "phpstan/extension-installer": "^1",
+        "phpstan/phpstan": "^2",
         "phpstan/phpstan-deprecation-rules": "^2",
-        "roave/security-advisories": "dev-master",
+        "phpunit/phpunit": "^10 || ^11 || ^12",
         "squizlabs/php_codesniffer": "^3.7 || ^4.0"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "DrupalEnvironment\\": "src/"
@@ -38,6 +40,17 @@
         "psr-4": {
             "DrupalEnvironment\\Tests\\": "tests/src/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true,
+            "phpro/grumphp-shim": true,
+            "phpstan/extension-installer": true
+        },
+        "platform": {
+            "php": "8.4"
+        },
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
@@ -49,20 +62,12 @@
             "@phpcs",
             "@phpstan"
         ],
+        "phpcs": "vendor/bin/phpcs",
+        "phpstan": "vendor/bin/phpstan",
+        "phpunit": "vendor/bin/phpunit --coverage-text",
         "test": [
             "@putenv XDEBUG_MODE=coverage",
             "@phpunit"
-        ],
-        "phpcs": "vendor/bin/phpcs",
-        "phpstan": "vendor/bin/phpstan",
-        "phpunit": "vendor/bin/phpunit --coverage-text"
-    },
-    "config": {
-        "allow-plugins": {
-            "phpstan/extension-installer": true
-        },
-        "platform": {
-            "php": "8.4"
-        }
+        ]
     }
 }

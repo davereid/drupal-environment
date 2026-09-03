@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace DrupalEnvironment\Tests;
@@ -19,16 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class EnvironmentTest extends TestCase
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        // Reset all static variables.
-        Environment::reset();
-    }
+    use SetVariablesTestTrait;
 
     /**
      * Test the commandExists() method.
@@ -59,50 +51,9 @@ final class EnvironmentTest extends TestCase
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
         ];
-        $originals = [];
-        $this->setVariables($variables, $originals);
+        $this->setVariables($variables);
         foreach ($method_tests as $name => $expected) {
             $this->assertSame($expected, Environment::$name(), "Asserting Environment::$name");
-        }
-        // Reset the environment variables.
-        $this->setVariables($originals);
-    }
-
-    /**
-     * Set environment variables manually for testing.
-     *
-     * @param array $variables
-     *   The variable values to set keyed by name.
-     * @param array|null $originals
-     *   If provided will be populated with the original variable values keyed by name.
-     */
-    protected function setVariables(array $variables, ?array &$originals = null): void
-    {
-        foreach ($variables as $type => $type_variables) {
-            foreach ($type_variables as $name => $value) {
-                switch ($type) {
-                    case 'ENV':
-                        if (isset($originals)) {
-                            $originals[$type][$name] = getenv($name) ?: null;
-                        }
-                        Environment::set($name, $value);
-                        break;
-
-                    case '_SERVER':
-                        if (isset($originals)) {
-                            $originals[$type][$name] = $_SERVER[$name] ?? null;
-                        }
-                        $_SERVER[$name] = $value;
-                        break;
-
-                    default:
-                        if (isset($originals)) {
-                            $originals[$type][$name] = $$type[$name] ?: null;
-                        }
-                        $$type[$name] = $value;
-                        break;
-                }
-            }
         }
     }
 
