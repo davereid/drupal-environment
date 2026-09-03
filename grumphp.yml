@@ -1,0 +1,13 @@
+grumphp:
+    ascii: null
+    fixer:
+        enabled: true
+        fix_by_default: true
+    tasks:
+        phplint: ~
+        yamllint: ~
+        jsonlint: ~
+        composer: ~
+        phpcs: ~
+        phpstan: ~
+        phpunit: ~
