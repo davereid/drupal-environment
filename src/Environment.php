@@ -128,6 +128,7 @@ class Environment
 
         // Special handling for setting the internal class variable.
         if ($name === 'DRUPAL_ENVIRONMENT_CLASS') {
+            static::reset();
             static::$class = $value;
         }
     }
