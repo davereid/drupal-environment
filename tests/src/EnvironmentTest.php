@@ -40,6 +40,93 @@ final class EnvironmentTest extends TestCase
     }
 
     /**
+     * Test that enforceDomain() does not redirect CLI requests.
+     */
+    public function testEnforceDomainMatches(): void
+    {
+        $test_environment = new class extends Environment {
+
+            /**
+             * {@inheritdoc}
+             */
+            public static function isCli(): bool
+            {
+                return false;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            protected static function redirect(string $url, int $code = 301): never
+            {
+                throw new \RuntimeException($url, $code);
+            }
+        };
+
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+                'HTTP_HOST' => 'example.com',
+            ],
+        ]);
+        $test_environment::enforceDomain('example.com');
+        $this->expectNotToPerformAssertions();
+    }
+
+    /**
+     * Test that enforceDomain() does not redirect CLI requests.
+     */
+    public function testEnforceDomainSkipsCliRequests(): void
+    {
+        if (!Environment::isCli()) {
+            $this->markTestSkipped('Cannot test enforceDomain() when not running PHP in CLI.');
+        }
+
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+            ],
+        ]);
+        Environment::enforceDomain('example.com');
+        $this->expectNotToPerformAssertions();
+    }
+
+    /**
+     * Test that enforceDomain() redirects requests using the wrong domain.
+     */
+    public function testEnforceDomainRedirectsToPreferredDomain(): void
+    {
+        $test_environment = new class extends Environment {
+
+            /**
+             * {@inheritdoc}
+             */
+            public static function isCli(): bool
+            {
+                return false;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            protected static function redirect(string $url, int $code = 301): never
+            {
+                throw new \RuntimeException($url, $code);
+            }
+        };
+
+        $this->setVariables([
+            '_SERVER' => [
+                'REQUEST_URI' => '/current-path?query=value',
+            ],
+        ]);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('https://example.com/current-path?query=value');
+        $this->expectExceptionCode(301);
+        $test_environment::enforceDomain('example.com');
+    }
+
+    /**
      * Test the environment methods.
      *
      * @dataProvider providerEnvironment

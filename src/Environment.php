@@ -289,9 +289,20 @@ class Environment
                 newrelic_name_transaction('redirect');
             }
 
-            header('HTTP/1.0 301 Moved Permanently');
-            header('Location: https://' . $domain . $_SERVER['REQUEST_URI']);
-            exit();
+            static::redirect('https://' . $domain . $_SERVER['REQUEST_URI']);
         }
+    }
+
+    /**
+     * Terminate the current request.
+     *
+     * This is a separate method to allow the redirect behavior to be tested
+     * without terminating the test process.
+     */
+    protected static function redirect(string $url, int $code = 301): never
+    {
+        header('HTTP/1.0 ' . $code);
+        header('Location: ' . $url);
+        exit();
     }
 }
