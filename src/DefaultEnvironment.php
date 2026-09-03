@@ -92,7 +92,7 @@ class DefaultEnvironment
     /**
      * Reset the static variables.
      *
-     * Primary used for tests.
+     * This should really only be called from tests.
      */
     public static function reset(): void
     {
