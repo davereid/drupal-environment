@@ -11,7 +11,6 @@ use DrupalEnvironment\Environment;
  */
 final class RedirectTestEnvironment extends Environment
 {
-
     /**
      * If the request is supposed to be a CLI request.
      */

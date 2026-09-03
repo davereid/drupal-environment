@@ -7,15 +7,14 @@ namespace DrupalEnvironment\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests Environment::enforeDomain().
+ * Tests Environment::enforceDomain().
  */
 final class EnforceDomainTest extends TestCase
 {
-
     use SetVariablesTestTrait;
 
     /**
-     * Test that enforceDomain() does not redirect CLI requests.
+     * Test that enforceDomain() does not redirect when the domain matches.
      */
     public function testEnforceDomainMatches(): void
     {

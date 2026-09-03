@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
  */
 final class EnvironmentTest extends TestCase
 {
-
     use SetVariablesTestTrait;
 
     /**

@@ -11,7 +11,6 @@ use DrupalEnvironment\Environment;
  */
 trait SetVariablesTestTrait
 {
-
     /**
      * The original variables from before the test run.
      *
