@@ -173,45 +173,35 @@ class DefaultEnvironment
      *
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
      */
-    public static function getIndicatorConfig(): ?array
-    {
-        if (static::isProduction()) {
-            return [
+    public static function getIndicatorConfig(): ?array {
+        return match (TRUE) {
+            static::isProduction() => [
                 'name' => 'Production',
                 'bg_color' => '#e7131a',
                 'fg_color' => '#ffffff',
-            ];
-        }
-        if (static::isStaging()) {
-            return [
+            ],
+            static::isStaging() => [
                 'name' => 'Staging',
                 'bg_color' => '#b85c00',
                 'fg_color' => '#ffffff',
-            ];
-        }
-        if (static::isDevelopment()) {
-            return [
+            ],
+            static::isDevelopment() => [
                 'name' => 'Development',
                 'bg_color' => '#307b24',
                 'fg_color' => '#ffffff',
-            ];
-        }
-        if (static::isPreview()) {
-            return [
+            ],
+            static::isPreview() => [
                 'name' => 'Preview',
                 'bg_color' => '#20688C',
                 'fg_color' => '#ffffff',
-            ];
-        }
-        if (static::isLocal()) {
-            return [
+            ],
+            static::isLocal() => [
                 'name' => 'Local',
                 'bg_color' => '#505050',
                 'fg_color' => '#ffffff',
-            ];
-        }
-
-        // Unknown environment condition.
-        return null;
+            ],
+            // Unknown environment condition.
+            default => null,
+        };
     }
 }

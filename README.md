@@ -100,3 +100,10 @@ if ($environment = Environment::getEnvironment()) {
   }
 }
 ```
+
+## Recommended Projects
+
+### Loading .env files
+
+- https://github.com/symfony/dotenv
+- https://github.com/vlucas/phpdotenv
