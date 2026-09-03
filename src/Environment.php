@@ -298,11 +298,13 @@ class Environment
      *
      * This is a separate method to allow the redirect behavior to be tested
      * without terminating the test process.
+     *
+     * @codeCoverageIgnore
      */
     protected static function redirect(string $url, int $code = 301): never
     {
         header('HTTP/1.0 ' . $code);
         header('Location: ' . $url);
-        exit();
+        exit;
     }
 }
