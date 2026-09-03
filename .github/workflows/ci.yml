@@ -37,12 +37,13 @@ jobs:
           COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Read the composer PHP config
         run: echo "PHP_DEFAULT_VERSION=$(composer config platform.php)" >> "$GITHUB_ENV"
-      - run: composer config --unset platform.php
+      - run: composer config --unset platform
       - run: composer diagnose || true
       - run: composer install
       - run: composer audit
       - run: composer run lint
       - run: composer run test
+      - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
         uses: qltysh/qlty-action/coverage@v2
