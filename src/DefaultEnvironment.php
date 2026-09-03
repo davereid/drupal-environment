@@ -174,7 +174,8 @@ class DefaultEnvironment
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/
      */
     public static function getIndicatorConfig(): ?array {
-        return match (TRUE) {
+        return match (true)
+        {
             static::isProduction() => [
                 'name' => 'Production',
                 'bg_color' => '#e7131a',
