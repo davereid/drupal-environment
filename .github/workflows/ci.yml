@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 1.x
   pull_request:
   schedule:
     - cron: 0 0 * * 1
@@ -26,11 +27,11 @@ jobs:
         os: ['ubuntu-latest']
       fail-fast: false
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: ${{ matrix.php }}
         env:
@@ -46,7 +47,7 @@ jobs:
       - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
-        uses: qltysh/qlty-action/coverage@v2
+        uses: qltysh/qlty-action/coverage@08a0a862c159eae9b9003081da6663d96efef637 # v2.3.0
         with:
           token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
           files: ${{ github.workspace }}/build/logs/clover.xml

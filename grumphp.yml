@@ -1,16 +1,16 @@
 grumphp:
-    ascii: null
-    fixer:
-        enabled: true
-        fix_by_default: true
-    tasks:
-        phplint: ~
-        yamllint: ~
-        jsonlint:
-            ignore_patterns:
-                - /^tests\/fixtures\/invalid\.json/
-        composer: ~
-        composer_normalize: ~
-        phpcs: ~
-        phpstan: ~
-        phpunit: ~
+  ascii: null
+  fixer:
+    enabled: true
+    fix_by_default: true
+  tasks:
+    phplint: ~
+    yamllint: ~
+    jsonlint:
+      ignore_patterns:
+        - /^tests\/fixtures\/invalid\.json/
+    composer: ~
+    composer_normalize: ~
+    phpcs: ~
+    phpstan: ~
+    phpunit: ~
