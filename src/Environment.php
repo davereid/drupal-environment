@@ -52,7 +52,7 @@ class Environment
                 // Intentionally re-assigning the class variable here so that a match
                 // breaks the foreach loop, or we fall back to the default class.
                 foreach ($classPossibilities as $class) {
-                    if (static::getEnvironment()) {
+                    if ($class::getEnvironment()) {
                         break;
                     }
                 }
