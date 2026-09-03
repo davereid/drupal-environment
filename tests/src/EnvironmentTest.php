@@ -659,4 +659,54 @@ final class EnvironmentTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * Test processing JSON files into environment variables.
+     *
+     * @dataProvider providerProcessEnvironmentFileJson
+     */
+    #[DataProvider('providerProcessEnvironmentFileJson')]
+    public function testProcessEnvironmentFileJson(string $file, array|string $expectedValues): void
+    {
+        if (is_string($expectedValues)) {
+            $this->expectException($expectedValues);
+        }
+        Environment::processEnvironmentFileJson($file);
+
+        foreach ($expectedValues as $name => $value) {
+            $this->assertSame($value, getenv($name));
+            $this->assertSame($value, Environment::get($name));
+        }
+    }
+
+    /**
+     * Data provider for ::testProcessEnvironmentFileJson.
+     */
+    public static function providerProcessEnvironmentFileJson(): array
+    {
+        $fixtureDirectory = dirname(__DIR__) . '/fixtures/';
+        return [
+            'valid-file' => [
+                $fixtureDirectory . 'valid.json',
+                [
+                    'JSON_UPPER_KEY' => 'upper',
+                    'json_lower_key' => 'lower',
+                    'JSON_LOWER_KEY' => false,
+                    'invalid_value' => false,
+                ],
+            ],
+            'invalid-file' => [
+                $fixtureDirectory . 'invalid.json',
+                \JsonException::class,
+            ],
+            'nested-fail' => [
+                $fixtureDirectory . 'nested.json',
+                \JsonException::class,
+            ],
+            'missing-file' => [
+                $fixtureDirectory . 'missing.json',
+                \RuntimeException::class,
+            ],
+        ];
+    }
 }

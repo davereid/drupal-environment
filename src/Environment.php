@@ -313,11 +313,13 @@ class Environment
         }
 
         $contents = @file_get_contents($file);
-        if ($contents === FALSE) {
+        if ($contents === false) {
             throw new \RuntimeException("Environment file $file was unable to be read.");
         }
 
-        $values = json_decode($contents, TRUE, 1, JSON_THROW_ON_ERROR);
+        // The depth is set intentionally low because we do not expect deeply
+        // nested JSON.
+        $values = json_decode($contents, true, 2, JSON_THROW_ON_ERROR);
 
         // We only support key value secrets that are strings.
         $values = array_filter($values, static function ($value, $key) {
