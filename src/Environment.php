@@ -200,17 +200,24 @@ class Environment
     /**
      * Determines whether the current request comes from a test.
      *
+     * This currently covers the following cases:
+     * - When running with PHPUnit.
+     * - When DRUPAL_TEST_IN_CHILD_SITE has been set to TRUE by DrupalKernel.
+     * - When running with Playwright.
+     *
      * @return bool
      *   TRUE if this request was originated in a test environment, FALSE
      *   otherwise.
+     *
+     * @see \Drupal\Core\DrupalKernel::setupDrupalTestInChildSite
+     * @link https://github.com/Lullabot/playwright-drupal/
      */
     public static function isTest(): bool
     {
-        return defined('SIMPLETEST_USER_AGENT')
-            || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
-            || defined('PHPUNIT_COMPOSER_INSTALL')
+        return defined('PHPUNIT_COMPOSER_INSTALL')
             || defined('__PHPUNIT_PHAR__')
-            || (function_exists('drupal_valid_test_ua') && drupal_valid_test_ua())
+            // Drupal's methods of detecting if being run in a test.
+            || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
             // @see https://github.com/Lullabot/playwright-drupal/
             || static::get('PLAYWRIGHT_SETUP')
             || static::getEnvironment() === 'testing';
