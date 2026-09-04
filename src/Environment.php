@@ -287,11 +287,6 @@ class Environment
     public static function enforceDomain(string $domain): void
     {
         if (!static::isCli() && static::getHost() !== $domain) {
-            // Name transaction "redirect" in New Relic for improved reporting.
-            if (extension_loaded('newrelic')) {
-                newrelic_name_transaction('redirect');
-            }
-
             static::redirect('https://' . $domain . $_SERVER['REQUEST_URI']);
         }
     }
@@ -315,6 +310,12 @@ class Environment
         if (headers_sent()) {
             throw new \RuntimeException('Cannot redirect after headers have been sent.');
         }
+
+        // Name transaction "redirect" in New Relic for improved reporting.
+        if (extension_loaded('newrelic')) {
+            newrelic_name_transaction('redirect');
+        }
+
         header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);
         header('Location: ' . $url);
         exit;
