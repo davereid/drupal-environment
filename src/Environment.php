@@ -173,10 +173,10 @@ class Environment
     }
 
     /**
-     * Determine if this is a Localdev or Lando environment.
+     * Determine if this is a Lando environment.
      *
      * @return bool
-     *   TRUE if this is a Localdev or Lando environment.
+     *   TRUE if this is a Lando environment.
      *
      * @see https://docs.lando.dev/core/v3/env.html
      */
@@ -186,15 +186,34 @@ class Environment
     }
 
     /**
-     * Determines whether the current request is a command-line one.
+     * Determines whether the current request comes from the command line.
      *
      * @return bool
-     *   TRUE if this request was originated in command-line (cli), FALSE
+     *   TRUE if this request was originated in command line (cli), FALSE
      *   otherwise.
      */
     public static function isCli(): bool
     {
         return (PHP_SAPI === 'cli');
+    }
+
+    /**
+     * Determines whether the current request comes from a test.
+     *
+     * @return bool
+     *   TRUE if this request was originated in a test environment, FALSE
+     *   otherwise.
+     */
+    public static function isTest(): bool
+    {
+        return defined('SIMPLETEST_USER_AGENT')
+            || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
+            || defined('PHPUNIT_COMPOSER_INSTALL')
+            || defined('__PHPUNIT_PHAR__')
+            || (function_exists('drupal_valid_test_ua') && drupal_valid_test_ua())
+            // @see https://github.com/Lullabot/playwright-drupal/
+            || static::get('PLAYWRIGHT_SETUP')
+            || static::getEnvironment() === 'testing';
     }
 
     /**
@@ -208,6 +227,10 @@ class Environment
      */
     public static function commandExists(string $command): bool
     {
+        // @todo Should this throw an error?
+        if (!function_exists('shell_exec')) {
+            return false;
+        }
         $command = escapeshellcmd($command);
         return (bool) shell_exec("command -v {$command}");
     }
