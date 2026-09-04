@@ -320,4 +320,40 @@ class Environment
         header('Location: ' . $url);
         exit;
     }
+
+    /**
+     * Process a file that contains environment variables to the current environment.
+     *
+     * @param string $file
+     *   The path to the JSON file.
+     *
+     * @throws \RuntimeException
+     *   If the file does not exist or is not readable.
+     * @throws \JsonException
+     *   If the file contents is not valid JSON.
+     */
+    public static function processEnvironmentFileJson(string $file): void
+    {
+        if (!is_file($file) || !is_readable($file)) {
+            throw new \RuntimeException("Environment file $file does not exist or is not readable.");
+        }
+
+        $contents = @file_get_contents($file);
+        if ($contents === false) {
+            throw new \RuntimeException("Environment file $file was unable to be read.");
+        }
+
+        // The depth is set intentionally low because we do not expect deeply
+        // nested JSON.
+        $values = json_decode($contents, true, 2, JSON_THROW_ON_ERROR);
+
+        // We only support key value secrets that are strings.
+        $values = array_filter($values, static function ($value, $key) {
+            return is_string($key) && is_string($value);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        foreach ($values as $name => $value) {
+            static::set($name, $value);
+        }
+    }
 }
