@@ -243,8 +243,7 @@ class Environment
      */
     public static function getHost(): string
     {
-        static $host;
-        if (!isset($host)) {
+        if (!isset(static::$cache[__METHOD__])) {
             $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
             $sourceTransformations = array(
                 "HTTP_X_FORWARDED_HOST" => function ($value) {
@@ -268,9 +267,9 @@ class Environment
 
             // trim and remove port number from host
             // host is lowercase as per RFC 952/2181
-            $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
+            static::$cache[__METHOD__] = strtolower(preg_replace('/:\d+$/', '', trim($host)));
         }
-        return $host;
+        return static::$cache[__METHOD__];
     }
 
     /**
