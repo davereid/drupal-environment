@@ -173,10 +173,10 @@ class Environment
     }
 
     /**
-     * Determine if this is a Localdev or Lando environment.
+     * Determine if this is a Lando environment.
      *
      * @return bool
-     *   TRUE if this is a Localdev or Lando environment.
+     *   TRUE if this is a Lando environment.
      *
      * @see https://docs.lando.dev/core/v3/env.html
      */
@@ -186,15 +186,41 @@ class Environment
     }
 
     /**
-     * Determines whether the current request is a command-line one.
+     * Determines whether the current request comes from the command line.
      *
      * @return bool
-     *   TRUE if this request was originated in command-line (cli), FALSE
+     *   TRUE if this request was originated in command line (cli), FALSE
      *   otherwise.
      */
     public static function isCli(): bool
     {
         return (PHP_SAPI === 'cli');
+    }
+
+    /**
+     * Determines whether the current request comes from a test.
+     *
+     * This currently covers the following cases:
+     * - When running with PHPUnit.
+     * - When DRUPAL_TEST_IN_CHILD_SITE has been set to TRUE by DrupalKernel.
+     * - When running with Playwright.
+     *
+     * @return bool
+     *   TRUE if this request was originated in a test environment, FALSE
+     *   otherwise.
+     *
+     * @see \Drupal\Core\DrupalKernel::setupDrupalTestInChildSite
+     * @link https://github.com/Lullabot/playwright-drupal/
+     */
+    public static function isTest(): bool
+    {
+        return defined('PHPUNIT_COMPOSER_INSTALL')
+            || defined('__PHPUNIT_PHAR__')
+            // Drupal's methods of detecting if being run in a test.
+            || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
+            // @see https://github.com/Lullabot/playwright-drupal/
+            || static::get('PLAYWRIGHT_SETUP')
+            || static::getEnvironment() === 'testing';
     }
 
     /**
@@ -208,6 +234,10 @@ class Environment
      */
     public static function commandExists(string $command): bool
     {
+        // @todo Should this throw an error?
+        if (!function_exists('shell_exec')) {
+            return false;
+        }
         $command = escapeshellcmd($command);
         return (bool) shell_exec("command -v {$command}");
     }

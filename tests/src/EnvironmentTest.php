@@ -32,6 +32,30 @@ final class EnvironmentTest extends TestCase
     }
 
     /**
+     * Test that isTest() returns false in an isolated standard process.
+     */
+    public function testIsTestReturnsFalseInStandardEnvironment(): void
+    {
+        if (!function_exists('shell_exec')) {
+            $this->markTestSkipped('shell_exec() is disabled.');
+        }
+
+        $autoloadPath = dirname(__DIR__, 2) . '/vendor/autoload.php';
+        if (!is_file($autoloadPath)) {
+            $this->markTestIncomplete('Could not find autoload.php.');
+        }
+
+        $code = sprintf(
+            'require %s; echo \DrupalEnvironment\Environment::isTest() ? "true" : "false";',
+            var_export($autoloadPath, true)
+        );
+        $command = sprintf('%s -r %s', escapeshellcmd(PHP_BINARY), escapeshellarg($code));
+        $output = shell_exec($command);
+
+        $this->assertSame('false', trim((string) $output));
+    }
+
+    /**
      * Test the environment methods.
      *
      * @dataProvider providerEnvironment
@@ -81,6 +105,7 @@ final class EnvironmentTest extends TestCase
                     'isCi' => false,
                     'isCli' => (PHP_SAPI === 'cli'),
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                     'getComposerFilename' => 'composer.json',
                     'getComposerLockFilename' => 'composer.lock',
@@ -107,6 +132,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#e7131a',
@@ -135,6 +161,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#e7131a',
@@ -164,6 +191,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
                         'bg_color' => '#307b24',
@@ -192,6 +220,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
@@ -222,6 +251,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => true,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getHost' => 'www.example.com',
                     'getIndicatorConfig' => [
                         'name' => 'Production',
@@ -256,6 +286,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getHost' => 'drupal-environment-test.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
@@ -290,6 +321,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getHost' => 'drupal-environment-dev.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Development',
@@ -324,6 +356,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getHost' => 'drupal-environment-multidev-test.pantheonsite.io',
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
@@ -358,6 +391,7 @@ final class EnvironmentTest extends TestCase
                     'isCustomDomain' => false,
                     'isCi' => true,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
@@ -383,6 +417,7 @@ final class EnvironmentTest extends TestCase
                     'isMultidev' => false,
                     'isCi' => false,
                     'isLocal' => true,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#505050',
@@ -411,6 +446,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => true,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Preview',
                         'bg_color' => '#20688C',
@@ -440,6 +476,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => true,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
@@ -465,6 +502,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => true,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
@@ -490,6 +528,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => true,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
@@ -514,6 +553,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => true,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#505050',
@@ -542,6 +582,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => true,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#505050',
@@ -570,6 +611,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => null,
                 ],
             ],
