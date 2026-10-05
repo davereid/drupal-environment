@@ -219,8 +219,7 @@ class Environment
             // Drupal's methods of detecting if being run in a test.
             || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
             // @see https://github.com/Lullabot/playwright-drupal/
-            || static::get('PLAYWRIGHT_SETUP')
-            || static::getEnvironment() === 'testing';
+            || static::get('PLAYWRIGHT_SETUP');
     }
 
     /**
