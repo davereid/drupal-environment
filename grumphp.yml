@@ -1,18 +1,18 @@
 grumphp:
-    ascii: null
-    fixer:
-        enabled: true
-        fix_by_default: true
-    tasks:
-        phplint: ~
-        yamllint: ~
-        jsonlint: ~
-        composer: ~
-        composer_normalize: ~
-        phpcs: ~
-        phpstan: ~
-        phpunit: ~
-        npm_script:
-            script: "lint"
-            triggered_by: [md, php, yml, json]
-            is_run_task: true
+  ascii: null
+  fixer:
+    enabled: true
+    fix_by_default: true
+  tasks:
+    phplint: ~
+    yamllint: ~
+    jsonlint: ~
+    composer: ~
+    composer_normalize: ~
+    phpcs: ~
+    phpstan: ~
+    phpunit: ~
+    npm_script:
+      script: "lint"
+      triggered_by: [md, php, yml, json]
+      is_run_task: true
