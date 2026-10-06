@@ -6,7 +6,9 @@ grumphp:
   tasks:
     phplint: ~
     yamllint: ~
-    jsonlint: ~
+    jsonlint:
+      ignore_patterns:
+        - /^tests\/fixtures\/invalid\.json/
     composer: ~
     composer_normalize: ~
     phpcs: ~
