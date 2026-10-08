@@ -53,6 +53,7 @@ Environment::isCi();
 Environment::isLocal(); // Covers both DDEV and Lando
 Environment::isDdev();
 Environment::isLando();
+Environment::isTest(); // Covers PHPUnit and Playwright tests
 ```
 
 ### Testing for executable commands
