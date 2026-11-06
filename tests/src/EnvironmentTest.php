@@ -8,6 +8,7 @@ use DrupalEnvironment\Acquia;
 use DrupalEnvironment\CircleCi;
 use DrupalEnvironment\DefaultEnvironment;
 use DrupalEnvironment\Environment;
+use DrupalEnvironment\GenericCi;
 use DrupalEnvironment\GitHubWorkflow;
 use DrupalEnvironment\GitLabCi;
 use DrupalEnvironment\Pantheon;
@@ -530,6 +531,41 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'isTest' => true,
                     'getIndicatorConfig' => null,
+                ],
+            ],
+            'generic-ci' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => GenericCi::class,
+                    'getEnvironment' => 'ci',
+                    'isCircleCi' => false,
+                    'isGitHubWorkflow' => false,
+                    'isGitLabCi' => false,
+                    'isGenericCi' => true,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => null,
+                ],
+            ],
+            'generic-ci-false' => [
+                [
+                    'ENV' => [
+                        'CI' => 'false',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
+                    'isGenericCi' => false,
+                    'isCi' => false,
                 ],
             ],
             'ddev' => [

@@ -35,6 +35,7 @@ Environment::isTugboat();
 Environment::isGitHubWorkflow();
 Environment::isGitLabCi();
 Environment::isCircleCi();
+Environment::isGenericCi(); // Any other CI service that sets CI=true
 ```
 
 ### Testing for specific environments
