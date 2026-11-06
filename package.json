@@ -1,0 +1,10 @@
+{
+    "devDependencies": {
+        "cspell": "^10.2.1"
+    },
+    "scripts": {
+        "check:spelling": "cspell check",
+        "lint": "npm run lint:spelling",
+        "lint:spelling": "cspell lint \"**\" --no-progress --relative --show-suggestions --show-context --must-find-files"
+    }
+}
