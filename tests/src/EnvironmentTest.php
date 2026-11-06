@@ -425,6 +425,78 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
             ],
+            'acquia-site-factory-01live' => [
+                [
+                    'ENV' => [
+                        'AH_SITE_ENVIRONMENT' => '01live',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Acquia::class,
+                    'getEnvironment' => '01live',
+                    'isAcquia' => true,
+                    'isPantheon' => false,
+                    'isProduction' => true,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Production',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'acquia-site-factory-01test' => [
+                [
+                    'ENV' => [
+                        'AH_SITE_ENVIRONMENT' => '01test',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Acquia::class,
+                    'getEnvironment' => '01test',
+                    'isAcquia' => true,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => true,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Staging',
+                        'bg_color' => '#b85c00',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'acquia-site-factory-01dev' => [
+                [
+                    'ENV' => [
+                        'AH_SITE_ENVIRONMENT' => '01dev',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Acquia::class,
+                    'getEnvironment' => '01dev',
+                    'isAcquia' => true,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => true,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Development',
+                        'bg_color' => '#307b24',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
             'tugboat' => [
                 [
                     'ENV' => [
