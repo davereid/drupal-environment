@@ -10,6 +10,7 @@ use DrupalEnvironment\DefaultEnvironment;
 use DrupalEnvironment\Environment;
 use DrupalEnvironment\GitHubWorkflow;
 use DrupalEnvironment\GitLabCi;
+use DrupalEnvironment\Lagoon;
 use DrupalEnvironment\Pantheon;
 use DrupalEnvironment\Tugboat;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -421,6 +422,56 @@ final class EnvironmentTest extends TestCase
                     'getIndicatorConfig' => [
                         'name' => 'Local',
                         'bg_color' => '#505050',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'lagoon-production' => [
+                [
+                    'ENV' => [
+                        'LAGOON_ENVIRONMENT_TYPE' => 'production',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Lagoon::class,
+                    'getEnvironment' => 'production',
+                    'isAcquia' => false,
+                    'isLagoon' => true,
+                    'isPantheon' => false,
+                    'isProduction' => true,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Production',
+                        'bg_color' => '#e7131a',
+                        'fg_color' => '#ffffff',
+                    ],
+                ],
+            ],
+            'lagoon-development' => [
+                [
+                    'ENV' => [
+                        'LAGOON_ENVIRONMENT_TYPE' => 'development',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Lagoon::class,
+                    'getEnvironment' => 'development',
+                    'isAcquia' => false,
+                    'isLagoon' => true,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => true,
+                    'isPreview' => false,
+                    'isCi' => false,
+                    'isLocal' => false,
+                    'getIndicatorConfig' => [
+                        'name' => 'Development',
+                        'bg_color' => '#307b24',
                         'fg_color' => '#ffffff',
                     ],
                 ],
