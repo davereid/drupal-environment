@@ -53,6 +53,7 @@ Environment::isCi();
 Environment::isLocal(); // Covers both DDEV and Lando
 Environment::isDdev();
 Environment::isLando();
+Environment::isTest(); // Covers PHPUnit and Playwright tests
 ```
 
 ### Testing for executable commands
@@ -62,6 +63,16 @@ use DrupalEnvironment\Environment;
 
 // This returns a boolean true/false:
 Environment::commandExists('composer');
+```
+
+### Getting the PHP memory limit
+
+```php
+use DrupalEnvironment\Environment;
+
+// These return bytes, or -1 if memory is unlimited:
+Environment::getMemoryLimit();
+Environment::getAvailableMemory();
 ```
 
 ## Example usage

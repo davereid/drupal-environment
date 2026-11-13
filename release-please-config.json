@@ -1,0 +1,10 @@
+{
+    "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+    "release-type": "php",
+    "include-v-in-tag": false,
+    "include-component-in-tag": false,
+    "bootstrap-sha": "4d3520bf474e203fa742743e5f50626df31b66ae",
+    "packages": {
+        ".": {}
+    }
+}
