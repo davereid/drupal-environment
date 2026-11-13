@@ -5,6 +5,6 @@
     "scripts": {
         "check:spelling": "cspell check",
         "lint": "npm run lint:spelling",
-        "lint:spelling": "cspell lint \"**\" --no-progress --relative --show-suggestions --show-context --must-find-files"
+        "lint:spelling": "git ls-files | cspell lint --file-list stdin --no-progress --relative --show-suggestions --show-context --no-must-find-files"
     }
 }
