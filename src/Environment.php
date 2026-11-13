@@ -173,10 +173,10 @@ class Environment
     }
 
     /**
-     * Determine if this is a Localdev or Lando environment.
+     * Determine if this is a Lando environment.
      *
      * @return bool
-     *   TRUE if this is a Localdev or Lando environment.
+     *   TRUE if this is a Lando environment.
      *
      * @see https://docs.lando.dev/core/v3/env.html
      */
@@ -186,15 +186,40 @@ class Environment
     }
 
     /**
-     * Determines whether the current request is a command-line one.
+     * Determines whether the current request comes from the command line.
      *
      * @return bool
-     *   TRUE if this request was originated in command-line (cli), FALSE
+     *   TRUE if this request was originated in command line (cli), FALSE
      *   otherwise.
      */
     public static function isCli(): bool
     {
         return (PHP_SAPI === 'cli');
+    }
+
+    /**
+     * Determines whether the current request comes from a test.
+     *
+     * This currently covers the following cases:
+     * - When running with PHPUnit.
+     * - When DRUPAL_TEST_IN_CHILD_SITE has been set to TRUE by DrupalKernel.
+     * - When running with Playwright.
+     *
+     * @return bool
+     *   TRUE if this request was originated in a test environment, FALSE
+     *   otherwise.
+     *
+     * @see \Drupal\Core\DrupalKernel::setupDrupalTestInChildSite
+     * @link https://github.com/Lullabot/playwright-drupal/
+     */
+    public static function isTest(): bool
+    {
+        return defined('PHPUNIT_COMPOSER_INSTALL')
+            || defined('__PHPUNIT_PHAR__')
+            // Drupal's methods of detecting if being run in a test.
+            || (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE)
+            // @see https://github.com/Lullabot/playwright-drupal/
+            || static::get('PLAYWRIGHT_SETUP');
     }
 
     /**
@@ -208,8 +233,37 @@ class Environment
      */
     public static function commandExists(string $command): bool
     {
+        // @todo Should this throw an error?
+        if (!function_exists('shell_exec')) {
+            return false;
+        }
         $command = escapeshellcmd($command);
         return (bool) shell_exec("command -v {$command}");
+    }
+
+    /**
+     * Get the PHP memory limit in bytes.
+     *
+     * @return int
+     *   The memory limit in bytes, or -1 if memory is unlimited.
+     */
+    public static function getMemoryLimit(): int
+    {
+        // PHP only accepts valid values for memory_limit, so this cannot fail.
+        return ini_parse_quantity((string) ini_get('memory_limit'));
+    }
+
+    /**
+     * Get the memory available before reaching the PHP memory limit.
+     *
+     * @return int
+     *   The memory limit minus the memory allocated from the system, in bytes,
+     *   or -1 if memory is unlimited.
+     */
+    public static function getAvailableMemory(): int
+    {
+        $limit = static::getMemoryLimit();
+        return $limit === -1 ? -1 : $limit - memory_get_usage(true);
     }
 
     /**
@@ -243,8 +297,7 @@ class Environment
      */
     public static function getHost(): string
     {
-        static $host;
-        if (!isset($host)) {
+        if (!isset(static::$cache[__METHOD__])) {
             $possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
             $sourceTransformations = array(
                 "HTTP_X_FORWARDED_HOST" => function ($value) {
@@ -268,9 +321,9 @@ class Environment
 
             // trim and remove port number from host
             // host is lowercase as per RFC 952/2181
-            $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
+            static::$cache[__METHOD__] = strtolower(preg_replace('/:\d+$/', '', trim($host)));
         }
-        return $host;
+        return static::$cache[__METHOD__];
     }
 
     /**
@@ -287,11 +340,6 @@ class Environment
     public static function enforceDomain(string $domain): void
     {
         if (!static::isCli() && static::getHost() !== $domain) {
-            // Name transaction "redirect" in New Relic for improved reporting.
-            if (extension_loaded('newrelic')) {
-                newrelic_name_transaction('redirect');
-            }
-
             static::redirect('https://' . $domain . $_SERVER['REQUEST_URI']);
         }
     }
@@ -315,6 +363,12 @@ class Environment
         if (headers_sent()) {
             throw new \RuntimeException('Cannot redirect after headers have been sent.');
         }
+
+        // Name transaction "redirect" in New Relic for improved reporting.
+        if (extension_loaded('newrelic')) {
+            newrelic_name_transaction('redirect');
+        }
+
         header($_SERVER['SERVER_PROTOCOL'] . ' ' . $code);
         header('Location: ' . $url);
         exit;

@@ -10,8 +10,7 @@ on:
     - cron: 0 0 * * 1
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref || github.run_id }}
@@ -21,6 +20,9 @@ jobs:
   test:
     name: Test PHP ${{ matrix.php }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read # Check out the code.
+      id-token: write # Upload coverage to Qlty with OIDC instead of a stored token.
     strategy:
       matrix:
         php: ['8.3', '8.4', '8.5']
@@ -31,7 +33,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Setup PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ matrix.php }}
         env:
@@ -44,10 +46,11 @@ jobs:
       - run: composer audit
       - run: composer run lint
       - run: composer run test
+      - run: npm install
       - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
-        uses: qltysh/qlty-action/coverage@08a0a862c159eae9b9003081da6663d96efef637 # v2.3.0
+        uses: qltysh/qlty-action/coverage@ebcd284bf32e36a030afe15f1e136c7be08b9506 # v2.5.0
         with:
-          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          oidc: true
           files: ${{ github.workspace }}/build/logs/clover.xml
