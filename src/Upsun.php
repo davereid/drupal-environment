@@ -54,7 +54,7 @@ class Upsun extends DefaultEnvironment
             !$type => false,
             Environment::isDdev() || Environment::isLando() => 'local',
             $type === static::DEVELOPMENT
-                && (bool) preg_match('/^pr-\d+$/', (string) static::getEnvironmentName()) => static::PREVIEW,
+                && preg_match('/^pr-\d+$/', (string) static::getEnvironmentName()) => static::PREVIEW,
             default => $type,
         };
     }
