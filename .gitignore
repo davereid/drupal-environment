@@ -1,8 +1,7 @@
-build/
-vendor/
-.idea/
+/build/
+/vendor/
 .DS_Store
 composer.lock
 package-lock.json
 .phpunit.result.cache
-node_modules/
+/node_modules/
