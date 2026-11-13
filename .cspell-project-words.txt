@@ -9,3 +9,4 @@ amannn
 qlty
 qltysh
 shivammathur
+platformsh

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DrupalEnvironment;
 
 /**
@@ -11,7 +13,6 @@ namespace DrupalEnvironment;
  */
 class PlatformSh extends DefaultEnvironment
 {
-
     /**
      * The default environment variable name.
      *
@@ -42,9 +43,9 @@ class PlatformSh extends DefaultEnvironment
     /**
      * {@inheritdoc}
      */
-    public static function getEnvironment(): string
+    public static function getEnvironment(): string|bool
     {
-        return static::get(static::ENVIRONMENT_TYPE) ?: 'local';
+        return Environment::get(static::ENVIRONMENT_TYPE) ?: false;
     }
 
     /**
@@ -55,23 +56,7 @@ class PlatformSh extends DefaultEnvironment
      */
     public static function getEnvironmentName(): string|bool
     {
-        return static::get(static::ENVIRONMENT_NAME);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function isProduction(): bool
-    {
-        return static::getEnvironment() === static::PRODUCTION;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function isStaging(): bool
-    {
-        return static::getEnvironment() === static::STAGING;
+        return Environment::get(static::ENVIRONMENT_NAME) ?: false;
     }
 
     /**
@@ -88,6 +73,6 @@ class PlatformSh extends DefaultEnvironment
     public static function isPreview(): bool
     {
         // If the branch looks like "pr-123" then it's a pull request environment.
-        return preg_match('/^pr-\d+$/', static::get("PLATFORM_BRANCH"));
+        return (bool) preg_match('/^pr-\d+$/', (string) Environment::get('PLATFORM_BRANCH'));
     }
 }

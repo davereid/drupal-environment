@@ -11,6 +11,7 @@ use DrupalEnvironment\Environment;
 use DrupalEnvironment\GitHubWorkflow;
 use DrupalEnvironment\GitLabCi;
 use DrupalEnvironment\Pantheon;
+use DrupalEnvironment\PlatformSh;
 use DrupalEnvironment\Tugboat;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -191,6 +192,7 @@ final class EnvironmentTest extends TestCase
                     'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
+                    'isPlatformSh' => false,
                     'isProduction' => true,
                     'isStaging' => false,
                     'isDevelopment' => false,
@@ -221,6 +223,7 @@ final class EnvironmentTest extends TestCase
                     'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
+                    'isPlatformSh' => false,
                     'isProduction' => false,
                     'isStaging' => false,
                     'isDevelopment' => true,
@@ -476,6 +479,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => PlatformSh::class,
                     'getEnvironment' => 'production',
                     'getEnvironmentName' => 'main-asdf123',
                     'isAcquia' => false,
@@ -491,6 +495,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Production',
                         'bg_color' => '#e7131a',
@@ -506,6 +511,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => PlatformSh::class,
                     'getEnvironment' => 'staging',
                     'getEnvironmentName' => 'stage-asdf123',
                     'isAcquia' => false,
@@ -521,6 +527,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Staging',
                         'bg_color' => '#b85c00',
@@ -536,6 +543,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => PlatformSh::class,
                     'getEnvironment' => 'development',
                     'getEnvironmentName' => 'develop-asdf123',
                     'isAcquia' => false,
@@ -551,6 +559,7 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => false,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
                         'name' => 'Development',
                         'bg_color' => '#307b24',
@@ -567,6 +576,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
                 [
+                    'getEnvironmentClass' => PlatformSh::class,
                     'getEnvironment' => 'development',
                     'getEnvironmentName' => 'pr-225-asdf123',
                     'isAcquia' => false,
@@ -582,10 +592,11 @@ final class EnvironmentTest extends TestCase
                     'isPreview' => true,
                     'isCi' => false,
                     'isLocal' => false,
+                    'isTest' => true,
                     'getIndicatorConfig' => [
-                      'name' => 'Preview',
-                      'bg_color' => '#990055',
-                      'fg_color' => '#ffffff',
+                        'name' => 'Preview',
+                        'bg_color' => '#20688C',
+                        'fg_color' => '#ffffff',
                     ],
                 ],
             ],
@@ -775,6 +786,7 @@ final class EnvironmentTest extends TestCase
                     'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
+                    'isPlatformSh' => false,
                     'isProduction' => false,
                     'isStaging' => false,
                     'isDevelopment' => false,
