@@ -580,7 +580,7 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironmentClass' => Upsun::class,
-                    'getEnvironment' => 'development',
+                    'getEnvironment' => 'preview',
                     'getEnvironmentName' => 'pr-225',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -614,7 +614,7 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironmentClass' => Upsun::class,
-                    'getEnvironment' => 'development',
+                    'getEnvironment' => 'local',
                     'getEnvironmentName' => 'main',
                     'isAcquia' => false,
                     'isCircleCi' => false,
@@ -647,7 +647,7 @@ final class EnvironmentTest extends TestCase
                 ],
                 [
                     'getEnvironmentClass' => Upsun::class,
-                    'getEnvironment' => 'development',
+                    'getEnvironment' => 'local',
                     'getEnvironmentName' => 'pr-12',
                     'isAcquia' => false,
                     'isCircleCi' => false,

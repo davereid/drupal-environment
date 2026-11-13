@@ -7,7 +7,8 @@ namespace DrupalEnvironment;
 /**
  * The Upsun (formerly Platform.sh) environment specifics.
  *
- * Upsun Cloud and Upsun Fixed provide the same variables.
+ * Upsun Cloud and Upsun Fixed provide the same variables. They are only set at
+ * runtime, so Upsun is not detected during the build hook.
  *
  * @see https://developer.upsun.com/docs/development/variables/use-variables
  * @see https://fixed.docs.upsun.com/development/variables/use-variables.html
@@ -17,19 +18,12 @@ namespace DrupalEnvironment;
 class Upsun extends DefaultEnvironment
 {
     /**
-     * The environment type variable name.
-     *
-     * @var string
-     */
-    public const ENVIRONMENT_TYPE = 'PLATFORM_ENVIRONMENT_TYPE';
-
-    /**
      * {@inheritdoc}
      *
-     * PLATFORM_ENVIRONMENT is the generated machine name, like "main-abcd123",
-     * so use the branch, which is the environment name the user chose.
+     * Upsun sets the environment type, not the environment name, in this
+     * variable.
      */
-    public const ENVIRONMENT_NAME = 'PLATFORM_BRANCH';
+    public const ENVIRONMENT_NAME = 'PLATFORM_ENVIRONMENT_TYPE';
 
     /**
      * {@inheritdoc}
@@ -48,38 +42,31 @@ class Upsun extends DefaultEnvironment
 
     /**
      * {@inheritdoc}
+     *
+     * Lando and DDEV emulate an Upsun development environment, so return
+     * "local" there. Pull request environments, like "pr-123", return
+     * "preview". Other development environments return "development".
      */
     public static function getEnvironment(): string|bool
     {
-        return Environment::get(static::ENVIRONMENT_TYPE) ?: false;
+        $type = parent::getEnvironment();
+        return match (true) {
+            !$type => false,
+            Environment::isDdev() || Environment::isLando() => 'local',
+            $type === static::DEVELOPMENT
+                && (bool) preg_match('/^pr-\d+$/', (string) static::getEnvironmentName()) => static::PREVIEW,
+            default => $type,
+        };
     }
 
     /**
-     * Return the user-defined environment name.
+     * {@inheritdoc}
      *
-     * @return string|bool
-     *   The name of the environment.
+     * PLATFORM_ENVIRONMENT is the generated machine name, like "main-abcd123",
+     * so use the branch, which is the environment name the user chose.
      */
     public static function getEnvironmentName(): string|bool
     {
-        return Environment::get(static::ENVIRONMENT_NAME) ?: false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function isDevelopment(): bool
-    {
-        // Lando and DDEV emulate an Upsun development environment locally.
-        return static::getEnvironment() === static::DEVELOPMENT && !static::isPreview() && !static::isLocal();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function isPreview(): bool
-    {
-        // If the branch looks like "pr-123" then it's a pull request environment.
-        return !static::isLocal() && (bool) preg_match('/^pr-\d+$/', (string) static::getEnvironmentName());
+        return Environment::get('PLATFORM_BRANCH') ?: false;
     }
 }
