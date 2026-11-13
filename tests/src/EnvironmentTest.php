@@ -174,7 +174,7 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
             ],
-            'default-prod-appenv' => [
+            'default-prod-app-env' => [
                 [
                     'ENV' => [
                         'APP_ENV' => 'prod',
@@ -660,7 +660,7 @@ final class EnvironmentTest extends TestCase
                     'getComposerLockFilename' => 'alternate.lock',
                 ]
             ],
-            'current-domain-servername' => [
+            'current-domain-server-name' => [
                 [
                     '_SERVER' => [
                         'SERVER_NAME' => 'www.SERVERNAME.com:443',
@@ -671,7 +671,7 @@ final class EnvironmentTest extends TestCase
                     'getHost' => 'www.servername.com',
                 ],
             ],
-            'current-domain-serveraddr' => [
+            'current-domain-server-addr' => [
                 [
                     '_SERVER' => [
                         'HTTP_X_FORWARDED_HOST' => '',
