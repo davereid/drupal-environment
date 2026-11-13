@@ -64,12 +64,12 @@ class DefaultEnvironment
     public const CI = 'ci';
 
     /**
-     * Return the environment name.
+     * Return the environment type.
      *
      * For example: "local" or "ci" or "dev" or "prod".
      *
      * @return string|bool
-     *   The name of the environment.
+     *   The type of the environment.
      */
     public static function getEnvironment(): string|bool
     {
@@ -87,6 +87,20 @@ class DefaultEnvironment
             }
         }
         return static::$environment[static::class];
+    }
+
+    /**
+     * Return the user-defined environment name.
+     *
+     * This is the same as getEnvironment() unless the host sets the
+     * environment type and name in separate variables.
+     *
+     * @return string|bool
+     *   The name of the environment.
+     */
+    public static function getEnvironmentName(): string|bool
+    {
+        return static::getEnvironment();
     }
 
     /**

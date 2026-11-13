@@ -6,11 +6,11 @@ Provides a class for working with Drupal environments and environment variables.
 
 This also standardizes some environment terminology between hosting providers so that you can use the same code across different hosts:
 
-| Environment | Acquia | Pantheon |
-|-|-|-|
-| Production | `prod` | `live` |
-| Staging | `test` | `test` |
-| Development | `dev` | `dev` |
+| Environment | Acquia | Pantheon | Upsun |
+|-|-|-|-|
+| Production | `prod` | `live` | `production` |
+| Staging | `test` | `test` | `staging` |
+| Development | `dev` | `dev` | `development` |
 
 ## Basic Usage
 
@@ -30,6 +30,7 @@ use DrupalEnvironment\Environment;
 
 // These all return a boolean true/false
 Environment::isPantheon();
+Environment::isUpsun(); // Formerly Platform.sh
 Environment::isAcquia();
 Environment::isTugboat();
 Environment::isGitHubWorkflow();
@@ -44,6 +45,10 @@ use DrupalEnvironment\Environment;
 
 // This gets the specific environment string.
 $environment = Environment::getEnvironment();
+
+// This gets the name the user chose for the environment, like a branch name.
+// On most hosts, this is the same as getEnvironment().
+$name = Environment::getEnvironmentName();
 
 // These all return a boolean true/false
 Environment::isProduction();
