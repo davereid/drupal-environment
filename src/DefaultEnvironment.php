@@ -92,6 +92,9 @@ class DefaultEnvironment
     /**
      * Return the user-defined environment name.
      *
+     * This is the same as getEnvironment() unless the host sets the
+     * environment type and name in separate variables.
+     *
      * @return string|bool
      *   The name of the environment.
      */

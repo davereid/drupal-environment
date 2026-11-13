@@ -46,6 +46,10 @@ use DrupalEnvironment\Environment;
 // This gets the specific environment string.
 $environment = Environment::getEnvironment();
 
+// This gets the name the user chose for the environment, like a branch name.
+// On most hosts, this is the same as getEnvironment().
+$name = Environment::getEnvironmentName();
+
 // These all return a boolean true/false
 Environment::isProduction();
 Environment::isStaging();

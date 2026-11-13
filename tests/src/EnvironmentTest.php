@@ -385,6 +385,7 @@ final class EnvironmentTest extends TestCase
                 [
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'pr-1',
+                    'getEnvironmentName' => 'pr-1',
                     'isAcquia' => false,
                     'isCircleCi' => false,
                     'isGitHubWorkflow' => false,
