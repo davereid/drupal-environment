@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace DrupalEnvironment;
 
 /**
- * The Platform.sh environment specifics.
+ * The Upsun (formerly Platform.sh) environment specifics.
  *
- * @see https://docs.platform.sh/environments.html
+ * Upsun Cloud and Upsun Fixed provide the same variables.
+ *
+ * @see https://developer.upsun.com/docs/development/variables/use-variables
+ * @see https://fixed.docs.upsun.com/development/variables/use-variables.html
  *
  * @internal
  */
-class PlatformSh extends DefaultEnvironment
+class Upsun extends DefaultEnvironment
 {
     /**
-     * The default environment variable name.
+     * The environment type variable name.
      *
      * @var string
      */
@@ -22,8 +25,11 @@ class PlatformSh extends DefaultEnvironment
 
     /**
      * {@inheritdoc}
+     *
+     * PLATFORM_ENVIRONMENT is the generated machine name, like "main-abcd123",
+     * so use the branch, which is the environment name the user chose.
      */
-    public const ENVIRONMENT_NAME = 'PLATFORM_ENVIRONMENT';
+    public const ENVIRONMENT_NAME = 'PLATFORM_BRANCH';
 
     /**
      * {@inheritdoc}
@@ -64,7 +70,8 @@ class PlatformSh extends DefaultEnvironment
      */
     public static function isDevelopment(): bool
     {
-        return static::getEnvironment() === static::DEVELOPMENT && !static::isPreview();
+        // Lando and DDEV emulate an Upsun development environment locally.
+        return static::getEnvironment() === static::DEVELOPMENT && !static::isPreview() && !static::isLocal();
     }
 
     /**
@@ -73,6 +80,6 @@ class PlatformSh extends DefaultEnvironment
     public static function isPreview(): bool
     {
         // If the branch looks like "pr-123" then it's a pull request environment.
-        return (bool) preg_match('/^pr-\d+$/', (string) Environment::get('PLATFORM_BRANCH'));
+        return !static::isLocal() && (bool) preg_match('/^pr-\d+$/', (string) static::getEnvironmentName());
     }
 }

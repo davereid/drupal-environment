@@ -11,7 +11,7 @@ namespace DrupalEnvironment;
  * @method static string|bool getEnvironmentName()
  * @method static bool isAcquia()
  * @method static bool isPantheon()
- * @method static bool isPlatformSh()
+ * @method static bool isUpsun()
  * @method static bool isProduction()
  * @method static bool isStaging()
  * @method static bool isDevelopment()
@@ -45,7 +45,7 @@ class Environment
     public const CLASSES = [
         'isAcquia' => Acquia::class,
         'isPantheon' => Pantheon::class,
-        'isPlatformSh' => PlatformSh::class,
+        'isUpsun' => Upsun::class,
         'isTugboat' => Tugboat::class,
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
