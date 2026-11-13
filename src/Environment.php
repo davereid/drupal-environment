@@ -256,7 +256,6 @@ class Environment
         }
 
         // PHP 8.1 accepts a decimal number with an optional K, M or G suffix.
-        // @todo Remove when PHP 8.2 is the minimum version.
         $power = match (strtolower(substr(trim($value), -1))) {
             'g' => 3,
             'm' => 2,
