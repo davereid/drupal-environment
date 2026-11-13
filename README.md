@@ -65,6 +65,16 @@ use DrupalEnvironment\Environment;
 Environment::commandExists('composer');
 ```
 
+### Getting the PHP memory limit
+
+```php
+use DrupalEnvironment\Environment;
+
+// These return bytes, or -1 if memory is unlimited:
+Environment::getMemoryLimit();
+Environment::getAvailableMemory();
+```
+
 ## Example usage
 
 ### settings.php

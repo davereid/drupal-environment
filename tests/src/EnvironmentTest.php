@@ -32,6 +32,40 @@ final class EnvironmentTest extends TestCase
     }
 
     /**
+     * Test the getMemoryLimit() and getAvailableMemory() methods.
+     */
+    #[DataProvider('providerMemoryLimit')]
+    public function testMemoryLimit(string $value, int $expected): void
+    {
+        $original = ini_get('memory_limit');
+        try {
+            $this->assertNotFalse(ini_set('memory_limit', $value));
+            $this->assertSame($expected, Environment::getMemoryLimit());
+            $this->assertSame(
+                $expected === -1 ? -1 : $expected - memory_get_usage(true),
+                Environment::getAvailableMemory()
+            );
+        } finally {
+            ini_set('memory_limit', $original);
+        }
+    }
+
+    /**
+     * Data provider for testMemoryLimit().
+     */
+    public static function providerMemoryLimit(): array
+    {
+        return [
+            'unlimited' => ['-1', -1],
+            'bytes' => ['1073741824', 1073741824],
+            'kilobytes' => ['1048576K', 1073741824],
+            'megabytes' => ['1024M', 1073741824],
+            'gigabytes' => ['2G', 2147483648],
+            'lowercase' => ['2g', 2147483648],
+        ];
+    }
+
+    /**
      * Test that isTest() returns false in an isolated standard process.
      */
     public function testIsTestReturnsFalseInStandardEnvironment(): void
