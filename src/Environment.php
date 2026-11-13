@@ -242,6 +242,44 @@ class Environment
     }
 
     /**
+     * Get the PHP memory limit in bytes.
+     *
+     * @return int
+     *   The memory limit in bytes, or -1 if memory is unlimited.
+     */
+    public static function getMemoryLimit(): int
+    {
+        // PHP only accepts valid values for memory_limit, so this cannot fail.
+        $value = (string) ini_get('memory_limit');
+        if (function_exists('ini_parse_quantity')) {
+            return ini_parse_quantity($value);
+        }
+
+        // PHP 8.1 accepts a decimal number with an optional K, M or G suffix.
+        // @todo Remove when PHP 8.2 is the minimum version.
+        $power = match (strtolower(substr(trim($value), -1))) {
+            'g' => 3,
+            'm' => 2,
+            'k' => 1,
+            default => 0,
+        };
+        return (int) $value * 1024 ** $power;
+    }
+
+    /**
+     * Get the memory available before reaching the PHP memory limit.
+     *
+     * @return int
+     *   The memory limit minus the memory allocated from the system, in bytes,
+     *   or -1 if memory is unlimited.
+     */
+    public static function getAvailableMemory(): int
+    {
+        $limit = static::getMemoryLimit();
+        return $limit === -1 ? -1 : $limit - memory_get_usage(true);
+    }
+
+    /**
      * Get the actual filename for composer.json.
      *
      * @return string
