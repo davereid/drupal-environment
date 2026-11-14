@@ -1,7 +1,8 @@
 name: Release milestone
 
-# Blocks a release-please PR while its milestone still has open issues or PRs,
-# and closes the milestone when the PR is merged. PRs without one pass.
+# Gives a release-please PR the milestone named after its version, creating it
+# if needed, blocks the PR while the milestone has other open issues or PRs, and
+# closes the milestone when the PR is merged.
 on:
   pull_request:
     types:
@@ -25,25 +26,40 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     permissions:
-      issues: read # Read the milestone's open issue count.
+      issues: write # Find or create the milestone and read its open issue count.
+      pull-requests: write # Set the PR's milestone.
     steps:
       - name: Check the PR's milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
           MILESTONE: ${{ github.event.pull_request.milestone.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
+          # release-please titles look like "chore(main): release 2.0.0".
+          version="${PR_TITLE##* release }"
+          # Anchored, so the version is safe to put in the jq filter below.
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::No release version found in the title: $PR_TITLE"
+            exit 1
+          fi
           if [ -z "$MILESTONE" ]; then
-            echo "This PR has no milestone."
-            exit 0
+            # Use a milestone created ahead of time, or create one.
+            MILESTONE=$(gh api "repos/$REPO/milestones?state=open&per_page=100" \
+              --jq "map(select(.title == \"$version\" or .title == \"v$version\")) | first | .number // empty")
+            if [ -z "$MILESTONE" ]; then
+              MILESTONE=$(gh api -X POST "repos/$REPO/milestones" -f title="$version" --jq .number)
+              echo "Created milestone $version."
+            fi
+            # Changes made with GITHUB_TOKEN don't start new runs, so check it here.
+            gh api -X PATCH "repos/$REPO/issues/$PR_NUMBER" -F milestone="$MILESTONE" --silent
+            echo "Added this PR to milestone $version."
           fi
           # Read the milestone now: the event's copy is stale after a re-run.
           # Title last, since it may contain spaces.
           read -r open url title < <(gh api "repos/$REPO/milestones/$MILESTONE" \
             --jq '"\(.open_issues) \(.html_url) \(.title)"')
-          # release-please titles look like "chore(main): release 2.0.0".
-          version="${PR_TITLE##* release }"
           if [ "${title#v}" != "$version" ]; then
             echo "::error::Milestone $title doesn't match the release version $version: $url"
             exit 1
