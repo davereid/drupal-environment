@@ -28,7 +28,7 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action != 'closed' }}
     runs-on: ubuntu-latest
     permissions:
-      issues: write # Find or create the milestone and read its open issue count.
+      issues: write # Find or create the milestone and list its open items.
       pull-requests: write # Set the PR's milestone.
     steps:
       - name: Check the PR's milestone
