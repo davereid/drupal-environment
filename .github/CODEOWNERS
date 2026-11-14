@@ -1,1 +1,7 @@
 * @davereid
+
+# No code owner, so Dependabot PRs that only change these merge with the
+# Dependabot workflow's approval. Workflows stay owned.
+/composer.json
+/package.json
+/package-lock.json
