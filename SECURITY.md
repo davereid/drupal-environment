@@ -1,13 +1,6 @@
 # Security policy
 
-## Supported versions
-
-Security fixes go into the latest release of each supported branch:
-
-| Branch | Versions | Supported |
-| --- | --- | --- |
-| `main` | 2.x | Yes, once 2.0.0 is released |
-| `1.x` | 1.x | Yes |
+Security fixes go into the latest release of each maintained branch.
 
 ## Reporting a vulnerability
 
