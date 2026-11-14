@@ -2,7 +2,9 @@ name: Release milestone
 
 # Gives a release-please PR the milestone named after its version, creating it
 # if needed, blocks the PR while the milestone has other open issues or PRs, and
-# closes the milestone when the PR is merged.
+# closes the milestone when the PR is merged. release-please doesn't do this
+# itself: milestone support was declined upstream in
+# https://github.com/googleapis/release-please/issues/1077.
 on:
   pull_request:
     types:
