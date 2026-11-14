@@ -85,5 +85,12 @@ jobs:
           REPO: ${{ github.repository }}
           MILESTONE: ${{ github.event.pull_request.milestone.number }}
         run: |
+          # The merged PR is closed, so it no longer counts as open.
+          read -r open url title < <(gh api "repos/$REPO/milestones/$MILESTONE" \
+            --jq '"\(.open_issues) \(.html_url) \(.title)"')
+          if [ "$open" -gt 0 ]; then
+            echo "::error::Not closing milestone $title: it has $open open item(s): $url"
+            exit 1
+          fi
           gh api -X PATCH "repos/$REPO/milestones/$MILESTONE" -f state=closed \
             --jq '"Closed milestone \(.title): \(.html_url)"'
