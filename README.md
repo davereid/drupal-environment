@@ -103,6 +103,25 @@ if ($environment = Environment::getEnvironment()) {
 }
 ```
 
+## Known Issues
+
+### CI isn't detected inside DDEV
+
+DDEV doesn't pass the CI system's environment variables, such as `CI` or `GITHUB_WORKFLOW`, into its containers. Code run in a CI job with `ddev exec` or `ddev composer` sees a local DDEV environment: `Environment::isCi()` and the CI methods, such as `Environment::isGitHubWorkflow()`, return `FALSE`. [ddev/ddev#9124](https://github.com/ddev/ddev/pull/9124) will pass the host's `CI` variable into DDEV's web container, which is enough for `Environment::isCi()`.
+
+Until then, pass `CI` into DDEV yourself. Also pass the CI system's own variable if your code calls its method, such as `GITHUB_WORKFLOW` for `Environment::isGitHubWorkflow()`, `GITLAB_CI` for `Environment::isGitLabCi()` or `CIRCLECI` for `Environment::isCircleCi()`. `Environment::isLocal()` and `Environment::isDdev()` still return `TRUE`. Either:
+
+- List the variables by name in `.ddev/config.yaml`. DDEV passes each one through from the host when it's set there, so nothing changes on developers' machines:
+  ```yaml
+  web_environment:
+    - CI
+    - GITHUB_WORKFLOW
+  ```
+- Or, in a GitHub Actions workflow, write them after `ddev/github-action-setup-ddev` with `autostart: false` and before `ddev start`. DDEV 1.25.4 and later read `.ddev/.env.web.local`, which is gitignored, so the checkout has no uncommitted changes:
+  ```yaml
+  - run: ddev dotenv set .ddev/.env.web.local --ci=true --github-workflow="$GITHUB_WORKFLOW"
+  ```
+
 ## Recommended Projects
 
 ### Loading .env files
