@@ -1,0 +1,66 @@
+name: Release milestone
+
+# Blocks a release-please PR while its milestone still has open issues or PRs,
+# and closes the milestone when the PR is merged. PRs without one pass.
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - milestoned
+      - demilestoned
+      - closed
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  milestone:
+    name: Milestone complete
+    if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action != 'closed' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: read # Read the milestone's open issue count.
+    steps:
+      - name: Check the PR's milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          MILESTONE: ${{ github.event.pull_request.milestone.number }}
+        run: |
+          if [ -z "$MILESTONE" ]; then
+            echo "This PR has no milestone."
+            exit 0
+          fi
+          # Read the milestone now: the event's copy is stale after a re-run.
+          # Title last, since it may contain spaces.
+          read -r open url title < <(gh api "repos/$REPO/milestones/$MILESTONE" \
+            --jq '"\(.open_issues) \(.html_url) \(.title)"')
+          # This PR is open and in the milestone, so it counts itself.
+          open=$((open - 1))
+          if [ "$open" -gt 0 ]; then
+            echo "::error::Milestone $title has $open other open item(s): $url"
+            exit 1
+          fi
+          echo "Milestone $title is complete: $url"
+
+  close:
+    name: Close milestone
+    if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action == 'closed' && github.event.pull_request.merged && github.event.pull_request.milestone }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # Close the milestone.
+    steps:
+      - name: Close the PR's milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          MILESTONE: ${{ github.event.pull_request.milestone.number }}
+        run: |
+          gh api -X PATCH "repos/$REPO/milestones/$MILESTONE" -f state=closed \
+            --jq '"Closed milestone \(.title): \(.html_url)"'
