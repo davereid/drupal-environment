@@ -87,7 +87,7 @@ class Environment
      * @return mixed
      *   The environment class method's return value.
      */
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): mixed
     {
         $class = static::getEnvironmentClass();
 
