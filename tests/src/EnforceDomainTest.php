@@ -55,9 +55,14 @@ final class EnforceDomainTest extends TestCase
                 'HTTP_HOST' => 'legacy.example.com',
             ],
         ]);
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('https://example.com/current-path?query=value');
-        $this->expectExceptionCode(301);
-        RedirectTestEnvironment::enforceDomain('example.com');
+        // Caught by hand: PHPUnit 13 deprecates expectExceptionMessage(), and its
+        // replacement doesn't exist in PHPUnit 10-12.
+        try {
+            RedirectTestEnvironment::enforceDomain('example.com');
+            $this->fail('enforceDomain() did not redirect.');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('https://example.com/current-path?query=value', $e->getMessage());
+            $this->assertSame(301, $e->getCode());
+        }
     }
 }
