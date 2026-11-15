@@ -2,3 +2,5 @@
 /package.json export-ignore
 /package-lock.json export-ignore
 /renovate.json export-ignore
+# And the code quality config.
+/.qlty export-ignore
