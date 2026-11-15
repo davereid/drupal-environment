@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":enableVulnerabilityAlerts",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "baseBranchPatterns": ["main", "1.x"],
+  "rangeStrategy": "update-lockfile",
+  "minimumReleaseAge": "7 days",
+  "packageRules": [
+    {
+      "description": "A library keeps its Composer ranges; only add new major versions.",
+      "matchManagers": ["composer"],
+      "rangeStrategy": "widen"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest", "lockFileMaintenance"],
+      "automerge": true
+    }
+  ]
+}

@@ -1,3 +1,4 @@
 # Leave npm's dev tooling out of the Composer package.
 /package.json export-ignore
 /package-lock.json export-ignore
+/renovate.json export-ignore
