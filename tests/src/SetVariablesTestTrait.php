@@ -14,7 +14,7 @@ trait SetVariablesTestTrait
     /**
      * The original variables from before the test run.
      *
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     protected static $originalVariables = [];
 
@@ -44,8 +44,8 @@ trait SetVariablesTestTrait
     /**
      * Set environment variables manually for testing.
      *
-     * @param array $variables
-     *   The variable values to set keyed by name.
+     * @param array<string, array<string, mixed>> $variables
+     *   The variable values to set, keyed by type ('ENV' or '_SERVER') and name.
      */
     protected function setVariables(array $variables): void
     {
