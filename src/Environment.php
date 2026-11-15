@@ -19,14 +19,14 @@ namespace DrupalEnvironment;
  * @method static bool isGitHubWorkflow()
  * @method static bool isGitLabCi()
  * @method static bool isCircleCi()
- * @method static array|null getIndicatorConfig()
+ * @method static array<string, string>|null getIndicatorConfig()
  */
 class Environment
 {
     /**
      * Static cache of environment variables.
      *
-     * @var array
+     * @var array<string, string|bool|null>
      */
     protected static array $cache = [];
 
@@ -78,8 +78,16 @@ class Environment
 
     /**
      * Provide a shortcut for calling methods on the environment classes.
+     *
+     * @param string $name
+     *   The method name.
+     * @param mixed[] $arguments
+     *   The method arguments.
+     *
+     * @return mixed
+     *   The environment class method's return value.
      */
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): mixed
     {
         $class = static::getEnvironmentClass();
 
