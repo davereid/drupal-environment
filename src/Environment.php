@@ -19,6 +19,7 @@ namespace DrupalEnvironment;
  * @method static bool isGitHubWorkflow()
  * @method static bool isGitLabCi()
  * @method static bool isCircleCi()
+ * @method static bool isGenericCi()
  * @method static array|null getIndicatorConfig()
  */
 class Environment
@@ -47,6 +48,7 @@ class Environment
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
         'isCircleCi' => CircleCi::class,
+        'isGenericCi' => GenericCi::class,
     ];
 
     /**
