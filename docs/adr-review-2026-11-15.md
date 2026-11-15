@@ -5,17 +5,18 @@
 
 - Date: 2026-11-15
 - Issue: #81
-- Project commit: 304a15c
-- Project ADRs: `docs/adrs` (0 accepted, 3 proposed), adoption ADR: `docs/adrs/0002-follow-lullabot-adrs.md` (proposed)
-- Lullabot ADRs: architecture.lullabot.com, 2026-11-15 (66 accepted; `lullabot:20260320-use-phpstan` left out, since raising PHPStan to level 6 is in progress on `chore/phpstan-level-6`)
-- Results: 8 follow, 2 partial, 0 deviate, 2 overridden, 52 not applicable, 1 unable to verify
+- Project commit: 304a15c, updated at 66f932a after #82 resolved both deviations and raised PHPStan to level 6
+- Project ADRs: `docs/adrs` (3 accepted), adoption ADR: `docs/adrs/0002-follow-lullabot-adrs.md`
+- Lullabot ADRs: architecture.lullabot.com, 2026-11-15 (66 accepted)
+- Results: 11 follow, 0 partial, 0 deviate, 2 overridden, 52 not applicable, 1 unable to verify
 
 ## Summary
 
 | ID | ADR | Verdict | Evidence | Effort |
 | --- | --- | --- | --- | --- |
-| lullabot:20211201-use-strict-types-in-php-code | [Use strict types in PHP code](https://architecture.lullabot.com/adr/20211201-use-strict-types-in-php-code/) | Partial | Every PHP file declares it; `phpcs.xml.dist` has no check | S |
-| lullabot:20220112-type-hints | [Always use typehints in new PHP code](https://architecture.lullabot.com/adr/20220112-type-hints/) | Partial | `src/Environment.php:82`, `tests/src/SetVariablesTestTrait.php:19` | S |
+| lullabot:20211201-use-strict-types-in-php-code | [Use strict types in PHP code](https://architecture.lullabot.com/adr/20211201-use-strict-types-in-php-code/) | Follows | `phpcs.xml.dist:8` (fixed in #82) | - |
+| lullabot:20220112-type-hints | [Always use typehints in new PHP code](https://architecture.lullabot.com/adr/20220112-type-hints/) | Follows | `src/Environment.php:90`, `tests/src/SetVariablesTestTrait.php:19` (fixed in #82) | - |
+| lullabot:20260320-use-phpstan | [Use PHPStan for PHP code static analysis at level 6](https://architecture.lullabot.com/adr/20260320-use-phpstan/) | Follows | `phpstan.neon.dist:2`, `.github/workflows/ci.yml:47` (since #82) | - |
 | lullabot:20220920-git-branch-naming | [Use [ticket-id]--[short-description] in feature branch names](https://architecture.lullabot.com/adr/20220920-git-branch-naming/) | Overridden | `docs/adrs/0002-follow-lullabot-adrs.md` | - |
 | lullabot:20251120-use-renovate | [Use Renovate for third-party dependency updates](https://architecture.lullabot.com/adr/20251120-use-renovate/) | Overridden | `docs/adrs/0003-use-renovate.md`, `renovate.json` | - |
 | lullabot:20220426-use-dedicated-accounts-service-integrations | [Use dedicated accounts for service integrations](https://architecture.lullabot.com/adr/20220426-use-dedicated-accounts-service-integrations/) | Unable to verify | Integrations are configured outside the repository | - |
@@ -28,17 +29,13 @@
 | lullabot:20260505-pin-github-actions-to-hash | [Always pin GitHub Actions to a commit hash](https://architecture.lullabot.com/adr/20260505-pin-github-actions-to-hash/) | Follows | Every `uses:` in `.github/workflows/` is a full SHA | - |
 | lullabot:20260522-use-git-feature-branch-workflow | [Use the feature branch git workflow](https://architecture.lullabot.com/adr/20260522-use-git-feature-branch-workflow/) | Follows | The `main` ruleset requires a pull request for every change | - |
 
-## Proposed
+## Resolved deviations
 
-- project:0001-record-architecture-decisions: Record architecture decisions, `docs/adrs/0001-record-architecture-decisions.md`. Accept it, or reject it, before it's checked.
-- project:0002-follow-lullabot-adrs: Follow Lullabot's architecture decisions, `docs/adrs/0002-follow-lullabot-adrs.md`. Accept it, or reject it, before it's checked.
-- project:0003-use-renovate: Use Renovate for dependency updates, `docs/adrs/0003-use-renovate.md`. Accept it, or reject it, before it's checked.
-
-## Deviations
+Both were Partial when this review ran, and #82 resolved them.
 
 ### lullabot:20211201-use-strict-types-in-php-code: Use strict types in PHP code
 
-- **Verdict:** Partial
+- **Verdict:** Partial, resolved in #82
 - **Issue:** #79
 - **The ADR requires:** `declare(strict_types=1);` in every PHP file, and a CI check that catches files without it.
 - **The project does:** every tracked PHP file declares strict types, but `phpcs.xml.dist:6` only uses `PSR12`, which doesn't require it, so a new file without it would pass CI.
@@ -47,12 +44,11 @@
 
 To resolve:
 
-- [ ] Add `<rule ref="Generic.PHP.RequireStrictTypes"/>` to `phpcs.xml.dist`, and run `vendor/bin/phpcs`.
-- [ ] Or, if this deviation is deliberate, record why: add it to the adoption ADR's exceptions, or write a project ADR.
+- [x] Add `<rule ref="Generic.PHP.RequireStrictTypes"/>` to `phpcs.xml.dist`, and run `vendor/bin/phpcs`.
 
 ### lullabot:20220112-type-hints: Always use typehints in new PHP code
 
-- **Verdict:** Partial
+- **Verdict:** Partial, resolved in #82
 - **Issue:** #80
 - **The ADR requires:** type hints on class properties, parameters and return types in new PHP code.
 - **The project does:** everything is typed except `Environment::__callStatic()`'s return type (`src/Environment.php:82`) and the test trait's `$originalVariables` property (`tests/src/SetVariablesTestTrait.php:19`). Both predate the ADR.
@@ -61,23 +57,25 @@ To resolve:
 
 To resolve:
 
-- [ ] Type `$originalVariables` as `array` in `tests/src/SetVariablesTestTrait.php`.
-- [ ] Add `: mixed` to `Environment::__callStatic()` in the next major release, and note it in the release notes.
-- [ ] Or, if this deviation is deliberate, record why: add it to the adoption ADR's exceptions, or write a project ADR.
+- [x] Type `$originalVariables` as `array` in `tests/src/SetVariablesTestTrait.php`.
+- [x] Add `: mixed` to `Environment::__callStatic()` in the next major release, and note it in the release notes. Done before 2.0.0's release, with a `BREAKING CHANGE` note.
 
 ## Overridden
 
-- lullabot:20220920-git-branch-naming: Use [ticket-id]--[short-description] in feature branch names, branches are named `<type>/<description>` to match Conventional Commit PR titles, see `docs/adrs/0002-follow-lullabot-adrs.md` (proposed).
-- lullabot:20251120-use-renovate: Use Renovate for third-party dependency updates, the project uses Renovate with a library's range strategy instead of `bump`, see `docs/adrs/0003-use-renovate.md` (proposed).
+- lullabot:20220920-git-branch-naming: Use [ticket-id]--[short-description] in feature branch names, branches are named `<type>/<description>` to match Conventional Commit PR titles, see `docs/adrs/0002-follow-lullabot-adrs.md`.
+- lullabot:20251120-use-renovate: Use Renovate for third-party dependency updates, the project uses Renovate with a library's range strategy instead of `bump`, see `docs/adrs/0003-use-renovate.md`.
 
 ## Follows
 
 - lullabot:20210608-record-architecture-decisions: Record architecture decisions, `docs/adrs/` in Nygard's format.
 - lullabot:20211006-avoid-command-aliases: Avoid command aliases and short options, no aliases or short options in `composer.json` or `package.json` scripts or in `.github/workflows/` (`read -r` has no long form).
+- lullabot:20211201-use-strict-types-in-php-code: Use strict types in PHP code, every PHP file declares it and `phpcs.xml.dist:8` requires it (since #82).
+- lullabot:20220112-type-hints: Always use typehints in new PHP code, including `src/Environment.php:90` and `tests/src/SetVariablesTestTrait.php:19` (since #82).
 - lullabot:20220207-php-unit-tests: Use PHPUnit for unit testing PHP code, `phpunit.xml.dist`, `tests/src/`.
 - lullabot:20220511-use-inclusive-language: Use inclusive language in code and technical writing, no matches for the ADR's examples in tracked files.
 - lullabot:20240820-project-docs: Document project setup in README.md, `README.md` starts with the project name and an introduction.
 - lullabot:20260410-composer-audit: Use composer audit in automated checks, `.github/workflows/ci.yml:46`.
+- lullabot:20260320-use-phpstan: Use PHPStan for PHP code static analysis at level 6, `phpstan.neon.dist:2`, run in CI (`.github/workflows/ci.yml:47`, `composer run lint`) and by GrumPHP (since #82).
 - lullabot:20260505-pin-github-actions-to-hash: Always pin GitHub Actions to a commit hash, every `uses:` in the tracked workflows is a 40-character SHA with a version comment.
 - lullabot:20260522-use-git-feature-branch-workflow: Use the feature branch git workflow, the `main` ruleset requires pull requests; `1.x` is a maintenance branch, not a git-flow branch.
 
