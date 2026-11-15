@@ -16,7 +16,7 @@ trait SetVariablesTestTrait
      *
      * @var array<string, array<string, mixed>>
      */
-    protected static $originalVariables = [];
+    protected static array $originalVariables = [];
 
     /**
      * {@inheritdoc}
