@@ -6,7 +6,7 @@ _Drafted with the `adr-setup` AI skill._
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
