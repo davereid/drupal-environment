@@ -8,9 +8,15 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "rangeStrategy": "bump",
+  "baseBranchPatterns": ["main", "1.x"],
+  "rangeStrategy": "update-lockfile",
   "minimumReleaseAge": "7 days",
   "packageRules": [
+    {
+      "description": "A library keeps its Composer ranges; only add new major versions.",
+      "matchManagers": ["composer"],
+      "rangeStrategy": "widen"
+    },
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest", "lockFileMaintenance"],
       "automerge": true
