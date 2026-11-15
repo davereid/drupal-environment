@@ -116,5 +116,5 @@ if ($environment = Environment::getEnvironment()) {
 
 ### Loading .env files
 
-- https://github.com/symfony/dotenv
-- https://github.com/vlucas/phpdotenv
+- <https://github.com/symfony/dotenv>
+- <https://github.com/vlucas/phpdotenv>
