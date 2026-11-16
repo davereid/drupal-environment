@@ -233,6 +233,9 @@ class Environment
     /**
      * Tests if a command exists on the server.
      *
+     * The result is cached for the rest of the request, since checking runs a
+     * shell. Call reset() to check again.
+     *
      * @param string $command
      *   The command to test for.
      *
@@ -245,8 +248,12 @@ class Environment
         if (!function_exists('shell_exec')) {
             return false;
         }
-        $command = escapeshellcmd($command);
-        return (bool) shell_exec("command -v {$command}");
+        $cid = __METHOD__ . ':' . $command;
+        if (!isset(static::$cache[$cid])) {
+            $command = escapeshellcmd($command);
+            static::$cache[$cid] = (bool) shell_exec("command -v {$command}");
+        }
+        return (bool) static::$cache[$cid];
     }
 
     /**
