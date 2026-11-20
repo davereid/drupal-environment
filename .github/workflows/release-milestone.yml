@@ -115,7 +115,7 @@ jobs:
     name: Re-check release PRs
     # Closing, reopening or (de)milestoning another issue or PR doesn't start the
     # release PR's check, and an issues run would report on main's commit, so
-    # re-run the release PR's own run (#84). Fork PRs only get a read-only token.
+    # re-run the release PR's own run. Fork PRs only get a read-only token.
     if: ${{ github.event_name == 'issues' || (!startsWith(github.head_ref, 'release-please--') && !github.event.pull_request.head.repo.fork && contains(fromJSON('["closed", "reopened", "milestoned", "demilestoned"]'), github.event.action)) }}
     runs-on: ubuntu-latest
     permissions:
