@@ -16,12 +16,19 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Create release commits, tags and GitHub releases.
-      issues: write # Create and update release labels.
-      pull-requests: write # Open and update the release pull request.
+    environment: release # Holds the App's private key, for main and *.x only.
+    permissions: {} # The App token below does all the writing.
     steps:
+      # A GitHub App token, not GITHUB_TOKEN, so release PR checks start without approval (#60).
+      - uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+        id: app-token
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write # Create release commits, tags and GitHub releases.
+          permission-pull-requests: write # Open and update the release pull request, and its labels.
+
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           target-branch: ${{ github.ref_name }}
