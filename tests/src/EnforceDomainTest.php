@@ -55,9 +55,7 @@ final class EnforceDomainTest extends TestCase
                 'HTTP_HOST' => 'legacy.example.com',
             ],
         ]);
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('https://example.com/current-path?query=value');
-        $this->expectExceptionCode(301);
+        $this->expectExceptionObject(new \RuntimeException('https://example.com/current-path?query=value', 301));
         RedirectTestEnvironment::enforceDomain('example.com');
     }
 }
