@@ -139,8 +139,14 @@ jobs:
               echo "No milestone check found for $branch."
             elif [ "$status" != completed ]; then
               echo "The milestone check for $branch is still running."
-            else
-              gh run rerun "$id" -R "$REPO"
+            elif out=$(gh run rerun "$id" -R "$REPO" 2>&1); then
               echo "Re-ran the milestone check for $branch."
+            elif [[ "$out" == *"already running"* ]]; then
+              # One change can start several of these jobs, e.g. merging a PR
+              # that closes an issue.
+              echo "The milestone check for $branch is already being re-run."
+            else
+              echo "::error::$out"
+              exit 1
             fi
           done
