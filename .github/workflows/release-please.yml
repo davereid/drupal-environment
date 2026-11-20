@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - '*.x'
+      - '[0-9]*.x' # Not release-please's own release-please--branches--1.x.
 
 permissions: {}
 
@@ -16,7 +16,7 @@ jobs:
   release-please:
     name: Release Please
     runs-on: ubuntu-latest
-    environment: release # Holds the App's private key, for main and *.x only.
+    environment: release # Holds the App's private key, for main and [0-9]*.x only.
     # Only used without the App (no RELEASE_APP_CLIENT_ID variable): GITHUB_TOKEN
     # then opens the release PR, and its checks wait for approval.
     permissions:
