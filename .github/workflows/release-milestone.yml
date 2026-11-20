@@ -15,6 +15,12 @@ on:
       - milestoned
       - demilestoned
       - closed
+  issues:
+    types:
+      - closed
+      - reopened
+      - milestoned
+      - demilestoned
 
 permissions: {}
 
@@ -104,3 +110,37 @@ jobs:
           fi
           gh api -X PATCH "repos/$REPO/milestones/$MILESTONE" -f state=closed \
             --jq '"Closed milestone \(.title): \(.html_url)"'
+
+  rerun:
+    name: Re-check release PRs
+    # Closing, reopening or (de)milestoning another issue or PR doesn't start the
+    # release PR's check, and an issues run would report on main's commit, so
+    # re-run the release PR's own run (#84). Fork PRs only get a read-only token.
+    if: ${{ github.event_name == 'issues' || (!startsWith(github.head_ref, 'release-please--') && !github.event.pull_request.head.repo.fork && contains(fromJSON('["closed", "reopened", "milestoned", "demilestoned"]'), github.event.action)) }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # Re-run the release PRs' milestone checks.
+      pull-requests: read # Find the open release PRs.
+    steps:
+      - name: Re-run the release PRs' milestone checks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          # shortcut: re-runs every open release PR's check, not only the one for
+          # this item's milestone; fine while there are one per release branch.
+          branches=$(gh pr list -R "$REPO" --state open --json headRefName \
+            --jq '.[].headRefName | select(startswith("release-please--"))')
+          for branch in $branches; do
+            run=$(gh run list -R "$REPO" --workflow release-milestone.yml --event pull_request \
+              --branch "$branch" --limit 1 --json databaseId,status --jq '.[] | "\(.databaseId) \(.status)"')
+            read -r id status <<< "$run"
+            if [ -z "$id" ]; then
+              echo "No milestone check found for $branch."
+            elif [ "$status" != completed ]; then
+              echo "The milestone check for $branch is still running."
+            else
+              gh run rerun "$id" -R "$REPO"
+              echo "Re-ran the milestone check for $branch."
+            fi
+          done
