@@ -6,11 +6,11 @@ Provides a class for working with Drupal environments and environment variables.
 
 This also standardizes some environment terminology between hosting providers so that you can use the same code across different hosts:
 
-| Environment | Acquia | Pantheon |
-|-|-|-|
-| Production | `prod` | `live` |
-| Staging | `test` | `test` |
-| Development | `dev` | `dev` |
+| Environment | Acquia | Acquia Site Factory | Pantheon |
+|-|-|-|-|
+| Production | `prod` | `01live` | `live` |
+| Staging | `test` | `01test` | `test` |
+| Development | `dev` | `01dev` | `dev` |
 
 ## Basic Usage
 
