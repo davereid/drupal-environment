@@ -17,7 +17,7 @@ jobs:
     name: Release Please
     runs-on: ubuntu-latest
     environment: release # Holds the App's private key, for main and [0-9]*.x only.
-    # Only used without the App (no RELEASE_APP_CLIENT_ID variable): GITHUB_TOKEN
+    # Only used without the App (no RELEASE_PLEASE_CLIENT_ID variable): GITHUB_TOKEN
     # then opens the release PR, and its checks wait for approval.
     permissions:
       contents: write # Create release commits, tags and GitHub releases.
@@ -27,10 +27,10 @@ jobs:
       # A GitHub App token, not GITHUB_TOKEN, so release PR checks start without approval (#60).
       - uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         id: app-token
-        if: vars.RELEASE_APP_CLIENT_ID != ''
+        if: vars.RELEASE_PLEASE_CLIENT_ID != ''
         with:
-          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
-          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          client-id: ${{ vars.RELEASE_PLEASE_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_PLEASE_PRIVATE_KEY }}
           permission-contents: write # Create release commits, tags and GitHub releases.
           permission-pull-requests: write # Open and update the release pull request, and its labels.
 
