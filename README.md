@@ -1,6 +1,6 @@
 # Drupal Environment
 
-[![Test](https://github.com/davereid/drupal-environment/actions/workflows/test.yml/badge.svg)](https://github.com/davereid/drupal-environment/actions/workflows/test.yml) [![Maintainability](https://qlty.sh/gh/davereid/projects/drupal-environment/maintainability.svg)](https://qlty.sh/gh/davereid/projects/drupal-environment) [![Code Coverage](https://qlty.sh/gh/davereid/projects/drupal-environment/coverage.svg)](https://qlty.sh/gh/davereid/projects/drupal-environment) [![Packagist](https://img.shields.io/packagist/dt/davereid/drupal-environment.svg)](https://packagist.org/packages/davereid/drupal-environment)
+[![CI](https://github.com/davereid/drupal-environment/actions/workflows/ci.yml/badge.svg)](https://github.com/davereid/drupal-environment/actions/workflows/ci.yml) [![Maintainability](https://qlty.sh/gh/davereid/projects/drupal-environment/maintainability.svg)](https://qlty.sh/gh/davereid/projects/drupal-environment) [![Code Coverage](https://qlty.sh/gh/davereid/projects/drupal-environment/coverage.svg)](https://qlty.sh/gh/davereid/projects/drupal-environment) [![Packagist](https://img.shields.io/packagist/dt/davereid/drupal-environment.svg)](https://packagist.org/packages/davereid/drupal-environment)
 
 Provides a class for working with Drupal environments and environment variables.
 
