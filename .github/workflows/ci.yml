@@ -111,7 +111,7 @@ jobs:
           check ENVIRONMENT=prod Production prod
           check ENVIRONMENT=test Staging test
           check ENVIRONMENT=dev Development dev
-          check ENVIRONMENT=ci Local ci
+          check ENVIRONMENT=ci CI ci
           # isTest() for a Playwright run adds settings.testing.php.
           check PLAYWRIGHT_SETUP=1 Local testing
 

@@ -460,7 +460,11 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => null,
+                    'getIndicatorConfig' => [
+                        'name' => 'CI',
+                        'bg_color' => '#663894',
+                        'fg_color' => '#ffffff',
+                    ],
                 ],
             ],
             'pantheon-local' => [
@@ -545,7 +549,11 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => null,
+                    'getIndicatorConfig' => [
+                        'name' => 'CI',
+                        'bg_color' => '#663894',
+                        'fg_color' => '#ffffff',
+                    ],
                 ],
             ],
             'github' => [
@@ -571,7 +579,11 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => null,
+                    'getIndicatorConfig' => [
+                        'name' => 'CI',
+                        'bg_color' => '#663894',
+                        'fg_color' => '#ffffff',
+                    ],
                 ],
             ],
             'gitlab' => [
@@ -597,7 +609,11 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => null,
+                    'getIndicatorConfig' => [
+                        'name' => 'CI',
+                        'bg_color' => '#663894',
+                        'fg_color' => '#ffffff',
+                    ],
                 ],
             ],
             'ddev' => [
