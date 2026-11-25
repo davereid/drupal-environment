@@ -23,6 +23,38 @@ final class EnvironmentTest extends TestCase
     use SetVariablesTestTrait;
 
     /**
+     * Test that the deprecated CI methods trigger a deprecation notice.
+     */
+    public function testDeprecatedCiMethods(): void
+    {
+        $messages = [];
+        set_error_handler(function (int $level, string $message) use (&$messages): bool {
+            $messages[] = $message;
+            return true;
+        }, E_USER_DEPRECATED);
+        try {
+            Environment::isGitHubWorkflow();
+            Environment::isGitLabCi();
+            Environment::isCircleCi();
+            Environment::isCi();
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([
+            'DrupalEnvironment\Environment::isGitHubWorkflow() is deprecated in davereid/drupal-environment:1.4.0'
+                . ' and is removed from davereid/drupal-environment:2.0.0. Use DrupalEnvironment\Environment::isCi()'
+                . ' instead.',
+            'DrupalEnvironment\Environment::isGitLabCi() is deprecated in davereid/drupal-environment:1.4.0'
+                . ' and is removed from davereid/drupal-environment:2.0.0. Use DrupalEnvironment\Environment::isCi()'
+                . ' instead.',
+            'DrupalEnvironment\Environment::isCircleCi() is deprecated in davereid/drupal-environment:1.4.0'
+                . ' and is removed from davereid/drupal-environment:2.0.0. Use DrupalEnvironment\Environment::isCi()'
+                . ' instead.',
+        ], $messages);
+    }
+
+    /**
      * Test the commandExists() method.
      */
     public function testCommandExists(): void
@@ -104,10 +136,11 @@ final class EnvironmentTest extends TestCase
             'ENVIRONMENT' => null,
             'APP_ENV' => null,
             'PANTHEON_ENVIRONMENT' => null,
-            // When running under CI, we need to ensure these are reset.
+            // When running under CI or DDEV, we need to ensure these are reset.
             'CI' => null,
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
+            'IS_DDEV_PROJECT' => null,
         ];
         $this->setVariables($variables);
         foreach ($method_tests as $name => $expected) {
@@ -564,6 +597,155 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'isTest' => true,
                     'getIndicatorConfig' => null,
+                ],
+            ],
+            'ci' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
+                    'isAcquia' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'isTest' => true,
+                    'getIndicatorConfig' => null,
+                ],
+            ],
+            'ci-production' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                        'ENVIRONMENT' => 'prod',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'prod',
+                    'isProduction' => true,
+                    'isCi' => true,
+                    'isLocal' => false,
+                ],
+            ],
+            'ci-ddev' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                        'IS_DDEV_PROJECT' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'isCi' => true,
+                    'isLocal' => true,
+                    'isDdev' => true,
+                ],
+            ],
+            'ci-false' => [
+                [
+                    'ENV' => [
+                        'CI' => 'false',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
+                    'isCi' => false,
+                ],
+            ],
+            'ci-false-uppercase' => [
+                [
+                    'ENV' => [
+                        'CI' => 'FALSE',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-no' => [
+                [
+                    'ENV' => [
+                        'CI' => 'no',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-zero' => [
+                [
+                    'ENV' => [
+                        'CI' => '0',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-off' => [
+                [
+                    'ENV' => [
+                        'CI' => 'off',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-empty' => [
+                [
+                    'ENV' => [
+                        'CI' => '',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'pantheon-multidev-ci' => [
+                [
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'pr-1',
+                        'CI' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Pantheon::class,
+                    'isCi' => true,
+                    'isMultidev' => false,
+                    'isPreview' => false,
+                ],
+            ],
+            'ci-service-name' => [
+                [
+                    'ENV' => [
+                        'CI' => 'woodpecker',
+                    ],
+                ],
+                [
+                    'isCi' => true,
+                ],
+            ],
+            'environment-ci' => [
+                [
+                    'ENV' => [
+                        'ENVIRONMENT' => 'ci',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'ci',
+                    'isCi' => true,
                 ],
             ],
             'ddev' => [

@@ -23,7 +23,7 @@ $value = Environment::get('VARIABLE_NAME');
 
 The advantages of using this is the results are statically cached.
 
-### Testing for Drupal hosting or CI environments
+### Testing for Drupal hosting environments
 
 ```php
 use DrupalEnvironment\Environment;
@@ -32,9 +32,6 @@ use DrupalEnvironment\Environment;
 Environment::isPantheon();
 Environment::isAcquia();
 Environment::isTugboat();
-Environment::isGitHubWorkflow();
-Environment::isGitLabCi();
-Environment::isCircleCi();
 ```
 
 ### Testing for specific environments
@@ -49,7 +46,7 @@ $environment = Environment::getEnvironment();
 Environment::isProduction();
 Environment::isStaging();
 Environment::isDevelopment();
-Environment::isCi();
+Environment::isCi(); // See "CI services" below
 Environment::isLocal(); // Covers both DDEV and Lando
 Environment::isDdev();
 Environment::isLando();
@@ -110,6 +107,37 @@ if ($environment = Environment::getEnvironment()) {
     require_once $settings_file;
   }
 }
+```
+
+## CI services
+
+`Environment::isCi()` returns `TRUE` when the `CI` variable is set to anything but an empty or false-like value (`false`, `0`, `no` or `off`). These CI services set it:
+
+| CI service | `CI` value |
+|-|-|
+| [AppVeyor](https://www.appveyor.com/docs/environment-variables/) | `True` |
+| [Bitbucket Pipelines](https://support.atlassian.com/bitbucket-cloud/docs/variables-and-secrets/) | `true` |
+| [Buildkite](https://buildkite.com/docs/pipelines/configure/environment-variables) | `true` |
+| [CircleCI](https://circleci.com/docs/reference/variables/) | `true` |
+| [Codefresh](https://codefresh.io/docs/docs/pipelines/variables/) | `true` |
+| [Drone](https://docs.drone.io/pipeline/environment/reference/ci/) | `true` |
+| [GitHub Actions](https://docs.github.com/en/actions/reference/workflows-and-actions/variables#default-environment-variables) | `true` |
+| [GitLab CI/CD](https://docs.gitlab.com/ci/variables/predefined_variables/) | `true` |
+| [Semaphore](https://docs.semaphore.io/reference/env-vars) | `true` |
+| [Travis CI](https://docs.travis-ci.com/user/environment-variables/#default-environment-variables) | `true` |
+| [Woodpecker](https://woodpecker-ci.org/docs/usage/environment) | `woodpecker` |
+
+[Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables), [Jenkins](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables), [TeamCity](https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html) and [AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html) don't set `CI`. For these and any other service that doesn't, add `CI=true` to the pipeline's environment variables.
+
+### CI inside DDEV
+
+DDEV 1.25.6 and later [pass the host's `CI` variable into the web container](https://docs.ddev.com/en/stable/users/configuration/environment-variables/#ci-from-the-host), so code run in a CI job with `ddev exec` or `ddev composer` gets `TRUE` from both `Environment::isCi()` and `Environment::isLocal()`.
+
+With older DDEV versions, list `CI` by name in `.ddev/config.yaml`. DDEV passes it through from the host only when it's set there, so nothing changes on developers' machines:
+
+```yaml
+web_environment:
+  - CI
 ```
 
 ## Recommended Projects

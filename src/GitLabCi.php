@@ -10,6 +10,9 @@ namespace DrupalEnvironment;
  * @see https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
  *
  * @internal
+ *
+ * @deprecated in davereid/drupal-environment:1.4.0 and is removed from
+ *   davereid/drupal-environment:2.0.0. Use Environment::isCi() instead.
  */
 class GitLabCi extends DefaultEnvironment
 {
