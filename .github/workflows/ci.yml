@@ -43,7 +43,11 @@ jobs:
       - run: composer config --unset platform
       - run: composer diagnose || true
       - run: composer install
+      - run: composer audit
+      - run: composer run lint
       - run: composer run test
+      - run: npm ci
+      - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
         uses: qltysh/qlty-action/coverage@0ff2178667bf8eb28ed0013a7ef54857a24d4056 # v2.7.0
@@ -97,31 +101,6 @@ jobs:
           # shellcheck disable=SC2016 # PHP code, not shell variables.
           ddev drush php:eval '$s = \Drupal\Core\Site\Settings::get("drupal_environment"); var_export($s); if ($s !== ["isCi" => TRUE, "isLocal" => TRUE]) { throw new \RuntimeException("Expected isCi() and isLocal() to be TRUE inside DDEV in CI (needs DDEV 1.25.6 or later)."); }'
 
-  lint-php:
-    name: Lint PHP
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read # Check out the code.
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Read the composer PHP config
-        id: platform
-        # The runner's preinstalled Composer reads it before setup-php runs.
-        run: echo "php=$(composer config platform.php)" >> "$GITHUB_OUTPUT"
-      - name: Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
-        with:
-          php-version: ${{ steps.platform.outputs.php }}
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: composer install
-      - run: composer audit
-      - run: npm ci
-      # Every GrumPHP task except phpunit, which the test job runs on each PHP version.
-      - run: vendor/bin/grumphp run --tasks=phplint,yamllint,jsonlint,composer,composer_normalize,phpcs,phpstan,npm_script
-
   lint-actions:
     name: Lint actions
     runs-on: ubuntu-latest
@@ -132,7 +111,9 @@ jobs:
         with:
           persist-credentials: false
       - name: Run actionlint
-        run: docker run --rm -v "${PWD}:/repo" -w /repo rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667 -color
+        uses: docker://rhysd/actionlint:1.7.12@sha256:b1934ee5f1c509618f2508e6eb47ee0d3520686341fec936f3b79331f9315667
+        with:
+          args: -color -verbose # List the checked files, since a clean run prints nothing.
       - name: Run zizmor
         if: ${{ !cancelled() }} # Also report zizmor's findings when actionlint fails.
         uses: zizmorcore/zizmor-action@1b4550e929643b8b26a62303c6bd64814271a4f1 # v0.9.2
