@@ -63,8 +63,6 @@ jobs:
           autostart: false
       - name: Create a Drupal site
         run: |
-          mkdir site
-          cd site
           ddev config --project-type=drupal11 --docroot=web
           ddev start
           ddev composer create-project -n drupal/recommended-project
@@ -72,18 +70,15 @@ jobs:
       # DDEV project, which is the only directory DDEV mounts.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: site/lib
+          path: lib
           persist-credentials: false
       - name: Require this library and Drush
-        working-directory: site
         run: |
           ddev composer config repositories.drupal-environment '{"type": "path", "url": "lib"}'
           ddev composer require -n 'davereid/drupal-environment:*@dev' drush/drush
       - name: Install Drupal
-        working-directory: site
         run: ddev drush site:install -y minimal
       - name: Check the environment from settings.php
-        working-directory: site
         run: |
           chmod u+w web/sites/default web/sites/default/settings.php
           cat >> web/sites/default/settings.php <<'EOF'
