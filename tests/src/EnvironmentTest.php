@@ -32,6 +32,21 @@ final class EnvironmentTest extends TestCase
     }
 
     /**
+     * Test that commandExists() caches its result until reset().
+     */
+    public function testCommandExistsCache(): void
+    {
+        $this->assertTrue(Environment::commandExists('php'));
+
+        // Hide php from the shell: only the cached result can still find it.
+        putenv('PATH=/nonexistent');
+        $this->assertTrue(Environment::commandExists('php'));
+
+        Environment::reset();
+        $this->assertFalse(Environment::commandExists('php'));
+    }
+
+    /**
      * Test the getMemoryLimit() and getAvailableMemory() methods.
      */
     #[DataProvider('providerMemoryLimit')]
@@ -52,6 +67,9 @@ final class EnvironmentTest extends TestCase
 
     /**
      * Data provider for testMemoryLimit().
+     *
+     * @return array<string, array{string, int}>
+     *   Test cases of a memory limit and its value in bytes.
      */
     public static function providerMemoryLimit(): array
     {
@@ -92,6 +110,11 @@ final class EnvironmentTest extends TestCase
     /**
      * Test the environment methods.
      *
+     * @param array<string, array<string, mixed>> $variables
+     *   The variables to set, keyed by type ('ENV' or '_SERVER') and name.
+     * @param array<string, mixed> $method_tests
+     *   The expected return values, keyed by Environment method name.
+     *
      * @dataProvider providerEnvironment
      */
     #[DataProvider('providerEnvironment')]
@@ -117,6 +140,9 @@ final class EnvironmentTest extends TestCase
 
     /**
      * Data provider for ::testEnvironment.
+     *
+     * @return array<string, array{array<string, array<string, mixed>>, array<string, mixed>}>
+     *   Test cases of variables to set and the expected method return values.
      */
     public static function providerEnvironment(): array
     {
