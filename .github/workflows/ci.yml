@@ -54,6 +54,50 @@ jobs:
           oidc: true
           files: ${{ github.workspace }}/build/logs/clover.xml
 
+  test-drupal:
+    name: Test Drupal site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Check out the code.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: drupal-environment
+          persist-credentials: false
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@fdf2f5c97943bae638f31df6df86f1defa6210c0 # v1.12.1
+        with:
+          autostart: false
+      - name: Create a Drupal site
+        run: |
+          mkdir site
+          cd site
+          ddev config --project-type=drupal11 --docroot=web
+          ddev start
+          ddev composer create-project -n drupal/recommended-project
+      - name: Require this library and Drush
+        working-directory: site
+        run: |
+          # A copy instead of a symlink, since DDEV only mounts the project directory.
+          git -C ../drupal-environment archive --prefix=lib/ HEAD | tar -x
+          ddev composer config repositories.drupal-environment '{"type": "path", "url": "lib", "options": {"symlink": false}}'
+          ddev composer require -n 'davereid/drupal-environment:*@dev' drush/drush
+      - name: Install Drupal
+        working-directory: site
+        run: ddev drush site:install -y minimal
+      - name: Check the environment from settings.php
+        working-directory: site
+        run: |
+          chmod u+w web/sites/default web/sites/default/settings.php
+          cat >> web/sites/default/settings.php <<'EOF'
+          $settings['drupal_environment'] = [
+            'isCi' => \DrupalEnvironment\Environment::isCi(),
+            'isLocal' => \DrupalEnvironment\Environment::isLocal(),
+          ];
+          EOF
+          # shellcheck disable=SC2016 # PHP code, not shell variables.
+          ddev drush php:eval '$s = \Drupal\Core\Site\Settings::get("drupal_environment"); var_export($s); if ($s !== ["isCi" => TRUE, "isLocal" => TRUE]) { throw new \RuntimeException("Expected isCi() and isLocal() to be TRUE inside DDEV in CI."); }'
+
   zizmor:
     name: zizmor
     runs-on: ubuntu-latest

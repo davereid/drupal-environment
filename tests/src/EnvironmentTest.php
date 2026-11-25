@@ -104,10 +104,11 @@ final class EnvironmentTest extends TestCase
             'ENVIRONMENT' => null,
             'APP_ENV' => null,
             'PANTHEON_ENVIRONMENT' => null,
-            // When running under CI, we need to ensure these are reset.
+            // When running under CI or DDEV, we need to ensure these are reset.
             'CI' => null,
             'GITLAB_CI' => null,
             'GITHUB_WORKFLOW' => null,
+            'IS_DDEV_PROJECT' => null,
         ];
         $this->setVariables($variables);
         foreach ($method_tests as $name => $expected) {
@@ -564,6 +565,111 @@ final class EnvironmentTest extends TestCase
                     'isLocal' => false,
                     'isTest' => true,
                     'getIndicatorConfig' => null,
+                ],
+            ],
+            'ci' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
+                    'isAcquia' => false,
+                    'isTugboat' => false,
+                    'isPantheon' => false,
+                    'isProduction' => false,
+                    'isStaging' => false,
+                    'isDevelopment' => false,
+                    'isPreview' => false,
+                    'isCi' => true,
+                    'isLocal' => false,
+                    'isTest' => true,
+                    'getIndicatorConfig' => null,
+                ],
+            ],
+            'ci-production' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                        'ENVIRONMENT' => 'prod',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'prod',
+                    'isProduction' => true,
+                    'isCi' => true,
+                    'isLocal' => false,
+                ],
+            ],
+            'ci-ddev' => [
+                [
+                    'ENV' => [
+                        'CI' => 'true',
+                        'IS_DDEV_PROJECT' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'isCi' => true,
+                    'isLocal' => true,
+                    'isDdev' => true,
+                ],
+            ],
+            'ci-false' => [
+                [
+                    'ENV' => [
+                        'CI' => 'false',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
+                    'isCi' => false,
+                ],
+            ],
+            'ci-false-uppercase' => [
+                [
+                    'ENV' => [
+                        'CI' => 'FALSE',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-no' => [
+                [
+                    'ENV' => [
+                        'CI' => 'no',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-service-name' => [
+                [
+                    'ENV' => [
+                        'CI' => 'woodpecker',
+                    ],
+                ],
+                [
+                    'isCi' => true,
+                ],
+            ],
+            'environment-ci' => [
+                [
+                    'ENV' => [
+                        'ENVIRONMENT' => 'ci',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'ci',
+                    'isCi' => true,
                 ],
             ],
             'ddev' => [
