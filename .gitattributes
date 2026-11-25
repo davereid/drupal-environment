@@ -5,4 +5,3 @@
 # Leave the architecture decision records and agent instructions out too.
 /docs export-ignore
 /AGENTS.md export-ignore
-/CLAUDE.md export-ignore

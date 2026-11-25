@@ -32,6 +32,21 @@ final class EnvironmentTest extends TestCase
     }
 
     /**
+     * Test that commandExists() caches its result until reset().
+     */
+    public function testCommandExistsCache(): void
+    {
+        $this->assertTrue(Environment::commandExists('php'));
+
+        // Hide php from the shell: only the cached result can still find it.
+        putenv('PATH=/nonexistent');
+        $this->assertTrue(Environment::commandExists('php'));
+
+        Environment::reset();
+        $this->assertFalse(Environment::commandExists('php'));
+    }
+
+    /**
      * Test the getMemoryLimit() and getAvailableMemory() methods.
      */
     #[DataProvider('providerMemoryLimit')]
