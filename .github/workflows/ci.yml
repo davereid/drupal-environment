@@ -60,10 +60,6 @@ jobs:
     permissions:
       contents: read # Check out the code.
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          path: drupal-environment
-          persist-credentials: false
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@fdf2f5c97943bae638f31df6df86f1defa6210c0 # v1.12.1
         with:
@@ -75,12 +71,16 @@ jobs:
           ddev config --project-type=drupal11 --docroot=web
           ddev start
           ddev composer create-project -n drupal/recommended-project
+      # After create-project, which needs an empty directory, and inside the
+      # DDEV project, which is the only directory DDEV mounts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: site/lib
+          persist-credentials: false
       - name: Require this library and Drush
         working-directory: site
         run: |
-          # A copy instead of a symlink, since DDEV only mounts the project directory.
-          git -C ../drupal-environment archive --prefix=lib/ HEAD | tar -x
-          ddev composer config repositories.drupal-environment '{"type": "path", "url": "lib", "options": {"symlink": false}}'
+          ddev composer config repositories.drupal-environment '{"type": "path", "url": "lib"}'
           ddev composer require -n 'davereid/drupal-environment:*@dev' drush/drush
       - name: Install Drupal
         working-directory: site
