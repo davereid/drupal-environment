@@ -23,7 +23,7 @@ $value = Environment::get('VARIABLE_NAME');
 
 The advantages of using this is the results are statically cached.
 
-### Testing for Drupal hosting or CI environments
+### Testing for Drupal hosting environments
 
 ```php
 use DrupalEnvironment\Environment;
@@ -32,11 +32,6 @@ use DrupalEnvironment\Environment;
 Environment::isPantheon();
 Environment::isAcquia();
 Environment::isTugboat();
-
-// Deprecated: use Environment::isCi() instead. Removed in 2.0.0.
-Environment::isGitHubWorkflow();
-Environment::isGitLabCi();
-Environment::isCircleCi();
 ```
 
 ### Testing for specific environments
