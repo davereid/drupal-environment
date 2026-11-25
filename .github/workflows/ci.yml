@@ -43,37 +43,16 @@ jobs:
       - run: composer config --unset platform
       - run: composer diagnose || true
       - run: composer install
+      - run: composer audit
+      - run: composer run lint
       - run: composer run test
+      - run: vendor/bin/grumphp run
       - name: Test & publish code coverage
         if: ${{ matrix.php == env.PHP_DEFAULT_VERSION && matrix.os == 'ubuntu-latest' && !github.event.pull_request.head.repo.fork }}
         uses: qltysh/qlty-action/coverage@0ff2178667bf8eb28ed0013a7ef54857a24d4056 # v2.7.0
         with:
           oidc: true
           files: ${{ github.workspace }}/build/logs/clover.xml
-
-  lint-php:
-    name: Lint PHP
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read # Check out the code.
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - name: Read the composer PHP config
-        id: platform
-        # The runner's preinstalled Composer reads it before setup-php runs.
-        run: echo "php=$(composer config platform.php)" >> "$GITHUB_OUTPUT"
-      - name: Setup PHP
-        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
-        with:
-          php-version: ${{ steps.platform.outputs.php }}
-        env:
-          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: composer install
-      - run: composer audit
-      # Every GrumPHP task except phpunit, which the test job runs on each PHP version.
-      - run: vendor/bin/grumphp run --tasks=phplint,yamllint,jsonlint,composer,composer_normalize,phpcs,phpstan
 
   lint-actions:
     name: Lint actions
