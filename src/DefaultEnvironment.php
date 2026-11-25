@@ -14,14 +14,14 @@ class DefaultEnvironment
     /**
      * The calculated environment.
      *
-     * @var array
+     * @var array<string, string|false>
      */
     protected static array $environment = [];
 
     /**
      * The default environment variable name.
      *
-     * @var string|array
+     * @var string|string[]
      */
     public const ENVIRONMENT_NAME = [
       'ENVIRONMENT',
@@ -168,7 +168,7 @@ class DefaultEnvironment
     /**
      * Get the environment_indicator configuration. for this environment.
      *
-     * @return array|null
+     * @return array<string, string>|null
      *   The environment_indicator configuration or NULL if one could not be provided.
      *
      * @see https://architecture.lullabot.com/adr/20210609-environment-indicator/

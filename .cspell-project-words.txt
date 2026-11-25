@@ -11,6 +11,11 @@ qltysh
 shivammathur
 demilestoned
 Reqs
+Lullabot
+Nygard
+adrs
+zizmor
+zizmorcore
+rhysd
 Godeps
 mvnw
-zizmor

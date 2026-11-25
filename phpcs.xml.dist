@@ -5,4 +5,5 @@
   <file>tests</file>
   <rule ref="PSR12">
   </rule>
+  <rule ref="Generic.PHP.RequireStrictTypes"/>
 </ruleset>
