@@ -15,11 +15,6 @@ namespace DrupalEnvironment;
  * @method static bool isDevelopment()
  * @method static bool isPreview()
  * @method static bool isTugboat()
- * @method static bool isCi()
- * @method static bool isGitHubWorkflow()
- * @method static bool isGitLabCi()
- * @method static bool isCircleCi()
- * @method static bool isGenericCi()
  * @method static array<string, string>|null getIndicatorConfig()
  */
 class Environment
@@ -45,10 +40,6 @@ class Environment
         'isAcquia' => Acquia::class,
         'isPantheon' => Pantheon::class,
         'isTugboat' => Tugboat::class,
-        'isGitHubWorkflow' => GitHubWorkflow::class,
-        'isGitLabCi' => GitLabCi::class,
-        'isCircleCi' => CircleCi::class,
-        'isGenericCi' => GenericCi::class,
     ];
 
     /**
@@ -167,6 +158,25 @@ class Environment
     public static function isLocal(): bool
     {
         return static::getEnvironment() === 'local' || static::isDdev() || static::isLando();
+    }
+
+    /**
+     * Determine if this is a CI environment.
+     *
+     * Most CI services set CI=true, including GitHub Actions, GitLab CI,
+     * CircleCI, Bitbucket Pipelines and Buildkite. DDEV 1.25.6 and later pass
+     * it into the web container.
+     *
+     * @return bool
+     *   TRUE if the CI variable is set and isn't false-like ("false", "0",
+     *   "no", "off"), or if the environment is "ci".
+     */
+    public static function isCi(): bool
+    {
+        // Some build tools document CI=false as a way to turn off CI behavior,
+        // and some CI services set a name instead of "true", like "woodpecker".
+        return filter_var(static::get('CI'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== false
+            || static::getEnvironmentClass()::isCi();
     }
 
     /**

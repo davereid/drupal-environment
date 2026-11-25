@@ -23,7 +23,7 @@ $value = Environment::get('VARIABLE_NAME');
 
 The advantages of using this is the results are statically cached.
 
-### Testing for Drupal hosting or CI environments
+### Testing for Drupal hosting environments
 
 ```php
 use DrupalEnvironment\Environment;
@@ -32,10 +32,6 @@ use DrupalEnvironment\Environment;
 Environment::isPantheon();
 Environment::isAcquia();
 Environment::isTugboat();
-Environment::isGitHubWorkflow();
-Environment::isGitLabCi();
-Environment::isCircleCi();
-Environment::isGenericCi(); // Any other CI service that sets CI=true
 ```
 
 ### Testing for specific environments
@@ -50,7 +46,7 @@ $environment = Environment::getEnvironment();
 Environment::isProduction();
 Environment::isStaging();
 Environment::isDevelopment();
-Environment::isCi();
+Environment::isCi(); // Any CI service that sets CI=true, or ENVIRONMENT=ci
 Environment::isLocal(); // Covers both DDEV and Lando
 Environment::isDdev();
 Environment::isLando();
@@ -113,24 +109,16 @@ if ($environment = Environment::getEnvironment()) {
 }
 ```
 
-## Known Issues
+## CI inside DDEV
 
-### CI isn't detected inside DDEV
+DDEV 1.25.6 and later [pass the host's `CI` variable into the web container](https://docs.ddev.com/en/stable/users/configuration/environment-variables/#ci-from-the-host), so code run in a CI job with `ddev exec` or `ddev composer` gets `TRUE` from both `Environment::isCi()` and `Environment::isLocal()`.
 
-DDEV doesn't pass the CI system's environment variables, such as `CI` or `GITHUB_WORKFLOW`, into its containers. Code run in a CI job with `ddev exec` or `ddev composer` sees a local DDEV environment: `Environment::isCi()` and the CI methods, such as `Environment::isGitHubWorkflow()`, return `FALSE`. [ddev/ddev#9124](https://github.com/ddev/ddev/pull/9124) will pass the host's `CI` variable into DDEV's web container, which is enough for `Environment::isCi()`.
+With older DDEV versions, list `CI` by name in `.ddev/config.yaml`. DDEV passes it through from the host only when it's set there, so nothing changes on developers' machines:
 
-Until then, pass `CI` into DDEV yourself. Also pass the CI system's own variable if your code calls its method, such as `GITHUB_WORKFLOW` for `Environment::isGitHubWorkflow()`, `GITLAB_CI` for `Environment::isGitLabCi()` or `CIRCLECI` for `Environment::isCircleCi()`. `Environment::isLocal()` and `Environment::isDdev()` still return `TRUE`. Either:
-
-- List the variables by name in `.ddev/config.yaml`. DDEV passes each one through from the host when it's set there, so nothing changes on developers' machines:
-  ```yaml
-  web_environment:
-    - CI
-    - GITHUB_WORKFLOW
-  ```
-- Or, in a GitHub Actions workflow, write them after `ddev/github-action-setup-ddev` with `autostart: false` and before `ddev start`. DDEV 1.25.4 and later read `.ddev/.env.web.local`, which is gitignored, so the checkout has no uncommitted changes:
-  ```yaml
-  - run: ddev dotenv set .ddev/.env.web.local --ci=true --github-workflow="$GITHUB_WORKFLOW"
-  ```
+```yaml
+web_environment:
+  - CI
+```
 
 ## Recommended Projects
 

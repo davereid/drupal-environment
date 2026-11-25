@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace DrupalEnvironment\Tests;
 
 use DrupalEnvironment\Acquia;
-use DrupalEnvironment\CircleCi;
 use DrupalEnvironment\DefaultEnvironment;
 use DrupalEnvironment\Environment;
-use DrupalEnvironment\GenericCi;
-use DrupalEnvironment\GitHubWorkflow;
-use DrupalEnvironment\GitLabCi;
 use DrupalEnvironment\Pantheon;
 use DrupalEnvironment\Tugboat;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -128,10 +124,9 @@ final class EnvironmentTest extends TestCase
             'ENVIRONMENT' => null,
             'APP_ENV' => null,
             'PANTHEON_ENVIRONMENT' => null,
-            // When running under CI, we need to ensure these are reset.
+            // When running under CI or DDEV, we need to ensure these are reset.
             'CI' => null,
-            'GITLAB_CI' => null,
-            'GITHUB_WORKFLOW' => null,
+            'IS_DDEV_PROJECT' => null,
         ];
         $this->setVariables($variables);
         foreach ($method_tests as $name => $expected) {
@@ -154,9 +149,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -182,9 +174,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'prod',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => true,
@@ -211,9 +200,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'prod',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => true,
@@ -241,9 +227,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => 'dev',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -270,9 +253,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -299,9 +279,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'live',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => true,
@@ -334,9 +311,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'test',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
@@ -369,9 +343,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'dev',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
@@ -404,9 +375,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'pr-1',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
@@ -439,9 +407,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'ci',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
@@ -466,9 +431,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Pantheon::class,
                     'getEnvironment' => 'local',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => true,
                     'isProduction' => false,
@@ -496,9 +458,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Tugboat::class,
                     'getEnvironment' => 'phpunit',
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => true,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -515,20 +474,16 @@ final class EnvironmentTest extends TestCase
                     ],
                 ],
             ],
-            'circleci' => [
+            'ci' => [
                 [
                     'ENV' => [
                         'CI' => 'true',
-                        'CIRCLECI' => 'true',
                     ],
                 ],
                 [
-                    'getEnvironmentClass' => CircleCi::class,
-                    'getEnvironment' => 'ci',
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => false,
                     'isAcquia' => false,
-                    'isCircleCi' => true,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -541,81 +496,36 @@ final class EnvironmentTest extends TestCase
                     'getIndicatorConfig' => null,
                 ],
             ],
-            'github' => [
+            'ci-production' => [
                 [
                     'ENV' => [
                         'CI' => 'true',
-                        'GITHUB_WORKFLOW' => 'test',
+                        'ENVIRONMENT' => 'prod',
                     ],
                 ],
                 [
-                    'getEnvironmentClass' => GitHubWorkflow::class,
-                    'getEnvironment' => 'ci',
-                    'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => true,
-                    'isGitLabCi' => false,
-                    'isTugboat' => false,
-                    'isPantheon' => false,
-                    'isProduction' => false,
-                    'isStaging' => false,
-                    'isDevelopment' => false,
-                    'isPreview' => false,
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'prod',
+                    'isProduction' => true,
                     'isCi' => true,
                     'isLocal' => false,
-                    'isTest' => true,
-                    'getIndicatorConfig' => null,
                 ],
             ],
-            'gitlab' => [
+            'ci-ddev' => [
                 [
                     'ENV' => [
                         'CI' => 'true',
-                        'GITLAB_CI' => 'true',
+                        'IS_DDEV_PROJECT' => 'true',
                     ],
                 ],
                 [
-                    'getEnvironmentClass' => GitLabCi::class,
-                    'getEnvironment' => 'ci',
-                    'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => true,
-                    'isTugboat' => false,
-                    'isPantheon' => false,
-                    'isProduction' => false,
-                    'isStaging' => false,
-                    'isDevelopment' => false,
-                    'isPreview' => false,
+                    'getEnvironmentClass' => DefaultEnvironment::class,
                     'isCi' => true,
-                    'isLocal' => false,
-                    'isTest' => true,
-                    'getIndicatorConfig' => null,
+                    'isLocal' => true,
+                    'isDdev' => true,
                 ],
             ],
-            'generic-ci' => [
-                [
-                    'ENV' => [
-                        'CI' => 'true',
-                    ],
-                ],
-                [
-                    'getEnvironmentClass' => GenericCi::class,
-                    'getEnvironment' => 'ci',
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
-                    'isGenericCi' => true,
-                    'isProduction' => false,
-                    'isStaging' => false,
-                    'isDevelopment' => false,
-                    'isPreview' => false,
-                    'isCi' => true,
-                    'isLocal' => false,
-                    'getIndicatorConfig' => null,
-                ],
-            ],
-            'generic-ci-false' => [
+            'ci-false' => [
                 [
                     'ENV' => [
                         'CI' => 'false',
@@ -624,8 +534,49 @@ final class EnvironmentTest extends TestCase
                 [
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
-                    'isGenericCi' => false,
                     'isCi' => false,
+                ],
+            ],
+            'ci-false-uppercase' => [
+                [
+                    'ENV' => [
+                        'CI' => 'FALSE',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-no' => [
+                [
+                    'ENV' => [
+                        'CI' => 'no',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-service-name' => [
+                [
+                    'ENV' => [
+                        'CI' => 'woodpecker',
+                    ],
+                ],
+                [
+                    'isCi' => true,
+                ],
+            ],
+            'environment-ci' => [
+                [
+                    'ENV' => [
+                        'ENVIRONMENT' => 'ci',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => DefaultEnvironment::class,
+                    'getEnvironment' => 'ci',
+                    'isCi' => true,
                 ],
             ],
             'ddev' => [
@@ -638,9 +589,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -667,9 +615,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => DefaultEnvironment::class,
                     'getEnvironment' => false,
                     'isAcquia' => false,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
@@ -696,9 +641,6 @@ final class EnvironmentTest extends TestCase
                     'getEnvironmentClass' => Acquia::class,
                     'getEnvironment' => false,
                     'isAcquia' => true,
-                    'isCircleCi' => false,
-                    'isGitHubWorkflow' => false,
-                    'isGitLabCi' => false,
                     'isTugboat' => false,
                     'isPantheon' => false,
                     'isProduction' => false,
