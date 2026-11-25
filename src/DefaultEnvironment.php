@@ -199,13 +199,6 @@ class DefaultEnvironment
                 'bg_color' => '#20688C',
                 'fg_color' => '#ffffff',
             ],
-            // A violet, apart from the other colors' hues.
-            // @todo Use the ADR's CI color once it has one.
-            static::isCi() => [
-                'name' => 'CI',
-                'bg_color' => '#663894',
-                'fg_color' => '#ffffff',
-            ],
             static::isLocal() => [
                 'name' => 'Local',
                 'bg_color' => '#505050',

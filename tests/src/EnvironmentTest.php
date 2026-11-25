@@ -418,11 +418,7 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => [
-                        'name' => 'CI',
-                        'bg_color' => '#663894',
-                        'fg_color' => '#ffffff',
-                    ],
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'pantheon-local' => [
@@ -497,11 +493,7 @@ final class EnvironmentTest extends TestCase
                     'isCi' => true,
                     'isLocal' => false,
                     'isTest' => true,
-                    'getIndicatorConfig' => [
-                        'name' => 'CI',
-                        'bg_color' => '#663894',
-                        'fg_color' => '#ffffff',
-                    ],
+                    'getIndicatorConfig' => null,
                 ],
             ],
             'ci-production' => [
