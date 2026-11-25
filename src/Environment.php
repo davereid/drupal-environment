@@ -305,6 +305,22 @@ class Environment
     }
 
     /**
+     * Get the path to this package's settings file for Drupal sites.
+     *
+     * Include it from a site's settings.php:
+     * @code
+     * include \DrupalEnvironment\Environment::settingsFile();
+     * @endcode
+     *
+     * @return string
+     *   The absolute path to settings/settings.environment.php.
+     */
+    public static function settingsFile(): string
+    {
+        return dirname(__DIR__) . '/settings/settings.environment.php';
+    }
+
+    /**
      * Get the current host name.
      *
      * @return string

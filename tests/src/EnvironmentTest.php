@@ -23,6 +23,14 @@ final class EnvironmentTest extends TestCase
     use SetVariablesTestTrait;
 
     /**
+     * Test that settingsFile() points to the file this package ships.
+     */
+    public function testSettingsFile(): void
+    {
+        $this->assertFileExists(Environment::settingsFile());
+    }
+
+    /**
      * Test the commandExists() method.
      */
     public function testCommandExists(): void
