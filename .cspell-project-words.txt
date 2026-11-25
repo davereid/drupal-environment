@@ -17,3 +17,5 @@ adrs
 zizmor
 zizmorcore
 rhysd
+Godeps
+mvnw
