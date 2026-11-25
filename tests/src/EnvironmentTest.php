@@ -650,6 +650,50 @@ final class EnvironmentTest extends TestCase
                     'isCi' => false,
                 ],
             ],
+            'ci-zero' => [
+                [
+                    'ENV' => [
+                        'CI' => '0',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-off' => [
+                [
+                    'ENV' => [
+                        'CI' => 'off',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'ci-empty' => [
+                [
+                    'ENV' => [
+                        'CI' => '',
+                    ],
+                ],
+                [
+                    'isCi' => false,
+                ],
+            ],
+            'pantheon-multidev-ci' => [
+                [
+                    'ENV' => [
+                        'PANTHEON_ENVIRONMENT' => 'pr-1',
+                        'CI' => 'true',
+                    ],
+                ],
+                [
+                    'getEnvironmentClass' => Pantheon::class,
+                    'isCi' => true,
+                    'isMultidev' => false,
+                    'isPreview' => false,
+                ],
+            ],
             'ci-service-name' => [
                 [
                     'ENV' => [
