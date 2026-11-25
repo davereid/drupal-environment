@@ -79,11 +79,22 @@ Environment::getAvailableMemory();
 
 ### settings.php
 
+Include this package's [settings file](settings/settings.environment.php) from your site's `settings.php`:
+
+```php
+include \DrupalEnvironment\Environment::settingsFile();
+```
+
+It configures the [Environment Indicator](https://www.drupal.org/project/environment_indicator) module for the current environment. It also includes these settings files next to `settings.php`, in this order, when they exist:
+
+- `settings.<environment>.php` for the current environment, like `settings.prod.php` or `settings.dev.php`.
+- `settings.ci.php` when `Environment::isCi()` is `TRUE`.
+- `settings.testing.php` when `Environment::isTest()` is `TRUE`, for PHPUnit and Playwright runs. It isn't `settings.test.php`, which is the staging environment's file on Acquia and Pantheon.
+
+For other per-environment settings:
+
 ```php
 use DrupalEnvironment\Environment;
-
-// Add configuration for the Environment Indicator module.
-$config['environment_indicator.indicator'] = Environment::getIndicatorConfig();
 
 if (Environment::isProduction()) {
   // Set some production environment settings overrides.
@@ -94,21 +105,19 @@ elseif (Environment::isStaging()) {
 elseif (Environment::isDevelopment()) {
   // Set some development environment settings overrides.
 }
+elseif (Environment::isCi()) {
+  // Set some CI environment settings overrides.
+}
+elseif (Environment::isTest()) {
+  // Set some PHPUnit or Playwright test settings overrides.
+}
 elseif (Environment::isLocal()) {
-  // Set some development environment settings overrides.
+  // Set some local environment settings overrides.
 }
 
 // Redirect any internal platform domains to a preferred domain.
 if (Environment::isProduction()) {
   Environment::enforceDomain('www.example.com');
-}
-
-// Include a environment-specific settings file.
-if ($environment = Environment::getEnvironment()) {
-  $settings_file = 'settings.' . $environment . '.php';
-  if (is_file($settings_file)) {
-    require_once $settings_file;
-  }
 }
 ```
 

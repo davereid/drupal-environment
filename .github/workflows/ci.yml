@@ -55,6 +55,70 @@ jobs:
           oidc: true
           files: ${{ github.workspace }}/build/logs/clover.xml
 
+  test-drupal:
+    name: Test Drupal ${{ matrix.drupal }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Check out the code.
+    strategy:
+      matrix:
+        # The Drupal major version, for both DDEV's project type and Composer.
+        # Changing it renames the job, so update the required checks too.
+        drupal: ['11']
+    steps:
+      - name: Setup DDEV
+        uses: ddev/github-action-setup-ddev@fdf2f5c97943bae638f31df6df86f1defa6210c0 # v1.12.1
+        with:
+          autostart: false
+      - name: Create a Drupal site
+        env:
+          DRUPAL_VERSION: ${{ matrix.drupal }} # Through env rather than expanded in the script (zizmor template-injection).
+        run: |
+          # Without DDEV's settings.ddev.php, so settings.php is what site:install writes.
+          ddev config --project-type="drupal${DRUPAL_VERSION}" --docroot=web --disable-settings-management
+          ddev start
+          ddev composer create-project -n "drupal/recommended-project:^${DRUPAL_VERSION}"
+      # After create-project, which needs an empty directory, and inside the
+      # DDEV project, which is the only directory DDEV mounts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: lib
+          persist-credentials: false
+      - name: Require this library, Environment Indicator and Drush
+        run: |
+          ddev composer config repositories.drupal-environment '{"type": "path", "url": "lib"}'
+          ddev composer require -n 'davereid/drupal-environment:*@dev' drupal/environment_indicator drush/drush
+      - name: Install Drupal
+        run: |
+          ddev drush site:install -y minimal --db-url=mysql://db:db@db/db
+          ddev drush pm:install -y environment_indicator
+      - name: Include the settings file
+        run: |
+          chmod u+w web/sites/default web/sites/default/settings.php
+          # As the README tells sites to.
+          echo 'include \DrupalEnvironment\Environment::settingsFile();' >> web/sites/default/settings.php
+          # Each environment-specific settings file adds its name to a list, to show it was included.
+          for name in prod test dev ci testing; do
+            echo "<?php \$settings['drupal_environment_included'][] = '${name}';" > "web/sites/default/settings.${name}.php"
+          done
+      - name: Check the indicator and settings files in each environment
+        run: |
+          # A variable to set, the indicator name, and the settings files included, in order.
+          check() {
+            # shellcheck disable=SC2016 # PHP code, not shell variables.
+            actual=$(ddev exec env "$1" vendor/bin/drush php:eval 'echo \Drupal::config("environment_indicator.indicator")->get("name") . "|" . implode(",", \Drupal\Core\Site\Settings::get("drupal_environment_included", []));')
+            echo "$1: ${actual}"
+            test "${actual}" = "$2|$3"
+          }
+          # DDEV is local, so environments without their own indicator get Local.
+          check ENVIRONMENT= Local ''
+          check ENVIRONMENT=prod Production prod
+          check ENVIRONMENT=test Staging test
+          check ENVIRONMENT=dev Development dev
+          check ENVIRONMENT=ci CI ci
+          # isTest() for a Playwright run adds settings.testing.php.
+          check PLAYWRIGHT_SETUP=1 Local testing
+
   lint-actions:
     name: Lint actions
     runs-on: ubuntu-latest
