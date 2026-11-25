@@ -15,6 +15,9 @@ namespace DrupalEnvironment;
  * @method static bool isDevelopment()
  * @method static bool isPreview()
  * @method static bool isTugboat()
+ * @method static bool isGitHubWorkflow() Deprecated in 1.4.0, removed from 2.0.0: use isCi().
+ * @method static bool isGitLabCi() Deprecated in 1.4.0, removed from 2.0.0: use isCi().
+ * @method static bool isCircleCi() Deprecated in 1.4.0, removed from 2.0.0: use isCi().
  * @method static array|null getIndicatorConfig()
  */
 class Environment
@@ -43,6 +46,15 @@ class Environment
         'isGitHubWorkflow' => GitHubWorkflow::class,
         'isGitLabCi' => GitLabCi::class,
         'isCircleCi' => CircleCi::class,
+    ];
+
+    /**
+     * Deprecated methods handled by __callStatic(), and what replaces them.
+     */
+    protected const DEPRECATED = [
+        'isGitHubWorkflow' => 'isCi',
+        'isGitLabCi' => 'isCi',
+        'isCircleCi' => 'isCi',
     ];
 
     /**
@@ -77,6 +89,18 @@ class Environment
      */
     public static function __callStatic(string $name, array $arguments)
     {
+        if (isset(static::DEPRECATED[$name])) {
+            // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Logged by error handlers, not shown, as in Drupal core.
+            @trigger_error(sprintf(
+                '%s::%s() is deprecated in davereid/drupal-environment:1.4.0 and is removed from'
+                . ' davereid/drupal-environment:2.0.0. Use %s::%s() instead.',
+                static::class,
+                $name,
+                static::class,
+                static::DEPRECATED[$name]
+            ), E_USER_DEPRECATED);
+        }
+
         $class = static::getEnvironmentClass();
 
         // Provide special case for methods like isPantheon() or isAcquia().
@@ -174,45 +198,6 @@ class Environment
         // and some CI services set a name instead of "true", like "woodpecker".
         return filter_var(static::get('CI'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== false
             || $class::getEnvironment() === $class::CI;
-    }
-
-    /**
-     * Determine if this is a GitHub Actions workflow.
-     *
-     * @return bool
-     *   TRUE if this is a GitHub Actions workflow.
-     *
-     * @deprecated Use Environment::isCi() instead. Removed in 2.0.0.
-     */
-    public static function isGitHubWorkflow(): bool
-    {
-        return static::getEnvironmentClass() === GitHubWorkflow::class;
-    }
-
-    /**
-     * Determine if this is a GitLab CI job.
-     *
-     * @return bool
-     *   TRUE if this is a GitLab CI job.
-     *
-     * @deprecated Use Environment::isCi() instead. Removed in 2.0.0.
-     */
-    public static function isGitLabCi(): bool
-    {
-        return static::getEnvironmentClass() === GitLabCi::class;
-    }
-
-    /**
-     * Determine if this is a CircleCI job.
-     *
-     * @return bool
-     *   TRUE if this is a CircleCI job.
-     *
-     * @deprecated Use Environment::isCi() instead. Removed in 2.0.0.
-     */
-    public static function isCircleCi(): bool
-    {
-        return static::getEnvironmentClass() === CircleCi::class;
     }
 
     /**

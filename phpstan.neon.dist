@@ -3,3 +3,10 @@ parameters:
     paths:
         - src
         - tests
+    ignoreErrors:
+        # This package still uses the CI classes it deprecates, until 2.0.0 removes them.
+        -
+            identifier: classConstant.deprecatedClass
+            paths:
+                - src/Environment.php
+                - tests/src/EnvironmentTest.php
