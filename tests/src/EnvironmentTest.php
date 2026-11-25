@@ -716,6 +716,9 @@ final class EnvironmentTest extends TestCase
     /**
      * Test processing JSON files into environment variables.
      *
+     * @param array<string, string|false>|class-string<\Throwable> $expectedValues
+     *   The expected variable values, or the exception class to expect.
+     *
      * @dataProvider providerProcessEnvironmentFileJson
      */
     #[DataProvider('providerProcessEnvironmentFileJson')]
@@ -734,6 +737,8 @@ final class EnvironmentTest extends TestCase
 
     /**
      * Data provider for ::testProcessEnvironmentFileJson.
+     *
+     * @return array<string, array{string, array<string, string|false>|class-string<\Throwable>}>
      */
     public static function providerProcessEnvironmentFileJson(): array
     {
