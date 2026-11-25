@@ -127,7 +127,7 @@ if ($environment = Environment::getEnvironment()) {
 | [Travis CI](https://docs.travis-ci.com/user/environment-variables/#default-environment-variables) | `true` |
 | [Woodpecker](https://woodpecker-ci.org/docs/usage/environment) | `woodpecker` |
 
-[Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables) and [Jenkins](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables) don't set `CI`. Set `CI=true` or `ENVIRONMENT=ci` in the pipeline instead.
+[Azure Pipelines](https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables), [Jenkins](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#using-environment-variables), [TeamCity](https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html) and [AWS CodeBuild](https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html) don't set `CI`. For these and any other service that doesn't, add `CI=true` to the pipeline's environment variables.
 
 ### CI inside DDEV
 
