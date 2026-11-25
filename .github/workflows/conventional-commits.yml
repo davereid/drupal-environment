@@ -1,4 +1,7 @@
-name: PR title
+name: Conventional Commits
+
+# Its own workflow because it runs on title and description edits, which
+# shouldn't re-run the tests and linters in ci.yml.
 
 on:
   pull_request:
@@ -15,8 +18,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  conventional-commits:
-    name: Conventional Commits
+  pr-title:
+    name: PR title
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read # Read the pull request title.
