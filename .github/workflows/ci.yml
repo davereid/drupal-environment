@@ -55,20 +55,27 @@ jobs:
           files: ${{ github.workspace }}/build/logs/clover.xml
 
   test-drupal:
-    name: Test Drupal site
+    name: Test Drupal ${{ matrix.drupal }}
     runs-on: ubuntu-latest
     permissions:
       contents: read # Check out the code.
+    strategy:
+      matrix:
+        # The Drupal major version, for both DDEV's project type and Composer.
+        # Changing it renames the job, so update the required checks too.
+        drupal: ['11']
     steps:
       - name: Setup DDEV
         uses: ddev/github-action-setup-ddev@fdf2f5c97943bae638f31df6df86f1defa6210c0 # v1.12.1
         with:
           autostart: false
       - name: Create a Drupal site
+        env:
+          DRUPAL_VERSION: ${{ matrix.drupal }} # Through env rather than expanded in the script (zizmor template-injection).
         run: |
-          ddev config --project-type=drupal11 --docroot=web
+          ddev config --project-type="drupal${DRUPAL_VERSION}" --docroot=web
           ddev start
-          ddev composer create-project -n drupal/recommended-project
+          ddev composer create-project -n "drupal/recommended-project:^${DRUPAL_VERSION}"
       # After create-project, which needs an empty directory, and inside the
       # DDEV project, which is the only directory DDEV mounts.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
