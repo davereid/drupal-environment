@@ -111,7 +111,7 @@ if ($environment = Environment::getEnvironment()) {
 
 ## CI services
 
-`Environment::isCi()` returns `TRUE` when the `CI` variable is set to anything but a false-like value (`false`, `0`, `no` or `off`). These CI services set it:
+`Environment::isCi()` returns `TRUE` when the `CI` variable is set to anything but an empty or false-like value (`false`, `0`, `no` or `off`). These CI services set it:
 
 | CI service | `CI` value |
 |-|-|

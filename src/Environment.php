@@ -165,18 +165,20 @@ class Environment
      *
      * Most CI services set CI=true, including GitHub Actions, GitLab CI,
      * CircleCI, Bitbucket Pipelines and Buildkite. DDEV 1.25.6 and later pass
-     * it into the web container.
+     * it into the web container. The CI variable always wins: an environment
+     * class can't turn it off.
      *
      * @return bool
-     *   TRUE if the CI variable is set and isn't false-like ("false", "0",
-     *   "no", "off"), or if the environment is "ci".
+     *   TRUE if the CI variable is set and isn't empty or false-like ("false",
+     *   "0", "no", "off"), or if the environment is "ci".
      */
     public static function isCi(): bool
     {
+        $class = static::getEnvironmentClass();
         // Some build tools document CI=false as a way to turn off CI behavior,
         // and some CI services set a name instead of "true", like "woodpecker".
         return filter_var(static::get('CI'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) !== false
-            || static::getEnvironmentClass()::isCi();
+            || $class::getEnvironment() === $class::CI;
     }
 
     /**

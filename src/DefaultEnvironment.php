@@ -146,12 +146,15 @@ class DefaultEnvironment
     /**
      * Determine if this is a CI environment.
      *
+     * Same as Environment::isCi(), so methods like Pantheon::isMultidev() give
+     * the same answer as site code.
+     *
      * @return bool
      *   TRUE if this is CI.
      */
     public static function isCi(): bool
     {
-        return static::getEnvironment() === static::CI;
+        return Environment::isCi();
     }
 
     /**

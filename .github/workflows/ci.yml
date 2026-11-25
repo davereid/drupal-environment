@@ -93,7 +93,7 @@ jobs:
           ];
           EOF
           # shellcheck disable=SC2016 # PHP code, not shell variables.
-          ddev drush php:eval '$s = \Drupal\Core\Site\Settings::get("drupal_environment"); var_export($s); if ($s !== ["isCi" => TRUE, "isLocal" => TRUE]) { throw new \RuntimeException("Expected isCi() and isLocal() to be TRUE inside DDEV in CI."); }'
+          ddev drush php:eval '$s = \Drupal\Core\Site\Settings::get("drupal_environment"); var_export($s); if ($s !== ["isCi" => TRUE, "isLocal" => TRUE]) { throw new \RuntimeException("Expected isCi() and isLocal() to be TRUE inside DDEV in CI (needs DDEV 1.25.6 or later)."); }'
 
   lint-php:
     name: Lint PHP
