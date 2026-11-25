@@ -307,6 +307,16 @@ class Environment
     /**
      * Get the path to this package's settings file for Drupal sites.
      *
+     * The settings file:
+     * - Sets the Environment Indicator module's config from
+     *   getIndicatorConfig().
+     * - Includes these files from the site's directory (next to settings.php),
+     *   when they exist:
+     *   - settings.<environment>.php, using getEnvironment(), such as
+     *     settings.prod.php.
+     *   - settings.ci.php, when isCi() is TRUE.
+     *   - settings.testing.php, when isTest() is TRUE.
+     *
      * Include it from a site's settings.php:
      * @code
      * include \DrupalEnvironment\Environment::settingsFile();
