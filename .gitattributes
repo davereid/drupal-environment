@@ -1,0 +1,7 @@
+# Leave npm's dev tooling out of the Composer package.
+/package.json export-ignore
+/package-lock.json export-ignore
+/renovate.json export-ignore
+# Leave the architecture decision records and agent instructions out too.
+/docs export-ignore
+/AGENTS.md export-ignore

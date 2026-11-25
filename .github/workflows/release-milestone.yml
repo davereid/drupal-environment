@@ -1,0 +1,152 @@
+name: Release milestone
+
+# Gives a release-please PR the milestone named after its version, creating it
+# if needed, blocks the PR while the milestone has other open issues or PRs, and
+# closes the milestone when the PR is merged. release-please doesn't do this
+# itself: milestone support was declined upstream in
+# https://github.com/googleapis/release-please/issues/1077.
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+      - milestoned
+      - demilestoned
+      - closed
+  issues:
+    types:
+      - closed
+      - reopened
+      - milestoned
+      - demilestoned
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  milestone:
+    name: Milestone complete
+    if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action != 'closed' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # Find or create the milestone and list its open items.
+      pull-requests: write # Set the PR's milestone.
+    steps:
+      - name: Check the PR's milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MILESTONE: ${{ github.event.pull_request.milestone.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          # release-please titles look like "chore(main): release 2.0.0".
+          version="${PR_TITLE##* release }"
+          # Anchored, so the version is safe to put in the jq filter below.
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::No release version found in the title: $PR_TITLE"
+            exit 1
+          fi
+          if [ -z "$MILESTONE" ]; then
+            # Use a milestone created ahead of time, or create one. Titles are
+            # unique across open and closed milestones, so search both.
+            found=$(gh api --paginate "repos/$REPO/milestones?state=all&per_page=100" \
+              --jq ".[] | select(.title == \"$version\" or .title == \"v$version\") | .number")
+            MILESTONE="${found%%$'\n'*}"
+            if [ -z "$MILESTONE" ]; then
+              MILESTONE=$(gh api -X POST "repos/$REPO/milestones" -f title="$version" --jq .number)
+              echo "Created milestone $version."
+            fi
+            # Changes made with GITHUB_TOKEN don't start new runs, so check it here.
+            gh api -X PATCH "repos/$REPO/issues/$PR_NUMBER" -F milestone="$MILESTONE" --silent
+            echo "Added this PR to milestone $version."
+          fi
+          # Read the milestone now: the event's copy is stale after a re-run.
+          # Assigned first so a failed request stops the job. Title last,
+          # since it may contain spaces.
+          info=$(gh api "repos/$REPO/milestones/$MILESTONE" --jq '"\(.html_url) \(.title)"')
+          read -r url title <<< "$info"
+          if [ "${title#v}" != "$version" ]; then
+            echo "::error::Milestone $title doesn't match the release version $version: $url"
+            exit 1
+          fi
+          # List the items rather than trusting the open_issues counter, which
+          # may not count this PR yet if it was just added.
+          others=$(gh api --paginate "repos/$REPO/issues?milestone=$MILESTONE&state=open&per_page=100" \
+            --jq ".[] | select(.number != $PR_NUMBER) | \"#\(.number)\"")
+          if [ -n "$others" ]; then
+            echo "::error::Milestone $title has other open items (${others//$'\n'/ }): $url"
+            exit 1
+          fi
+          echo "Milestone $title is complete: $url"
+
+  close:
+    name: Close milestone
+    if: ${{ startsWith(github.head_ref, 'release-please--') && github.event.action == 'closed' && github.event.pull_request.merged && github.event.pull_request.milestone }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # Close the milestone.
+    steps:
+      - name: Close the PR's milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          MILESTONE: ${{ github.event.pull_request.milestone.number }}
+        run: |
+          # Assigned first so a failed request stops the job before closing.
+          info=$(gh api "repos/$REPO/milestones/$MILESTONE" --jq '"\(.html_url) \(.title)"')
+          read -r url title <<< "$info"
+          # The merged PR is closed, so it isn't listed.
+          open=$(gh api --paginate "repos/$REPO/issues?milestone=$MILESTONE&state=open&per_page=100" \
+            --jq '.[] | "#\(.number)"')
+          if [ -n "$open" ]; then
+            echo "::error::Not closing milestone $title: it has open items (${open//$'\n'/ }): $url"
+            exit 1
+          fi
+          gh api -X PATCH "repos/$REPO/milestones/$MILESTONE" -f state=closed \
+            --jq '"Closed milestone \(.title): \(.html_url)"'
+
+  rerun:
+    name: Re-check release PRs
+    # Closing, reopening or (de)milestoning another issue or PR doesn't start the
+    # release PR's check, and an issues run would report on main's commit, so
+    # re-run the release PR's own run. Fork PRs only get a read-only token.
+    if: ${{ github.event_name == 'issues' || (!startsWith(github.head_ref, 'release-please--') && !github.event.pull_request.head.repo.fork && contains(fromJSON('["closed", "reopened", "milestoned", "demilestoned"]'), github.event.action)) }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # Re-run the release PRs' milestone checks.
+      pull-requests: read # Find the open release PRs.
+    steps:
+      - name: Re-run the release PRs' milestone checks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          # shortcut: re-runs every open release PR's check, not only the one for
+          # this item's milestone; fine while there are one per release branch.
+          branches=$(gh pr list -R "$REPO" --state open --json headRefName \
+            --jq '.[].headRefName | select(startswith("release-please--"))')
+          for branch in $branches; do
+            run=$(gh run list -R "$REPO" --workflow release-milestone.yml --event pull_request \
+              --branch "$branch" --limit 1 --json databaseId,status --jq '.[] | "\(.databaseId) \(.status)"')
+            read -r id status <<< "$run"
+            if [ -z "$id" ]; then
+              echo "No milestone check found for $branch."
+            elif [ "$status" != completed ]; then
+              echo "The milestone check for $branch is still running."
+            elif out=$(gh run rerun "$id" -R "$REPO" 2>&1); then
+              echo "Re-ran the milestone check for $branch."
+            elif [[ "$out" == *"already running"* ]]; then
+              # One change can start several of these jobs, e.g. merging a PR
+              # that closes an issue.
+              echo "The milestone check for $branch is already being re-run."
+            else
+              echo "::error::$out"
+              exit 1
+            fi
+          done
